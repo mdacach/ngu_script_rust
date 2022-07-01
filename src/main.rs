@@ -1,8 +1,10 @@
-use enigo::MouseControllable;
+use std::{thread, time};
+
 use image::{open, GenericImage, GrayImage, Luma};
 use imageproc::definitions::Image;
 use imageproc::map::map_colors;
 use imageproc::template_matching::{find_extremes, match_template, MatchTemplateMethod};
+use rdev::{simulate, Button, EventType, Key, SimulateError};
 use screenshots::Screen;
 
 fn main() {
@@ -17,8 +19,26 @@ fn main() {
         .to_luma8();
     let (x, y) = find_game_corner(&screenshot);
 
-    let mut controller = enigo::Enigo::new();
-    controller.mouse_move_to(x as i32, y as i32);
+    mouse_move((x, y));
+}
+
+fn mouse_move((x, y): (u32, u32)) {
+    send(&EventType::MouseMove {
+        x: x.into(),
+        y: y.into(),
+    });
+}
+
+fn send(event_type: &EventType) {
+    let delay = time::Duration::from_millis(20);
+    match simulate(event_type) {
+        Ok(()) => (),
+        Err(SimulateError) => {
+            println!("We could not send {:?}", event_type);
+        }
+    }
+    // Let ths OS catchup (at least MacOS)
+    thread::sleep(delay);
 }
 
 /// Returns the coordinates of the game upper-left corner.
