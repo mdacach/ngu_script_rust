@@ -28,7 +28,7 @@ fn main() {
     mouse_move(*CORNER);
 
     for id in 0..24 {
-        Inventory::move_to_item(id as u32);
+        Inventory::move_to_slot(id as u32);
         thread::sleep(time::Duration::from_millis(300));
     }
 }
@@ -110,7 +110,8 @@ impl Inventory {
     const SLOT_FIRST: (u32, u32) = (470, 440);
     const SLOT_SIZE: (u32, u32) = (66, 67);
     const SLOTS_PER_ROW: u32 = 12;
-    fn move_to_item(id: u32) {
+
+    fn move_to_slot(id: u32) {
         let (mut x, mut y) = Self::SLOT_FIRST;
         // Rows wrap around after some slots
         let move_right = id % Self::SLOTS_PER_ROW;
