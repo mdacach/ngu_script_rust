@@ -588,6 +588,7 @@ version = "0.1.0"
 dependencies = [
  "image",
  "imageproc",
+ "lazy_static",
  "rdev",
  "screenshots",
 ]

@@ -4,10 +4,12 @@ use image::{open, GenericImage, GrayImage, Luma};
 use imageproc::definitions::Image;
 use imageproc::map::map_colors;
 use imageproc::template_matching::{find_extremes, match_template, MatchTemplateMethod};
+use lazy_static::lazy_static;
 use rdev::{simulate, Button, EventType, Key, SimulateError};
 use screenshots::Screen;
 
-fn main() {
+lazy_static! {
+    static ref CORNER: (u32, u32) = {
     let left_monitor = Screen::from_point(100, 100).expect("Could not find display screen");
     let screenshot = left_monitor.capture().expect("Could not screenshot");
     // TODO: avoid the extra write to file, we already have the image here
@@ -17,12 +19,23 @@ fn main() {
     let screenshot = open("images/screenshot.png")
         .expect("Could not open previous screenshot")
         .to_luma8();
-    let (x, y) = find_game_corner(&screenshot);
 
-    mouse_move((x, y));
+    find_game_corner(&screenshot)
+    };
+}
+
+fn main() {
+    mouse_move(*CORNER);
+
+    for id in 0..24 {
+        Inventory::move_to_item(id as u32);
+        thread::sleep(time::Duration::from_millis(300));
+    }
 }
 
 fn mouse_move((x, y): (u32, u32)) {
+    let x = x + CORNER.0;
+    let y = y + CORNER.1;
     send(&EventType::MouseMove {
         x: x.into(),
         y: y.into(),
