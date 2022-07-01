@@ -103,3 +103,20 @@ fn convert_to_gray_image(image: &Image<Luma<f32>>) -> GrayImage {
     let scale = |x| (255.0 * (x - lo) / range) as u8;
     map_colors(image, |p| Luma([scale(p[0])]))
 }
+
+struct Inventory;
+
+impl Inventory {
+    const SLOT_FIRST: (u32, u32) = (470, 440);
+    const SLOT_SIZE: (u32, u32) = (66, 67);
+    const SLOTS_PER_ROW: u32 = 12;
+    fn move_to_item(id: u32) {
+        let (mut x, mut y) = Self::SLOT_FIRST;
+        // Rows wrap around after some slots
+        let move_right = id % Self::SLOTS_PER_ROW;
+        let move_down = id / Self::SLOTS_PER_ROW;
+        x += move_right * Self::SLOT_SIZE.0;
+        y += move_down * Self::SLOT_SIZE.1;
+        mouse_move((x, y));
+    }
+}
