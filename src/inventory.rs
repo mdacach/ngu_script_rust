@@ -6,6 +6,15 @@ const SLOT_FIRST: (u32, u32) = (470, 440);
 const SLOT_SIZE: (u32, u32) = (66, 67);
 const SLOTS_PER_ROW: u32 = 12;
 
+const HELMET: (u32, u32) = (705, 88);
+const CHEST: (u32, u32) = (705, 157);
+const LEGS: (u32, u32) = (705, 224);
+const BOOTS: (u32, u32) = (705, 289);
+const WEAPON: (u32, u32) = (775, 157);
+const ACC1: (u32, u32) = (639, 88);
+const ACC2: (u32, u32) = (639, 157);
+const CUBE: (u32, u32) = (840, 157);
+
 pub fn move_to_slot(id: u32) {
     let (mut x, mut y) = SLOT_FIRST;
     // Rows wrap around after some slots
