@@ -23,6 +23,11 @@ pub fn click() {
     send(&EventType::ButtonRelease(Button::Left));
 }
 
+pub fn click_at(coords: (u32, u32)) {
+    mouse_move(coords);
+    click();
+}
+
 pub fn send_key(key: Key) {
     send(&EventType::KeyPress(key));
     thread::sleep(Duration::from_millis(20));
