@@ -1,6 +1,7 @@
 use rdev::Key;
 
 use crate::input;
+use crate::input::{click_at, mouse_move};
 
 const SLOT_FIRST: (u32, u32) = (470, 440);
 const SLOT_SIZE: (u32, u32) = (66, 67);
@@ -33,5 +34,46 @@ pub fn click_slot(id: u32) {
 pub fn merge_slot(id: u32) {
     // Clicking is better than just moving because it puts the game in focus
     click_slot(id);
+    merge();
+}
+
+pub fn merge_equips() {
+    merge_at(WEAPON);
+    merge_at(HELMET);
+    merge_at(CHEST);
+    merge_at(LEGS);
+    merge_at(BOOTS);
+    merge_at(ACC1);
+    merge_at(ACC2);
+}
+
+pub fn boost_equips() {
+    // Order here will change depending on game's progression.
+    // Put the most important items first, so that boost is used
+    // more efficiently.
+    boost_at(WEAPON);
+    boost_at(HELMET);
+    boost_at(CHEST);
+    boost_at(LEGS);
+    boost_at(BOOTS);
+    boost_at(ACC1);
+    boost_at(ACC2);
+}
+
+fn merge_at(coords: (u32, u32)) {
+    click_at(coords);
+    merge();
+}
+
+fn boost_at(coords: (u32, u32)) {
+    click_at(coords);
+    boost();
+}
+
+fn merge() {
     input::send_key(Key::KeyD);
+}
+
+fn boost() {
+    input::send_key(Key::KeyA);
 }
