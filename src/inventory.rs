@@ -1,3 +1,5 @@
+use rdev::Key;
+
 use crate::input;
 
 const SLOT_FIRST: (u32, u32) = (470, 440);
@@ -12,4 +14,15 @@ pub fn move_to_slot(id: u32) {
     x += move_right * SLOT_SIZE.0;
     y += move_down * SLOT_SIZE.1;
     input::mouse_move((x, y));
+}
+
+pub fn click_slot(id: u32) {
+    move_to_slot(id);
+    input::click();
+}
+
+pub fn merge_slot(id: u32) {
+    // Clicking is better than just moving because it puts the game in focus
+    click_slot(id);
+    input::send_key(Key::KeyD);
 }
