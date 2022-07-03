@@ -20,6 +20,17 @@ pub fn click() {
     send(&EventType::ButtonRelease(Button::Left));
 }
 
+pub fn right_click() {
+    send(&EventType::ButtonPress(Button::Right));
+    thread::sleep(Duration::from_millis(20));
+    send(&EventType::ButtonRelease(Button::Right));
+}
+
+pub fn right_click_at(coords: (u32, u32)) {
+    mouse_move(coords);
+    right_click();
+}
+
 pub fn click_at(coords: (u32, u32)) {
     mouse_move(coords);
     click();

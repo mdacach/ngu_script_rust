@@ -1,7 +1,7 @@
 use rdev::Key;
 
 use crate::input;
-use crate::input::{click_at, mouse_move};
+use crate::input::{click_at, right_click_at};
 
 const SLOT_FIRST: (u32, u32) = (470, 440);
 const SLOT_SIZE: (u32, u32) = (66, 67);
@@ -64,6 +64,7 @@ pub fn boost_equips() {
     boost_at(BOOTS);
     boost_at(ACC1);
     boost_at(ACC2);
+    boost_cube();
 }
 
 fn merge_at(coords: (u32, u32)) {
@@ -82,4 +83,10 @@ fn merge() {
 
 fn boost() {
     input::send_key(Key::KeyA);
+}
+
+/// Infinity Cube is a special accessory meant to consume boosts.
+/// Instead of boosting as usually, it uses a right click instead.
+fn boost_cube() {
+    right_click_at(CUBE);
 }
