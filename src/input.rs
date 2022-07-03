@@ -1,14 +1,11 @@
 use std::time::Duration;
 use std::{thread, time};
 
-use device_query::{DeviceQuery, DeviceState};
 use rdev::{simulate, Button, EventType, Key, SimulateError};
 
 use crate::coords;
 
 pub fn mouse_move((x, y): (u32, u32)) {
-    check_user_termination();
-
     let x = x + coords::CORNER.0;
     let y = y + coords::CORNER.1;
     send(&EventType::MouseMove {
@@ -42,17 +39,6 @@ fn send(event_type: &EventType) {
             println!("We could not send {:?}", event_type);
         }
     }
-    // Let ths OS catchup (at least MacOS)
+    // Let the OS catchup (at least MacOS)
     thread::sleep(delay);
-}
-
-// In case user wants to stop the running script.
-// As it takes control of the mouse, it may be difficult to stop it
-// through usual means.
-fn check_user_termination() {
-    let device = DeviceState::new();
-    let cursor_position = device.get_mouse().coords;
-    if cursor_position == (0, 0) {
-        panic!("Manual termination through mouse in corner");
-    }
 }

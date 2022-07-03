@@ -11,4 +11,3 @@ imageproc = "0.23.0"
 image = "0.24.2"
 rdev = "0.5.1"
 lazy_static = "1.4.0"
-device_query = "0.2.8" # For getting mouse position
