@@ -3,14 +3,12 @@ use std::{thread, time};
 
 use rdev::{simulate, Button, EventType, Key, SimulateError};
 
-use crate::coords;
+use crate::coords::InGamePosition;
 
-pub fn mouse_move((x, y): (u32, u32)) {
-    let x = x + coords::CORNER.0;
-    let y = y + coords::CORNER.1;
+pub fn mouse_move(pos: InGamePosition) {
     send(&EventType::MouseMove {
-        x: x.into(),
-        y: y.into(),
+        x: pos.x.into(),
+        y: pos.y.into(),
     });
 }
 
@@ -26,13 +24,13 @@ pub fn right_click() {
     send(&EventType::ButtonRelease(Button::Right));
 }
 
-pub fn right_click_at(coords: (u32, u32)) {
-    mouse_move(coords);
+pub fn right_click_at(pos: InGamePosition) {
+    mouse_move(pos);
     right_click();
 }
 
-pub fn click_at(coords: (u32, u32)) {
-    mouse_move(coords);
+pub fn click_at(pos: InGamePosition) {
+    mouse_move(pos);
     click();
 }
 

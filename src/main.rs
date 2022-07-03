@@ -7,19 +7,14 @@ mod input;
 mod inventory;
 
 fn main() {
-    // input::mouse_move(*coords::CORNER);
-
-    thread::spawn(|| {
-        loop {
-            // check_user_termination();
-            inventory::merge_equips();
-            inventory::boost_equips();
-            for id in 0..24 {
-                inventory::merge_slot(id as u32);
-                inventory::boost_slot(id as u32);
-            }
-            thread::sleep(time::Duration::from_secs(10));
+    thread::spawn(|| loop {
+        inventory::merge_equips();
+        inventory::boost_equips();
+        for id in 0..24 {
+            inventory::merge_slot(id);
+            inventory::boost_slot(id);
         }
+        thread::sleep(time::Duration::from_secs(10));
     });
 
     if let Err(e) = listen(check_for_user_termination) {

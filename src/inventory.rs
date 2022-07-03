@@ -1,43 +1,47 @@
 use rdev::Key;
 
+use crate::coords::{Position, Size};
 use crate::input;
 use crate::input::{click_at, right_click_at};
 
-const SLOT_FIRST: (u32, u32) = (470, 440);
-const SLOT_SIZE: (u32, u32) = (66, 67);
-const SLOTS_PER_ROW: u32 = 12;
+const SLOT_SIZE: Size = Size {
+    width: 66,
+    height: 67,
+};
+const SLOT_FIRST: Position = Position { x: 470, y: 440 };
+const SLOTS_PER_ROW: u16 = 12;
 
-const HELMET: (u32, u32) = (705, 88);
-const CHEST: (u32, u32) = (705, 157);
-const LEGS: (u32, u32) = (705, 224);
-const BOOTS: (u32, u32) = (705, 289);
-const WEAPON: (u32, u32) = (775, 157);
-const ACC1: (u32, u32) = (639, 88);
-const ACC2: (u32, u32) = (639, 157);
-const CUBE: (u32, u32) = (840, 157);
+const HELMET: Position = Position { x: 705, y: 88 };
+const CHEST: Position = Position { x: 705, y: 157 };
+const LEGS: Position = Position { x: 705, y: 224 };
+const BOOTS: Position = Position { x: 705, y: 289 };
+const WEAPON: Position = Position { x: 775, y: 157 };
+const ACC1: Position = Position { x: 639, y: 88 };
+const ACC2: Position = Position { x: 639, y: 157 };
+const CUBE: Position = Position { x: 840, y: 157 };
 
-pub fn move_to_slot(id: u32) {
-    let (mut x, mut y) = SLOT_FIRST;
+pub fn move_to_slot(id: u16) {
+    let Position { mut x, mut y } = SLOT_FIRST;
     // Rows wrap around after some slots
     let move_right = id % SLOTS_PER_ROW;
     let move_down = id / SLOTS_PER_ROW;
-    x += move_right * SLOT_SIZE.0;
-    y += move_down * SLOT_SIZE.1;
-    input::mouse_move((x, y));
+    x += move_right * SLOT_SIZE.width;
+    y += move_down * SLOT_SIZE.height;
+    input::mouse_move(Position { x, y }.into());
 }
 
-pub fn click_slot(id: u32) {
+pub fn click_slot(id: u16) {
     move_to_slot(id);
     input::click();
 }
 
-pub fn merge_slot(id: u32) {
+pub fn merge_slot(id: u16) {
     // Clicking is better than just moving because it puts the game in focus
     click_slot(id);
     merge();
 }
 
-pub fn boost_slot(id: u32) {
+pub fn boost_slot(id: u16) {
     // Clicking is better than just moving because it puts the game in focus
     click_slot(id);
     boost();
@@ -67,13 +71,13 @@ pub fn boost_equips() {
     boost_cube();
 }
 
-fn merge_at(coords: (u32, u32)) {
-    click_at(coords);
+fn merge_at(pos: Position) {
+    click_at(pos.into());
     merge();
 }
 
-fn boost_at(coords: (u32, u32)) {
-    click_at(coords);
+fn boost_at(pos: Position) {
+    click_at(pos.into());
     boost();
 }
 
@@ -88,5 +92,5 @@ fn boost() {
 /// Infinity Cube is a special accessory meant to consume boosts.
 /// Instead of boosting as usually, it uses a right click instead.
 fn boost_cube() {
-    right_click_at(CUBE);
+    right_click_at(CUBE.into());
 }
