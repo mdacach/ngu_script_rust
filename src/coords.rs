@@ -19,6 +19,13 @@ pub struct Position {
     pub y: u16,
 }
 
+impl Position {
+    /// Creates a new Position from x and y coordinates.
+    pub const fn from_coords(x: u16, y: u16) -> Self {
+        Position { x, y }
+    }
+}
+
 /// This way we can code in terms of normal Positions and have the script
 /// convert them to InGamePositions for us.
 impl From<Position> for InGamePosition {

@@ -8,17 +8,17 @@ const SLOT_SIZE: Size = Size {
     width: 66,
     height: 67,
 };
-const SLOT_FIRST: Position = Position { x: 470, y: 440 };
+const SLOT_FIRST: Position = Position::from_coords(470, 440);
 const SLOTS_PER_ROW: u16 = 12;
 
-const HELMET: Position = Position { x: 705, y: 88 };
-const CHEST: Position = Position { x: 705, y: 157 };
-const LEGS: Position = Position { x: 705, y: 224 };
-const BOOTS: Position = Position { x: 705, y: 289 };
-const WEAPON: Position = Position { x: 775, y: 157 };
-const ACC1: Position = Position { x: 639, y: 88 };
-const ACC2: Position = Position { x: 639, y: 157 };
-const CUBE: Position = Position { x: 840, y: 157 };
+const HELMET: Position = Position::from_coords(705, 88);
+const CHEST: Position = Position::from_coords(705, 157);
+const LEGS: Position = Position::from_coords(705, 224);
+const BOOTS: Position = Position::from_coords(705, 289);
+const WEAPON: Position = Position::from_coords(775, 157);
+const ACC1: Position = Position::from_coords(639, 88);
+const ACC2: Position = Position::from_coords(639, 157);
+const CUBE: Position = Position::from_coords(840, 157);
 
 pub fn move_to_slot(id: u16) {
     let Position { mut x, mut y } = SLOT_FIRST;
@@ -27,7 +27,7 @@ pub fn move_to_slot(id: u16) {
     let move_down = id / SLOTS_PER_ROW;
     x += move_right * SLOT_SIZE.width;
     y += move_down * SLOT_SIZE.height;
-    input::mouse_move(Position { x, y }.into());
+    input::mouse_move(Position::from_coords(x, y).into());
 }
 
 pub fn click_slot(id: u16) {
