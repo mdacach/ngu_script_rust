@@ -37,6 +37,12 @@ pub fn merge_slot(id: u32) {
     merge();
 }
 
+pub fn boost_slot(id: u32) {
+    // Clicking is better than just moving because it puts the game in focus
+    click_slot(id);
+    boost();
+}
+
 pub fn merge_equips() {
     merge_at(WEAPON);
     merge_at(HELMET);
