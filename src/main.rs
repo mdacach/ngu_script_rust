@@ -2,18 +2,24 @@ use std::{thread, time};
 
 use rdev::{listen, Event, EventType, Key};
 
+use crate::menu::Menu;
+
 mod coords;
 mod input;
 mod inventory;
+mod menu;
 
 fn main() {
     thread::spawn(|| loop {
+        menu::navigate(Menu::Inventory);
         inventory::merge_equips();
         inventory::boost_equips();
         for id in 0..24 {
             inventory::merge_slot(id);
             inventory::boost_slot(id);
         }
+        menu::navigate(Menu::Adventure);
+        println!("Checking on some monsters...");
         thread::sleep(time::Duration::from_secs(10));
     });
 
