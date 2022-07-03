@@ -28,14 +28,24 @@ fn main() {
 }
 
 fn check_for_user_termination(event: Event) {
-    if let EventType::KeyPress(key) = event.event_type {
-        println!("{:?} pressed.", key);
-        if key == Key::KeyZ {
+    match event.event_type {
+        EventType::KeyPress(Key::KeyZ) => {
             println!("Terminating due to user input.");
             // This hangs the working thread, but OK for now.
             std::process::exit(0);
         }
-    } else {
-        println!("Not a key press.");
+        EventType::KeyPress(other_key) => {
+            println!("{:?} pressed.", other_key);
+        }
+        EventType::ButtonPress(button) => {
+            println!("{:?} pressed.", button);
+        }
+        EventType::KeyRelease(other_key) => {
+            println!("{:?} released.", other_key);
+        }
+        EventType::ButtonRelease(button) => {
+            println!("{:?} released.", button);
+        }
+        _ => (),
     }
 }
