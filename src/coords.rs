@@ -60,17 +60,17 @@ pub struct InGamePosition {
 lazy_static! {
     /// Position of game's upper left corner, at the start of the script.
     pub static ref CORNER: Position = {
-    let left_monitor = Screen::from_point(100, 100).expect("Could not find display screen");
-    let screenshot = left_monitor.capture().expect("Could not screenshot");
-    // TODO: avoid the extra write to file, we already have the image here
-    std::fs::write("images/screenshot.png", screenshot.buffer())
-        .expect("Could not save screenshot");
+        let left_monitor = Screen::from_point(100, 100).expect("Could not find display screen");
+        let screenshot = left_monitor.capture().expect("Could not screenshot");
+        // TODO: avoid the extra write to file, we already have the image here
+        std::fs::write("images/screenshot.png", screenshot.buffer())
+            .expect("Could not save screenshot");
 
-    let screenshot = open("images/screenshot.png")
-        .expect("Could not open previous screenshot")
-        .to_luma8();
+        let screenshot = open("images/screenshot.png")
+            .expect("Could not open previous screenshot")
+            .to_luma8();
 
-    find_game_corner(&screenshot)
+        find_game_corner(&screenshot)
     };
 }
 
