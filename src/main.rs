@@ -1,16 +1,22 @@
+use std::time::Duration;
 use std::{thread, time};
 
 use rdev::{listen, Event, EventType, Key};
 
 use crate::menu::Menu;
 
+mod adventure;
 mod coords;
 mod input;
 mod inventory;
 mod menu;
+mod pixel;
 
 fn main() {
     thread::spawn(|| loop {
+        menu::navigate(Menu::Adventure);
+        adventure::kill_monsters();
+
         menu::navigate(Menu::Inventory);
         inventory::merge_equips();
         inventory::boost_equips();
@@ -18,9 +24,6 @@ fn main() {
             inventory::merge_slot(id);
             inventory::boost_slot(id);
         }
-        menu::navigate(Menu::Adventure);
-        println!("Checking on some monsters...");
-        thread::sleep(time::Duration::from_secs(10));
     });
 
     if let Err(e) = listen(check_for_user_termination) {
