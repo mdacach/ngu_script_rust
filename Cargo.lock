@@ -270,9 +270,9 @@ dependencies = [
 
 [[package]]
 name = "display-info"
-version = "0.1.1"
+version = "0.1.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2efd2ce605e7957c4e485cc4d3f1630aa97205fefaab0b0a50f78f190226e248"
+checksum = "b164ee3cc0d739904ec80a854c5ec9168f4b311a2fef053d150465b95d7c40e5"
 dependencies = [
  "core-graphics 0.22.3",
  "sfhash",
@@ -900,9 +900,9 @@ checksum = "d29ab0c6d3fc0ee92fe66e2d99f700eab17a8d57d1c1d3b748380fb20baa78cd"
 
 [[package]]
 name = "screenshots"
-version = "0.3.1"
+version = "0.3.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ece0d660463e7933882e889cad57ce07a9224e6c2111bc1ffba6d0317fb50dba"
+checksum = "c76a694f0a94cfa9e7bbf7ca0c5c75a98f553aee844095fdc76121a59a3f190a"
 dependencies = [
  "core-graphics 0.22.3",
  "dbus",
