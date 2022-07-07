@@ -6,25 +6,25 @@ use rdev::Key;
 use crate::input::send_key;
 use crate::pixel;
 
-pub fn kill_monsters() {
-    let mut kill_counter = 0;
-    while kill_counter < 10 {
+pub fn kill_monsters(quantity: u16) {
+    for kills in 1..=quantity {
         while !is_enemy_alive() {
             thread::sleep(Duration::from_millis(50));
-            // println!("Waiting for respawn.");
         }
+
         while is_enemy_alive() {
             attack();
             thread::sleep(Duration::from_millis(100));
         }
-        kill_counter += 1;
-        println!("[LOG] Kill Counter: {kill_counter}");
+        // It's possible that the monster is still alive, but we can not see it
+        // because the bar is almost completely white
+        attack(); // So we attack an extra time
+        println!("[LOG] Kill Counter: {kills}");
     }
-    println!("Successfully killed 10 monsters");
 }
 
 fn attack() {
-    send_key(Key::KeyW);
+    send_key(Key::KeyW); // Regular attack
 }
 
 fn is_enemy_alive() -> bool {

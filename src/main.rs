@@ -14,7 +14,7 @@ mod pixel;
 fn main() {
     thread::spawn(|| loop {
         menu::navigate(Menu::Adventure);
-        adventure::kill_monsters();
+        adventure::kill_monsters(25);
 
         menu::navigate(Menu::Inventory);
         inventory::merge_equips();
