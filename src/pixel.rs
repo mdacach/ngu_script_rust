@@ -5,8 +5,11 @@ use crate::coords::{InGamePosition, Position};
 
 pub const ENEMY_BAR_RIGHT: Position = Position::from_coords(1240, 555);
 pub const ENEMY_BAR_LEFT: Position = Position::from_coords(984, 555);
+pub const IDLE_MODE_PIXEL: Position = Position::from_coords(554, 119);
+
 pub const ENEMY_ALIVE_RGB: Rgb<u8> = Rgb([236, 52, 52]);
 pub const NO_ENEMY_RGB: Rgb<u8> = Rgb([255, 255, 255]);
+pub const IDLE_MODE_ON_RGB: Rgb<u8> = Rgb([255, 235, 4]);
 
 pub fn get_pixel_rgb(pos: InGamePosition) -> Rgb<u8> {
     let InGamePosition { x, y } = pos;

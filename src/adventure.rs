@@ -7,6 +7,10 @@ use crate::input::send_key;
 use crate::pixel;
 
 pub fn kill_monsters(quantity: u16) {
+    if is_idle_mode() {
+        send_key(Key::KeyQ); // Disable Idle Mode
+    }
+
     for kills in 1..=quantity {
         while !is_enemy_alive() {
             thread::sleep(Duration::from_millis(50));
@@ -30,4 +34,9 @@ fn attack() {
 fn is_enemy_alive() -> bool {
     let color = pixel::get_pixel_rgb(pixel::ENEMY_BAR_LEFT.into());
     color == pixel::ENEMY_ALIVE_RGB
+}
+
+fn is_idle_mode() -> bool {
+    let color = pixel::get_pixel_rgb(pixel::IDLE_MODE_PIXEL.into());
+    color == pixel::IDLE_MODE_ON_RGB
 }
