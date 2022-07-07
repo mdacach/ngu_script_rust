@@ -1,7 +1,6 @@
-use std::time::Duration;
 use std::{thread, time};
 
-use rdev::{listen, Event, EventType, Key};
+use rdev::{listen, Button, Event, EventType, Key};
 
 use crate::menu::Menu;
 
@@ -26,30 +25,7 @@ fn main() {
         }
     });
 
-    if let Err(e) = listen(check_for_user_termination) {
+    if let Err(e) = listen(input::handle_user_termination) {
         println!("Error listening to events: {:?}", e);
-    }
-}
-
-fn check_for_user_termination(event: Event) {
-    match event.event_type {
-        EventType::KeyPress(Key::KeyZ) => {
-            println!("Terminating due to user input.");
-            // This hangs the working thread, but OK for now.
-            std::process::exit(0);
-        }
-        EventType::KeyPress(other_key) => {
-            println!("{:?} pressed.", other_key);
-        }
-        EventType::ButtonPress(button) => {
-            println!("{:?} pressed.", button);
-        }
-        EventType::KeyRelease(other_key) => {
-            println!("{:?} released.", other_key);
-        }
-        EventType::ButtonRelease(button) => {
-            println!("{:?} released.", button);
-        }
-        _ => (),
     }
 }
