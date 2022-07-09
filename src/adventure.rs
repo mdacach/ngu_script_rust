@@ -5,7 +5,7 @@ use image::Rgb;
 use rdev::Key;
 
 use crate::coords::Position;
-use crate::input::send_key;
+use crate::input::{right_click_at, send_key};
 use crate::pixel;
 use crate::pixel::get_pixel_rgb;
 
@@ -64,9 +64,42 @@ pub fn kill_bosses(quantity: u16) {
     }
 }
 
+/// Zones in Adventure Menu.
+///
+/// Note that order here is important, as we use the zone
+/// numbering as the amount of right presses to get there.
+pub enum AdventureZone {
+    Safe,
+    Tutorial,
+    Sewers,
+    Forest,
+    Cave,
+    Sky,
+}
+
+pub fn go_to_zone(zone: AdventureZone) {
+    // First we must start from 0: The Safe Zone
+    // Right clicking adventure's left arrow makes us go to Safe
+    right_click_at(Pixels::RETREAT_ZONE.into());
+
+    // Then, we get how much to go forward by Zone Numbering
+    let forward_steps = zone as u8;
+    for _ in 0..forward_steps {
+        advance_zone();
+    }
+}
+
+fn advance_zone() {
+    send_key(Key::RightArrow); // We could also use the mouse here
+}
+
+fn retreat_zone() {
+    send_key(Key::LeftArrow); // We could also use the mouse here
+}
+
 fn refresh_zone() {
-    send_key(Key::LeftArrow);
-    send_key(Key::RightArrow);
+    retreat_zone();
+    advance_zone();
 }
 
 fn attack_highest_available() {
