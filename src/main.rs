@@ -16,8 +16,7 @@ mod pixel;
 fn main() {
     thread::spawn(|| loop {
         menu::navigate(Menu::Adventure);
-        adventure::kill_bosses(10);
-        // adventure::kill_bosses_at_zone(10, AdventureZone::Cave);
+        adventure::kill_bosses_at_zone(10, AdventureZone::Sky);
 
         menu::navigate(Menu::Inventory);
         inventory::merge_equips();
@@ -29,23 +28,37 @@ fn main() {
         inventory::boost_cube();
     });
 
+    handle_user_termination();
+}
+
+/// Handles script termination by listening for a "z" key press.
+fn handle_user_termination() {
+    // It's possible to terminate the script when the worker thread is in the middle of an action
+    // e.g. Pressing a key, but not yet releasing it
+    // This will cause the key to be pressed forever, and will be an issue for the OS
+    // To work around that, all currently pressed keys are tracked, and this thread will
+    // release those when terminating.
+
+    // Keep track of currently pressed keys (or buttons).
     let mut presses = Vec::new();
     let event_handler = move |event: Event| {
         match event.event_type {
             EventType::KeyPress(Key::KeyZ) => {
                 // This hangs the working thread, but OK for now.
-                // Note the script will not press Z by itself, so we don't need
-                // to track it in PRESSES for releasing
+                // Note that the script will not press Z by itself, so we don't need
+                // to track it in presses for releasing.
                 presses.iter().for_each(release);
                 println!("Terminating due to user input.");
                 std::process::exit(0);
             }
+            // Press events populate `presses`.
             EventType::KeyPress(other_key) => {
                 presses.push(InputPress::Key(other_key));
             }
             EventType::ButtonPress(button) => {
                 presses.push(InputPress::Button(button));
             }
+            // Release events remove the corresponding key/button from `presses`.
             EventType::KeyRelease(other_key) => {
                 let index = presses
                     .iter()
@@ -64,6 +77,7 @@ fn main() {
         }
     };
 
+    // Constantly listen for events.
     if let Err(e) = listen(event_handler) {
         println!("Error listening to events: {:?}", e);
     }
