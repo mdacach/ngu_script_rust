@@ -73,18 +73,18 @@ fn is_idle_mode() -> bool {
 struct Keys;
 
 impl Keys {
-    pub const REGULAR_ATTACK: Key = Key::KeyW;
-    pub const STRONG_ATTACK: Key = Key::KeyE;
-    pub const PARRY: Key = Key::KeyR;
-    pub const PIERCING_ATTACK: Key = Key::KeyT;
-    pub const ULTIMATE_ATTACK: Key = Key::KeyY;
+    const REGULAR_ATTACK: Key = Key::KeyW;
+    const STRONG_ATTACK: Key = Key::KeyE;
+    const PARRY: Key = Key::KeyR;
+    const PIERCING_ATTACK: Key = Key::KeyT;
+    const ULTIMATE_ATTACK: Key = Key::KeyY;
 
-    pub const BLOCK: Key = Key::KeyA;
-    pub const DEFENSIVE_BUFF: Key = Key::KeyS;
-    pub const HEAL: Key = Key::KeyD;
-    pub const OFFENSIVE_BUFF: Key = Key::KeyF;
-    pub const CHARGE: Key = Key::KeyG;
-    pub const ULTIMATE_BUFF: Key = Key::KeyH;
+    const BLOCK: Key = Key::KeyA;
+    const DEFENSIVE_BUFF: Key = Key::KeyS;
+    const HEAL: Key = Key::KeyD;
+    const OFFENSIVE_BUFF: Key = Key::KeyF;
+    const CHARGE: Key = Key::KeyG;
+    const ULTIMATE_BUFF: Key = Key::KeyH;
 }
 
 struct Pixels;
