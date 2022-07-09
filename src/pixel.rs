@@ -1,4 +1,4 @@
-use image::{open, Pixel, Rgb, RgbImage};
+use image::{open, ImageBuffer, Pixel, Rgb, RgbImage, Rgba};
 use screenshots::Screen;
 
 use crate::coords::{InGamePosition, Position};
@@ -32,10 +32,8 @@ fn get_screenshot() -> RgbImage {
     screenshot
 }
 
-fn get_screenshot_from_scrap() -> RgbImage {
-    // println!("[LOG] Screenshotting with Scrap");
+pub fn get_screenshot_from_scrap() -> RgbImage {
     use scrap::{Capturer, Display};
-    use std::fs::File;
     use std::io::ErrorKind::WouldBlock;
     use std::thread;
     use std::time::Duration;
@@ -50,7 +48,6 @@ fn get_screenshot_from_scrap() -> RgbImage {
 
     loop {
         // Wait until there's a frame.
-
         let buffer = match capturer.frame() {
             Ok(buffer) => buffer,
             Err(error) => {
@@ -64,32 +61,20 @@ fn get_screenshot_from_scrap() -> RgbImage {
             }
         };
 
-        // Flip the ARGB image into a BGRA image.
-        let mut bitflipped = Vec::with_capacity(w * h * 4);
+        // Flip the ARGB image into a RGB image.
+        // It seems  ^  this is wrong actually, more like the original image was ABGR
+        let mut bitflipped = Vec::with_capacity(w * h * 3);
         let stride = buffer.len() / h;
-
         for y in 0..h {
             for x in 0..w {
                 let i = stride * y + 4 * x;
-                bitflipped.extend_from_slice(&[buffer[i + 2], buffer[i + 1], buffer[i], 255]);
+                bitflipped.push(buffer[i + 2]);
+                bitflipped.push(buffer[i + 1]);
+                bitflipped.push(buffer[i]);
             }
         }
 
-        // Save the image.
-
-        repng::encode(
-            File::create("images/screenshot.png").unwrap(),
-            w as u32,
-            h as u32,
-            &bitflipped,
-        )
-        .unwrap();
-        break;
+        let raw_data = bitflipped;
+        return ImageBuffer::from_raw(w as u32, h as u32, raw_data).unwrap();
     }
-
-    let screenshot = open("images/screenshot.png")
-        .expect("Could not open previous screenshot")
-        .to_rgb8();
-
-    screenshot
 }
