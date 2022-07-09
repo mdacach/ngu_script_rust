@@ -32,6 +32,43 @@ pub fn kill_monsters(quantity: u16) {
     }
 }
 
+pub fn kill_bosses(quantity: u16) {
+    if is_idle_mode() {
+        send_key(Key::KeyQ); // Disable Idle Mode
+    }
+
+    let mut kill_counter = 0;
+    while kill_counter < quantity {
+        while !is_enemy_alive() {
+            thread::sleep(Duration::from_millis(50));
+        }
+
+        if is_enemy_boss() {
+            println!("[LOG] Found a boss, fighting.");
+        } else {
+            println!("[LOG] Not a boss, skipping.");
+            refresh_zone();
+            continue;
+        }
+
+        while is_enemy_alive() {
+            attack_highest_available();
+            thread::sleep(Duration::from_millis(50));
+        }
+        // It's possible that the monster is still alive, but we can not see it
+        // because the bar is almost completely white
+        thread::sleep(Duration::from_millis(1050));
+        attack(); // So we attack an extra time
+        kill_counter += 1;
+        println!("[LOG] Kill Counter: {kill_counter}");
+    }
+}
+
+fn refresh_zone() {
+    send_key(Key::LeftArrow);
+    send_key(Key::RightArrow);
+}
+
 fn attack_highest_available() {
     // Attempt to cast all skills, stronger first
     // This (generally) amounts to using the strongest skill available
@@ -61,6 +98,11 @@ fn attack() {
 fn is_enemy_alive() -> bool {
     let color = pixel::get_pixel_rgb(pixel::ENEMY_BAR_LEFT_PIXEL.into());
     color == pixel::ENEMY_ALIVE_RGB
+}
+
+fn is_enemy_boss() -> bool {
+    let color = pixel::get_pixel_rgb(Pixels::BOSS_CROWN.into());
+    color == Colors::BOSS_CROWN_RGB
 }
 
 fn is_idle_mode() -> bool {
@@ -102,6 +144,8 @@ impl Pixels {
     const OFFENSIVE_BUFF: Position = Position::from_coords(910, 128);
     const CHARGE: Position = Position::from_coords(1050, 128);
     const ULTIMATE_BUFF: Position = Position::from_coords(1190, 128);
+
+    const BOSS_CROWN: Position = Position::from_coords(986, 377);
 }
 
 struct Colors;
@@ -109,6 +153,7 @@ struct Colors;
 impl Colors {
     const FIRST_ROW_COOLDOWN_RGB: Rgb<u8> = Rgb([124, 78, 78]);
     const SECOND_ROW_COOLDOWN_RGB: Rgb<u8> = Rgb([51, 68, 82]);
+    const BOSS_CROWN_RGB: Rgb<u8> = Rgb([247, 239, 41]);
 }
 
 struct RegularAttack;
