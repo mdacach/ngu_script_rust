@@ -76,19 +76,19 @@ fn attack_highest_available() {
     //       1 - Know which ones are in cooldown (get button pixel color)
     //       2 - Use skills in order for maximum effectiveness
 
-    UltimateBuff.cast();
-    OffensiveBuff.cast();
-    Charge.cast();
-    UltimateAttack.cast();
-    PiercingAttack.cast();
-    Parry.cast();
-    StrongAttack.cast();
-    RegularAttack.cast();
+    ULTIMATE_BUFF.cast();
+    OFFENSIVE_BUFF.cast();
+    CHARGE.cast();
+    ULTIMATE_ATTACK.cast();
+    PIERCING_ATTACK.cast();
+    PARRY.cast();
+    STRONG_ATTACK.cast();
+    REGULAR_ATTACK.cast();
 
     // Defensive skills are not needed right now
-    // Block.cast();
-    // DefensiveBuff.cast();
-    // Heal.cast();
+    // BLOCK.cast();
+    // DEFENSIVE_BUFF.cast();
+    // HEAL.cast();
 }
 
 fn attack() {
@@ -96,17 +96,17 @@ fn attack() {
 }
 
 fn is_enemy_alive() -> bool {
-    let color = pixel::get_pixel_rgb(pixel::ENEMY_BAR_LEFT_PIXEL.into());
+    let color = get_pixel_rgb(pixel::ENEMY_BAR_LEFT_PIXEL.into());
     color == pixel::ENEMY_ALIVE_RGB
 }
 
 fn is_enemy_boss() -> bool {
-    let color = pixel::get_pixel_rgb(Pixels::BOSS_CROWN.into());
+    let color = get_pixel_rgb(Pixels::BOSS_CROWN.into());
     color == Colors::BOSS_CROWN_RGB
 }
 
 fn is_idle_mode() -> bool {
-    let color = pixel::get_pixel_rgb(pixel::IDLE_MODE_PIXEL.into());
+    let color = get_pixel_rgb(pixel::IDLE_MODE_PIXEL.into());
     color == pixel::IDLE_MODE_ON_RGB
 }
 
@@ -192,33 +192,33 @@ impl Skill for AdventureSkill {
     }
 }
 
-const RegularAttack: AdventureSkill =
+const REGULAR_ATTACK: AdventureSkill =
     AdventureSkill::new(Keys::REGULAR_ATTACK, Pixels::REGULAR_ATTACK, 1);
 
-const StrongAttack: AdventureSkill =
+const STRONG_ATTACK: AdventureSkill =
     AdventureSkill::new(Keys::STRONG_ATTACK, Pixels::STRONG_ATTACK, 1);
 
-const Parry: AdventureSkill = AdventureSkill::new(Keys::PARRY, Pixels::PARRY, 1);
+const PARRY: AdventureSkill = AdventureSkill::new(Keys::PARRY, Pixels::PARRY, 1);
 
-const PiercingAttack: AdventureSkill =
+const PIERCING_ATTACK: AdventureSkill =
     AdventureSkill::new(Keys::PIERCING_ATTACK, Pixels::PIERCING_ATTACK, 1);
 
-const UltimateAttack: AdventureSkill =
+const ULTIMATE_ATTACK: AdventureSkill =
     AdventureSkill::new(Keys::ULTIMATE_ATTACK, Pixels::ULTIMATE_ATTACK, 1);
 
-const Block: AdventureSkill = AdventureSkill::new(Keys::BLOCK, Pixels::BLOCK, 2);
+const BLOCK: AdventureSkill = AdventureSkill::new(Keys::BLOCK, Pixels::BLOCK, 2);
 
-const DefensiveBuff: AdventureSkill =
+const DEFENSIVE_BUFF: AdventureSkill =
     AdventureSkill::new(Keys::DEFENSIVE_BUFF, Pixels::DEFENSIVE_BUFF, 2);
 
-const Heal: AdventureSkill = AdventureSkill::new(Keys::HEAL, Pixels::HEAL, 2);
+const HEAL: AdventureSkill = AdventureSkill::new(Keys::HEAL, Pixels::HEAL, 2);
 
-const OffensiveBuff: AdventureSkill =
+const OFFENSIVE_BUFF: AdventureSkill =
     AdventureSkill::new(Keys::OFFENSIVE_BUFF, Pixels::OFFENSIVE_BUFF, 2);
 
-const Charge: AdventureSkill = AdventureSkill::new(Keys::CHARGE, Pixels::CHARGE, 2);
+const CHARGE: AdventureSkill = AdventureSkill::new(Keys::CHARGE, Pixels::CHARGE, 2);
 
-const UltimateBuff: AdventureSkill =
+const ULTIMATE_BUFF: AdventureSkill =
     AdventureSkill::new(Keys::ULTIMATE_BUFF, Pixels::ULTIMATE_BUFF, 2);
 
 trait Skill {
