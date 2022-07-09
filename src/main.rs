@@ -16,7 +16,7 @@ fn main() {
     thread::spawn(|| loop {
         menu::navigate(Menu::Adventure);
         // adventure::kill_monsters(25);
-        adventure::kill_bosses(25);
+        adventure::kill_bosses(10);
 
         menu::navigate(Menu::Inventory);
         inventory::merge_equips();
@@ -25,6 +25,7 @@ fn main() {
             inventory::merge_slot(id);
             inventory::boost_slot(id);
         }
+        inventory::boost_cube();
     });
 
     let mut presses = Vec::new();

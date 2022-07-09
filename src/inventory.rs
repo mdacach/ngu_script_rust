@@ -68,7 +68,6 @@ pub fn boost_equips() {
     boost_at(BOOTS);
     boost_at(ACC1);
     boost_at(ACC2);
-    boost_cube();
 }
 
 fn merge_at(pos: Position) {
@@ -91,6 +90,6 @@ fn boost() {
 
 /// Infinity Cube is a special accessory meant to consume boosts.
 /// Instead of boosting as usually, it uses a right click instead.
-fn boost_cube() {
+pub fn boost_cube() {
     right_click_at(CUBE.into());
 }
