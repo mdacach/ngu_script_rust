@@ -9,7 +9,7 @@ use crate::input::{right_click_at, send_key};
 use crate::pixel;
 use crate::pixel::get_pixel_rgb;
 
-/// Kills `quantity` monsters in Adventure Mode, by using Regular Attacks. Will disable Idle Mode if needed.
+/// Kills `quantity` monsters in the current Adventure Zone. Will disable Idle Mode if needed.
 pub fn kill_monsters(quantity: u16) {
     if is_idle_mode() {
         send_key(Key::KeyQ); // Disable Idle Mode
@@ -32,6 +32,7 @@ pub fn kill_monsters(quantity: u16) {
     }
 }
 
+/// Kills `quantity` bosses in the current Adventure Zone. Will disable Idle Mode if needed.
 pub fn kill_bosses(quantity: u16) {
     if is_idle_mode() {
         send_key(Key::KeyQ); // Disable Idle Mode
@@ -64,6 +65,18 @@ pub fn kill_bosses(quantity: u16) {
     }
 }
 
+/// Kills `quantity` monsters in the Adventure Zone chosen. Will disable Idle Mode if needed.
+pub fn kill_monsters_at_zone(quantity: u16, zone: AdventureZone) {
+    go_to_zone(zone);
+    kill_monsters(quantity);
+}
+
+/// Kills `quantity` bosses in the Adventure Zone chosen. Will disable Idle Mode if needed.
+pub fn kill_bosses_at_zone(quantity: u16, zone: AdventureZone) {
+    go_to_zone(zone);
+    kill_bosses(quantity);
+}
+
 /// Zones in Adventure Menu.
 ///
 /// Note that order here is important, as we use the zone
@@ -87,6 +100,11 @@ pub fn go_to_zone(zone: AdventureZone) {
     for _ in 0..forward_steps {
         advance_zone();
     }
+}
+
+fn go_to_latest() {
+    // Right clicking adventure's right arrow makes us to go to latest availabe zone
+    right_click_at(Pixels::ADVANCE_ZONE.into());
 }
 
 fn advance_zone() {
@@ -195,6 +213,9 @@ impl Pixels {
     const ULTIMATE_BUFF: Position = Position::from_coords(1190, 128);
 
     const BOSS_CROWN: Position = Position::from_coords(986, 377);
+
+    const RETREAT_ZONE: Position = Position::from_coords(976, 283);
+    const ADVANCE_ZONE: Position = Position::from_coords(1257, 283);
 }
 
 struct Colors;

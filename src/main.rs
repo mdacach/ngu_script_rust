@@ -2,6 +2,7 @@ use std::{thread, time};
 
 use rdev::{listen, Button, Event, EventType, Key};
 
+use crate::adventure::{go_to_zone, AdventureZone};
 use crate::input::{release, InputPress};
 use crate::menu::Menu;
 
@@ -15,8 +16,8 @@ mod pixel;
 fn main() {
     thread::spawn(|| loop {
         menu::navigate(Menu::Adventure);
-        // adventure::kill_monsters(25);
         adventure::kill_bosses(10);
+        // adventure::kill_bosses_at_zone(10, AdventureZone::Cave);
 
         menu::navigate(Menu::Inventory);
         inventory::merge_equips();
