@@ -14,6 +14,7 @@ pub struct Size {
 /// Represents absolute coordinates on a screen.
 /// Position{ x: 0, y: 0 } represents the upper left corner.
 /// x increases from left to right, and y increases from top to bottom.
+#[derive(Copy, Clone)]
 pub struct Position {
     pub x: u16,
     pub y: u16,

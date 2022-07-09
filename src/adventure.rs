@@ -76,19 +76,19 @@ fn attack_highest_available() {
     //       1 - Know which ones are in cooldown (get button pixel color)
     //       2 - Use skills in order for maximum effectiveness
 
-    UltimateBuff::cast();
-    OffensiveBuff::cast();
-    Charge::cast();
-    UltimateAttack::cast();
-    PiercingAttack::cast();
-    Parry::cast();
-    StrongAttack::cast();
-    RegularAttack::cast();
+    UltimateBuff.cast();
+    OffensiveBuff.cast();
+    Charge.cast();
+    UltimateAttack.cast();
+    PiercingAttack.cast();
+    Parry.cast();
+    StrongAttack.cast();
+    RegularAttack.cast();
 
     // Defensive skills are not needed right now
-    // Block::cast();
-    // DefensiveBuff::cast();
-    // Heal::cast();
+    // Block.cast();
+    // DefensiveBuff.cast();
+    // Heal.cast();
 }
 
 fn attack() {
@@ -129,6 +129,22 @@ impl Keys {
     const ULTIMATE_BUFF: Key = Key::KeyH;
 }
 
+struct AdventureSkill {
+    key: Key,
+    pixel_coords: Position,
+    row_number: u8,
+}
+
+impl AdventureSkill {
+    const fn new(key: Key, pixel_coords: Position, row_number: u8) -> Self {
+        Self {
+            key,
+            pixel_coords,
+            row_number,
+        }
+    }
+}
+
 struct Pixels;
 
 impl Pixels {
@@ -156,214 +172,62 @@ impl Colors {
     const BOSS_CROWN_RGB: Rgb<u8> = Rgb([247, 239, 41]);
 }
 
-struct RegularAttack;
+impl Skill for AdventureSkill {
+    fn is_available(&self) -> bool {
+        let current_color = get_pixel_rgb(self.pixel_coords.into());
+        match self.row_number {
+            1 => current_color != Colors::FIRST_ROW_COOLDOWN_RGB,
+            2 => current_color != Colors::SECOND_ROW_COOLDOWN_RGB,
+            _ => panic!("Unexpected row number"),
+        }
+    }
 
-struct StrongAttack;
+    fn cast(&self) -> bool {
+        if !self.is_available() {
+            return false;
+        }
 
-struct Parry;
+        send_key(self.key);
+        true
+    }
+}
 
-struct PiercingAttack;
+const RegularAttack: AdventureSkill =
+    AdventureSkill::new(Keys::REGULAR_ATTACK, Pixels::REGULAR_ATTACK, 1);
 
-struct UltimateAttack;
+const StrongAttack: AdventureSkill =
+    AdventureSkill::new(Keys::STRONG_ATTACK, Pixels::STRONG_ATTACK, 1);
 
-struct Block;
+const Parry: AdventureSkill = AdventureSkill::new(Keys::PARRY, Pixels::PARRY, 1);
 
-struct DefensiveBuff;
+const PiercingAttack: AdventureSkill =
+    AdventureSkill::new(Keys::PIERCING_ATTACK, Pixels::PIERCING_ATTACK, 1);
 
-struct Heal;
+const UltimateAttack: AdventureSkill =
+    AdventureSkill::new(Keys::ULTIMATE_ATTACK, Pixels::ULTIMATE_ATTACK, 1);
 
-struct OffensiveBuff;
+const Block: AdventureSkill = AdventureSkill::new(Keys::BLOCK, Pixels::BLOCK, 2);
 
-struct Charge;
+const DefensiveBuff: AdventureSkill =
+    AdventureSkill::new(Keys::DEFENSIVE_BUFF, Pixels::DEFENSIVE_BUFF, 2);
 
-struct UltimateBuff;
+const Heal: AdventureSkill = AdventureSkill::new(Keys::HEAL, Pixels::HEAL, 2);
+
+const OffensiveBuff: AdventureSkill =
+    AdventureSkill::new(Keys::OFFENSIVE_BUFF, Pixels::OFFENSIVE_BUFF, 2);
+
+const Charge: AdventureSkill = AdventureSkill::new(Keys::CHARGE, Pixels::CHARGE, 2);
+
+const UltimateBuff: AdventureSkill =
+    AdventureSkill::new(Keys::ULTIMATE_BUFF, Pixels::ULTIMATE_BUFF, 2);
 
 trait Skill {
     /// Returns true if skill is currently available to be used, false otherwise.
-    fn is_available() -> bool;
+    fn is_available(&self) -> bool;
 
     /// Attempts to cast the skill. Returns true if cast was successful.
     ///
     /// A cast is successful if the skill was ready (i.e is_available() is true).
     /// Otherwise, the cast fails and nothing happens.
-    fn cast() -> bool;
-}
-
-impl Skill for RegularAttack {
-    fn is_available() -> bool {
-        let current_color = get_pixel_rgb(Pixels::REGULAR_ATTACK.into());
-        current_color != Colors::FIRST_ROW_COOLDOWN_RGB
-    }
-
-    fn cast() -> bool {
-        // There's no need to try casting it if it's off.
-        if !Self::is_available() {
-            return false;
-        }
-
-        send_key(Keys::REGULAR_ATTACK);
-        true
-        // TODO: We could check here if cast was successful by checking the pixel color again
-        //       but I don't think the overhead (an extra call to get_pixel_rgb is justified right now).
-    }
-}
-
-impl Skill for StrongAttack {
-    fn is_available() -> bool {
-        let current_color = get_pixel_rgb(Pixels::STRONG_ATTACK.into());
-        current_color != Colors::FIRST_ROW_COOLDOWN_RGB
-    }
-
-    fn cast() -> bool {
-        if !Self::is_available() {
-            return false;
-        }
-
-        send_key(Keys::STRONG_ATTACK);
-        true
-    }
-}
-
-impl Skill for Parry {
-    fn is_available() -> bool {
-        let current_color = get_pixel_rgb(Pixels::PARRY.into());
-        current_color != Colors::FIRST_ROW_COOLDOWN_RGB
-    }
-
-    fn cast() -> bool {
-        if !Self::is_available() {
-            return false;
-        }
-
-        send_key(Keys::PARRY);
-        true
-    }
-}
-
-impl Skill for PiercingAttack {
-    fn is_available() -> bool {
-        let current_color = get_pixel_rgb(Pixels::PIERCING_ATTACK.into());
-        current_color != Colors::FIRST_ROW_COOLDOWN_RGB
-    }
-
-    fn cast() -> bool {
-        if !Self::is_available() {
-            return false;
-        }
-
-        send_key(Keys::PIERCING_ATTACK);
-        true
-    }
-}
-
-impl Skill for UltimateAttack {
-    fn is_available() -> bool {
-        let current_color = get_pixel_rgb(Pixels::ULTIMATE_ATTACK.into());
-        current_color != Colors::FIRST_ROW_COOLDOWN_RGB
-    }
-
-    fn cast() -> bool {
-        if !Self::is_available() {
-            return false;
-        }
-
-        send_key(Keys::ULTIMATE_ATTACK);
-        true
-    }
-}
-
-impl Skill for Block {
-    fn is_available() -> bool {
-        let current_color = get_pixel_rgb(Pixels::BLOCK.into());
-        current_color != Colors::SECOND_ROW_COOLDOWN_RGB
-    }
-
-    fn cast() -> bool {
-        if !Self::is_available() {
-            return false;
-        }
-
-        send_key(Keys::BLOCK);
-        true
-    }
-}
-
-impl Skill for DefensiveBuff {
-    fn is_available() -> bool {
-        let current_color = get_pixel_rgb(Pixels::DEFENSIVE_BUFF.into());
-        current_color != Colors::SECOND_ROW_COOLDOWN_RGB
-    }
-
-    fn cast() -> bool {
-        if !Self::is_available() {
-            return false;
-        }
-
-        send_key(Keys::DEFENSIVE_BUFF);
-        true
-    }
-}
-
-impl Skill for Heal {
-    fn is_available() -> bool {
-        let current_color = get_pixel_rgb(Pixels::HEAL.into());
-        current_color != Colors::SECOND_ROW_COOLDOWN_RGB
-    }
-
-    fn cast() -> bool {
-        if !Self::is_available() {
-            return false;
-        }
-
-        send_key(Keys::HEAL);
-        true
-    }
-}
-
-impl Skill for OffensiveBuff {
-    fn is_available() -> bool {
-        let current_color = get_pixel_rgb(Pixels::OFFENSIVE_BUFF.into());
-        current_color != Colors::SECOND_ROW_COOLDOWN_RGB
-    }
-
-    fn cast() -> bool {
-        if !Self::is_available() {
-            return false;
-        }
-
-        send_key(Keys::OFFENSIVE_BUFF);
-        true
-    }
-}
-
-impl Skill for Charge {
-    fn is_available() -> bool {
-        let current_color = get_pixel_rgb(Pixels::CHARGE.into());
-        current_color != Colors::SECOND_ROW_COOLDOWN_RGB
-    }
-
-    fn cast() -> bool {
-        if !Self::is_available() {
-            return false;
-        }
-
-        send_key(Keys::CHARGE);
-        true
-    }
-}
-
-impl Skill for UltimateBuff {
-    fn is_available() -> bool {
-        let current_color = get_pixel_rgb(Pixels::ULTIMATE_BUFF.into());
-        current_color != Colors::SECOND_ROW_COOLDOWN_RGB
-    }
-
-    fn cast() -> bool {
-        if !Self::is_available() {
-            return false;
-        }
-
-        send_key(Keys::ULTIMATE_BUFF);
-        true
-    }
+    fn cast(&self) -> bool;
 }
