@@ -3,8 +3,8 @@ use screenshots::Screen;
 
 use crate::coords::{InGamePosition, Position};
 
-pub const ENEMY_BAR_RIGHT: Position = Position::from_coords(1240, 555);
-pub const ENEMY_BAR_LEFT: Position = Position::from_coords(984, 555);
+pub const ENEMY_BAR_RIGHT_PIXEL: Position = Position::from_coords(1240, 555);
+pub const ENEMY_BAR_LEFT_PIXEL: Position = Position::from_coords(984, 555);
 pub const IDLE_MODE_PIXEL: Position = Position::from_coords(554, 119);
 
 pub const ENEMY_ALIVE_RGB: Rgb<u8> = Rgb([236, 52, 52]);
