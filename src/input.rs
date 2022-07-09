@@ -1,9 +1,7 @@
-use std::sync::Mutex;
 use std::time::Duration;
 use std::{thread, time};
 
-use lazy_static::lazy_static;
-use rdev::{simulate, Button, Event, EventType, Key, SimulateError};
+use rdev::{simulate, Button, EventType, Key, SimulateError};
 
 use crate::coords::InGamePosition;
 
@@ -56,7 +54,7 @@ pub fn release(input: &InputPress) {
 }
 
 fn send(event_type: &EventType) {
-    let delay = time::Duration::from_millis(20);
+    let delay = Duration::from_millis(20);
     match simulate(event_type) {
         Ok(()) => (),
         Err(SimulateError) => {

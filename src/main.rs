@@ -1,8 +1,8 @@
-use std::{thread, time};
+use std::thread;
 
-use rdev::{listen, Button, Event, EventType, Key};
+use rdev::{listen, Event, EventType, Key};
 
-use crate::adventure::{go_to_zone, AdventureZone};
+use crate::adventure::AdventureZone;
 use crate::input::{release, InputPress};
 use crate::menu::Menu;
 

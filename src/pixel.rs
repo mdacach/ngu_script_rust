@@ -1,4 +1,4 @@
-use image::{open, ImageBuffer, Pixel, Rgb, RgbImage, Rgba};
+use image::{open, ImageBuffer, Rgb, RgbImage};
 use screenshots::Screen;
 
 use crate::coords::{InGamePosition, Position};

@@ -15,7 +15,7 @@ Crates used:
 * [scrap](https://crates.io/crates/scrap)
 
 Related:
-- During development I've found an [issue with one crate](https://github.com/nashaofu/display-info/issues/1)
+- During development, I've found an [issue with one crate](https://github.com/nashaofu/display-info/issues/1)
 - And asked for a [feature request](https://github.com/nashaofu/screenshots-rs/issues/6) too
 
 
