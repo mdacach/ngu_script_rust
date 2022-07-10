@@ -2,9 +2,10 @@ use std::thread;
 use std::time::Duration;
 
 use image::Rgb;
+use lazy_static::lazy_static;
 use rdev::Key;
 
-use crate::coords::Position;
+use crate::coords::InGamePosition;
 use crate::input::{right_click_at, send_key};
 use crate::pixel;
 use crate::pixel::get_pixel_rgb;
@@ -88,12 +89,13 @@ pub enum AdventureZone {
     Forest,
     Cave,
     Sky,
+    HSB,
 }
 
 pub fn go_to_zone(zone: AdventureZone) {
     // First we must start from 0: The Safe Zone
     // Right clicking adventure's left arrow makes us go to Safe
-    right_click_at(Pixels::RETREAT_ZONE.into());
+    right_click_at(*RETREAT_ZONE_PIXEL);
 
     // Then, we get how much to go forward by Zone Numbering
     let forward_steps = zone as u8;
@@ -104,7 +106,7 @@ pub fn go_to_zone(zone: AdventureZone) {
 
 fn go_to_latest() {
     // Right clicking adventure's right arrow makes us to go to latest available zone
-    right_click_at(Pixels::ADVANCE_ZONE.into());
+    right_click_at(*ADVANCE_ZONE_PIXEL);
 }
 
 fn advance_zone() {
@@ -147,17 +149,17 @@ fn attack() {
 }
 
 fn is_enemy_alive() -> bool {
-    let color = get_pixel_rgb(pixel::ENEMY_BAR_LEFT_PIXEL.into());
+    let color = get_pixel_rgb(*pixel::ENEMY_BAR_LEFT_PIXEL);
     color == pixel::ENEMY_ALIVE_RGB
 }
 
 fn is_enemy_boss() -> bool {
-    let color = get_pixel_rgb(Pixels::BOSS_CROWN.into());
+    let color = get_pixel_rgb(*BOSS_CROWN_PIXEL);
     color == Colors::BOSS_CROWN_RGB
 }
 
 fn is_idle_mode() -> bool {
-    let color = get_pixel_rgb(pixel::IDLE_MODE_PIXEL.into());
+    let color = get_pixel_rgb(*pixel::IDLE_MODE_PIXEL);
     color == pixel::IDLE_MODE_ON_RGB
 }
 
@@ -182,12 +184,12 @@ impl Keys {
 
 struct AdventureSkill {
     key: Key,
-    pixel_coords: Position,
+    pixel_coords: InGamePosition,
     row_number: u8,
 }
 
 impl AdventureSkill {
-    const fn new(key: Key, pixel_coords: Position, row_number: u8) -> Self {
+    const fn new(key: Key, pixel_coords: InGamePosition, row_number: u8) -> Self {
         Self {
             key,
             pixel_coords,
@@ -196,26 +198,21 @@ impl AdventureSkill {
     }
 }
 
-struct Pixels;
-
-impl Pixels {
-    const REGULAR_ATTACK: Position = Position::from_coords(620, 128);
-    const STRONG_ATTACK: Position = Position::from_coords(768, 128);
-    const PARRY: Position = Position::from_coords(906, 128);
-    const PIERCING_ATTACK: Position = Position::from_coords(1051, 128);
-    const ULTIMATE_ATTACK: Position = Position::from_coords(1189, 128);
-
-    const BLOCK: Position = Position::from_coords(485, 175);
-    const DEFENSIVE_BUFF: Position = Position::from_coords(631, 128);
-    const HEAL: Position = Position::from_coords(766, 128);
-    const OFFENSIVE_BUFF: Position = Position::from_coords(910, 128);
-    const CHARGE: Position = Position::from_coords(1050, 128);
-    const ULTIMATE_BUFF: Position = Position::from_coords(1190, 128);
-
-    const BOSS_CROWN: Position = Position::from_coords(986, 377);
-
-    const RETREAT_ZONE: Position = Position::from_coords(976, 283);
-    const ADVANCE_ZONE: Position = Position::from_coords(1257, 283);
+lazy_static! {
+    static ref REGULAR_ATTACK_PIXEL: InGamePosition = InGamePosition::from_coords(620, 128);
+    static ref STRONG_ATTACK_PIXEL: InGamePosition = InGamePosition::from_coords(768, 128);
+    static ref PARRY_PIXEL: InGamePosition = InGamePosition::from_coords(906, 128);
+    static ref PIERCING_ATTACK_PIXEL: InGamePosition = InGamePosition::from_coords(1051, 128);
+    static ref ULTIMATE_ATTACK_PIXEL: InGamePosition = InGamePosition::from_coords(1189, 128);
+    static ref BLOCK_PIXEL: InGamePosition = InGamePosition::from_coords(485, 175);
+    static ref DEFENSIVE_BUFF_PIXEL: InGamePosition = InGamePosition::from_coords(631, 128);
+    static ref HEAL_PIXEL: InGamePosition = InGamePosition::from_coords(766, 128);
+    static ref OFFENSIVE_BUFF_PIXEL: InGamePosition = InGamePosition::from_coords(910, 128);
+    static ref CHARGE_PIXEL: InGamePosition = InGamePosition::from_coords(1050, 128);
+    static ref ULTIMATE_BUFF_PIXEL: InGamePosition = InGamePosition::from_coords(1190, 128);
+    static ref BOSS_CROWN_PIXEL: InGamePosition = InGamePosition::from_coords(986, 377);
+    static ref RETREAT_ZONE_PIXEL: InGamePosition = InGamePosition::from_coords(976, 283);
+    static ref ADVANCE_ZONE_PIXEL: InGamePosition = InGamePosition::from_coords(1257, 283);
 }
 
 struct Colors;
@@ -246,34 +243,26 @@ impl Skill for AdventureSkill {
     }
 }
 
-const REGULAR_ATTACK: AdventureSkill =
-    AdventureSkill::new(Keys::REGULAR_ATTACK, Pixels::REGULAR_ATTACK, 1);
-
-const STRONG_ATTACK: AdventureSkill =
-    AdventureSkill::new(Keys::STRONG_ATTACK, Pixels::STRONG_ATTACK, 1);
-
-const PARRY: AdventureSkill = AdventureSkill::new(Keys::PARRY, Pixels::PARRY, 1);
-
-const PIERCING_ATTACK: AdventureSkill =
-    AdventureSkill::new(Keys::PIERCING_ATTACK, Pixels::PIERCING_ATTACK, 1);
-
-const ULTIMATE_ATTACK: AdventureSkill =
-    AdventureSkill::new(Keys::ULTIMATE_ATTACK, Pixels::ULTIMATE_ATTACK, 1);
-
-const BLOCK: AdventureSkill = AdventureSkill::new(Keys::BLOCK, Pixels::BLOCK, 2);
-
-const DEFENSIVE_BUFF: AdventureSkill =
-    AdventureSkill::new(Keys::DEFENSIVE_BUFF, Pixels::DEFENSIVE_BUFF, 2);
-
-const HEAL: AdventureSkill = AdventureSkill::new(Keys::HEAL, Pixels::HEAL, 2);
-
-const OFFENSIVE_BUFF: AdventureSkill =
-    AdventureSkill::new(Keys::OFFENSIVE_BUFF, Pixels::OFFENSIVE_BUFF, 2);
-
-const CHARGE: AdventureSkill = AdventureSkill::new(Keys::CHARGE, Pixels::CHARGE, 2);
-
-const ULTIMATE_BUFF: AdventureSkill =
-    AdventureSkill::new(Keys::ULTIMATE_BUFF, Pixels::ULTIMATE_BUFF, 2);
+lazy_static! {
+    static ref REGULAR_ATTACK: AdventureSkill =
+        AdventureSkill::new(Keys::REGULAR_ATTACK, *REGULAR_ATTACK_PIXEL, 1);
+    static ref STRONG_ATTACK: AdventureSkill =
+        AdventureSkill::new(Keys::STRONG_ATTACK, *STRONG_ATTACK_PIXEL, 1);
+    static ref PARRY: AdventureSkill = AdventureSkill::new(Keys::PARRY, *PARRY_PIXEL, 1);
+    static ref PIERCING_ATTACK: AdventureSkill =
+        AdventureSkill::new(Keys::PIERCING_ATTACK, *PIERCING_ATTACK_PIXEL, 1);
+    static ref ULTIMATE_ATTACK: AdventureSkill =
+        AdventureSkill::new(Keys::ULTIMATE_ATTACK, *ULTIMATE_ATTACK_PIXEL, 1);
+    static ref BLOCK: AdventureSkill = AdventureSkill::new(Keys::BLOCK, *BLOCK_PIXEL, 2);
+    static ref DEFENSIVE_BUFF: AdventureSkill =
+        AdventureSkill::new(Keys::DEFENSIVE_BUFF, *DEFENSIVE_BUFF_PIXEL, 2);
+    static ref HEAL: AdventureSkill = AdventureSkill::new(Keys::HEAL, *HEAL_PIXEL, 2);
+    static ref OFFENSIVE_BUFF: AdventureSkill =
+        AdventureSkill::new(Keys::OFFENSIVE_BUFF, *OFFENSIVE_BUFF_PIXEL, 2);
+    static ref CHARGE: AdventureSkill = AdventureSkill::new(Keys::CHARGE, *CHARGE_PIXEL, 2);
+    static ref ULTIMATE_BUFF: AdventureSkill =
+        AdventureSkill::new(Keys::ULTIMATE_BUFF, *ULTIMATE_BUFF_PIXEL, 2);
+}
 
 trait Skill {
     /// Returns true if skill is currently available to be used, false otherwise.

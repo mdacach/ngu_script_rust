@@ -1,4 +1,4 @@
-use image::{open, GenericImage, GrayImage, Luma};
+use image::{GenericImage, GrayImage, Luma, open};
 use imageproc::definitions::Image;
 use imageproc::map::map_colors;
 use imageproc::template_matching::{find_extremes, match_template, MatchTemplateMethod};
@@ -20,18 +20,23 @@ pub struct Position {
     pub y: u16,
 }
 
-impl Position {
-    /// Creates a new Position from x and y coordinates.
-    pub const fn from_coords(x: u16, y: u16) -> Self {
-        Position { x, y }
-    }
+/// Represents in-game coordinates.
+/// InGamePosition{ x: 0, y: 0 } represents the GAME's upper left corner.
+/// Depending on where the game's window is located in your screen, Position and InGamePosition will differ.
+///
+/// Example:
+/// Position{ x: 50, y: 50 } represents coordinates on your screen. The game may not even be in that area.
+/// InGamePosition{ x: 50, y: 50 } represents coordinates inside the game, close to the upper left corner.
+/// In reality, InGamePosition{ x: 50, y: 50 } could be a Position{ x: 550, y: 800 } (if the game corner is
+/// on { x: 500, y: 750 }).
+#[derive(Copy, Clone)]
+pub struct InGamePosition {
+    pub x: u16,
+    pub y: u16,
 }
 
-/// This way we can code in terms of normal Positions and have the script
-/// convert them to InGamePositions for us.
-impl From<Position> for InGamePosition {
-    fn from(pos: Position) -> Self {
-        let Position { x, y } = pos;
+impl InGamePosition {
+    pub fn from_coords(x: u16, y: u16) -> InGamePosition {
         let Position {
             x: corner_x,
             y: corner_y,
@@ -42,20 +47,6 @@ impl From<Position> for InGamePosition {
             y: y + corner_y,
         }
     }
-}
-
-/// Represents in-game coordinates.
-/// InGamePosition{ x: 0, y: 0 } represents the GAME's upper left corner.
-/// Depending on where the game's window is located in your screen, Position and InGamePosition will differ.
-///
-/// Example:
-/// Position{ x: 50, y: 50 } represents coordinates on your screen. The game may not even be in that area.
-/// InGamePosition{ x: 50, y: 50 } represents coordinates inside the game, close to the upper left corner.
-/// In reality, InGamePosition{ x: 50, y: 50 } could be a Position{ x: 550, y: 800 } (if the game corner is
-/// on { x: 500, y: 750 }).
-pub struct InGamePosition {
-    pub x: u16,
-    pub y: u16,
 }
 
 lazy_static! {
@@ -79,6 +70,7 @@ lazy_static! {
 ///
 /// The game is windowed and can be moved around the screen, so we do not
 /// want to hard-code any coordinates here.
+/// Reference: https://github.com/image-rs/imageproc/blob/master/examples/template_matching.rs
 fn find_game_corner(screenshot: &GrayImage) -> Position {
     let corner_image = open("images/corner_game.png")
         .expect("Could not open cropped image!")
@@ -114,6 +106,8 @@ fn find_game_corner(screenshot: &GrayImage) -> Position {
 
 /// Convert an f32-valued image to a 8 bit depth, covering the whole
 /// available intensity range.
+///
+/// Reference: https://github.com/image-rs/imageproc/blob/master/examples/template_matching.rs
 fn convert_to_gray_image(image: &Image<Luma<f32>>) -> GrayImage {
     let mut lo = f32::INFINITY;
     let mut hi = f32::NEG_INFINITY;

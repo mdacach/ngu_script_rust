@@ -1,6 +1,7 @@
+use lazy_static::lazy_static;
 use rdev::Key;
 
-use crate::coords::{Position, Size};
+use crate::coords::{InGamePosition, Size};
 use crate::input;
 use crate::input::{click_at, right_click_at};
 
@@ -8,26 +9,29 @@ const SLOT_SIZE: Size = Size {
     width: 66,
     height: 67,
 };
-const SLOT_FIRST: Position = Position::from_coords(470, 440);
+
 const SLOTS_PER_ROW: u16 = 12;
 
-const HELMET: Position = Position::from_coords(705, 88);
-const CHEST: Position = Position::from_coords(705, 157);
-const LEGS: Position = Position::from_coords(705, 224);
-const BOOTS: Position = Position::from_coords(705, 289);
-const WEAPON: Position = Position::from_coords(775, 157);
-const ACC1: Position = Position::from_coords(639, 88);
-const ACC2: Position = Position::from_coords(639, 157);
-const CUBE: Position = Position::from_coords(840, 157);
+lazy_static! {
+    static ref SLOT_FIRST: InGamePosition = InGamePosition::from_coords(470, 440);
+    static ref HELMET: InGamePosition = InGamePosition::from_coords(705, 88);
+    static ref CHEST: InGamePosition = InGamePosition::from_coords(705, 157);
+    static ref LEGS: InGamePosition = InGamePosition::from_coords(705, 224);
+    static ref BOOTS: InGamePosition = InGamePosition::from_coords(705, 289);
+    static ref WEAPON: InGamePosition = InGamePosition::from_coords(775, 157);
+    static ref ACC1: InGamePosition = InGamePosition::from_coords(639, 88);
+    static ref ACC2: InGamePosition = InGamePosition::from_coords(639, 157);
+    static ref CUBE: InGamePosition = InGamePosition::from_coords(840, 157);
+}
 
 pub fn move_to_slot(id: u16) {
-    let Position { mut x, mut y } = SLOT_FIRST;
+    let mut pos = *SLOT_FIRST;
     // Rows wrap around after some slots
     let move_right = id % SLOTS_PER_ROW;
     let move_down = id / SLOTS_PER_ROW;
-    x += move_right * SLOT_SIZE.width;
-    y += move_down * SLOT_SIZE.height;
-    input::mouse_move(Position::from_coords(x, y).into());
+    pos.x += move_right * SLOT_SIZE.width;
+    pos.y += move_down * SLOT_SIZE.height;
+    input::mouse_move(pos);
 }
 
 pub fn click_slot(id: u16) {
@@ -48,35 +52,35 @@ pub fn boost_slot(id: u16) {
 }
 
 pub fn merge_equips() {
-    merge_at(WEAPON);
-    merge_at(HELMET);
-    merge_at(CHEST);
-    merge_at(LEGS);
-    merge_at(BOOTS);
-    merge_at(ACC1);
-    merge_at(ACC2);
+    merge_at(*WEAPON);
+    merge_at(*HELMET);
+    merge_at(*CHEST);
+    merge_at(*LEGS);
+    merge_at(*BOOTS);
+    merge_at(*ACC1);
+    merge_at(*ACC2);
 }
 
 pub fn boost_equips() {
     // Order here will change depending on game's progression.
     // Put the most important items first, so that boost is used
     // more efficiently.
-    boost_at(WEAPON);
-    boost_at(HELMET);
-    boost_at(CHEST);
-    boost_at(LEGS);
-    boost_at(BOOTS);
-    boost_at(ACC1);
-    boost_at(ACC2);
+    boost_at(*WEAPON);
+    boost_at(*HELMET);
+    boost_at(*CHEST);
+    boost_at(*LEGS);
+    boost_at(*BOOTS);
+    boost_at(*ACC1);
+    boost_at(*ACC2);
 }
 
-fn merge_at(pos: Position) {
-    click_at(pos.into());
+fn merge_at(pos: InGamePosition) {
+    click_at(pos);
     merge();
 }
 
-fn boost_at(pos: Position) {
-    click_at(pos.into());
+fn boost_at(pos: InGamePosition) {
+    click_at(pos);
     boost();
 }
 
@@ -91,5 +95,5 @@ fn boost() {
 /// Infinity Cube is a special accessory meant to consume boosts.
 /// Instead of boosting as usually, it uses a right click instead.
 pub fn boost_cube() {
-    right_click_at(CUBE.into());
+    right_click_at(*CUBE);
 }

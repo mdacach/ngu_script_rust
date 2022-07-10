@@ -1,11 +1,14 @@
 use image::{open, ImageBuffer, Rgb, RgbImage};
+use lazy_static::lazy_static;
 use screenshots::Screen;
 
-use crate::coords::{InGamePosition, Position};
+use crate::coords::InGamePosition;
 
-pub const ENEMY_BAR_RIGHT_PIXEL: Position = Position::from_coords(1240, 555);
-pub const ENEMY_BAR_LEFT_PIXEL: Position = Position::from_coords(984, 555);
-pub const IDLE_MODE_PIXEL: Position = Position::from_coords(554, 119);
+lazy_static! {
+    pub static ref ENEMY_BAR_RIGHT_PIXEL: InGamePosition = InGamePosition::from_coords(1240, 555);
+    pub static ref ENEMY_BAR_LEFT_PIXEL: InGamePosition = InGamePosition::from_coords(984, 555);
+    pub static ref IDLE_MODE_PIXEL: InGamePosition = InGamePosition::from_coords(554, 119);
+}
 
 pub const ENEMY_ALIVE_RGB: Rgb<u8> = Rgb([236, 52, 52]);
 pub const NO_ENEMY_RGB: Rgb<u8> = Rgb([255, 255, 255]);
