@@ -1,0 +1,24 @@
+use std::thread;
+
+use ngu_script::adventure::AdventureZone;
+use ngu_script::menu::Menu;
+use ngu_script::{adventure, inventory, menu};
+
+fn main() {
+    thread::spawn(|| loop {
+        menu::navigate(Menu::Adventure);
+        adventure::kill_monsters_at_zone(25, AdventureZone::Forest);
+        adventure::go_to_zone(AdventureZone::Safe);
+
+        menu::navigate(Menu::Inventory);
+        inventory::merge_equips();
+        inventory::boost_equips();
+        for id in 0..24 {
+            inventory::merge_slot(id);
+            inventory::boost_slot(id);
+        }
+        inventory::boost_cube();
+    });
+
+    ngu_script::handle_user_termination();
+}

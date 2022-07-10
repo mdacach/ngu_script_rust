@@ -1,40 +1,17 @@
-use std::thread;
-
 use rdev::{listen, Event, EventType, Key};
 
-use crate::adventure::AdventureZone;
 use crate::input::{release, InputPress};
-use crate::menu::Menu;
 
-mod adventure;
-mod constants;
-mod coords;
-mod input;
-mod inventory;
-mod menu;
-mod pixel;
-
-fn main() {
-    thread::spawn(|| loop {
-        menu::navigate(Menu::Adventure);
-        adventure::kill_monsters_at_zone(25, AdventureZone::Forest);
-        adventure::go_to_zone(AdventureZone::Safe);
-
-        menu::navigate(Menu::Inventory);
-        inventory::merge_equips();
-        inventory::boost_equips();
-        for id in 0..24 {
-            inventory::merge_slot(id);
-            inventory::boost_slot(id);
-        }
-        inventory::boost_cube();
-    });
-
-    handle_user_termination();
-}
+pub mod adventure;
+pub mod constants;
+pub mod coords;
+pub mod input;
+pub mod inventory;
+pub mod menu;
+pub mod pixel;
 
 /// Handles script termination by listening for a "z" key press.
-fn handle_user_termination() {
+pub fn handle_user_termination() {
     // It's possible to terminate the script when the worker thread is in the middle of an action
     // e.g. Pressing a key, but not yet releasing it
     // This will cause the key to be pressed forever, and will be an issue for the OS
