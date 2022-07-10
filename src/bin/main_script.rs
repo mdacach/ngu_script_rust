@@ -2,7 +2,7 @@ use std::thread;
 
 use ngu_script::adventure::AdventureZone;
 use ngu_script::menu::Menu;
-use ngu_script::{adventure, inventory, menu};
+use ngu_script::{adventure, input, inventory, menu};
 
 fn main() {
     thread::spawn(|| loop {
@@ -20,5 +20,5 @@ fn main() {
         inventory::boost_cube();
     });
 
-    ngu_script::handle_user_termination();
+    input::handle_user_termination();
 }
