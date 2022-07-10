@@ -5,13 +5,6 @@ use crate::coords::{InGamePosition, Size};
 use crate::input;
 use crate::input::{click_at, right_click_at};
 
-const SLOT_SIZE: Size = Size {
-    width: 66,
-    height: 67,
-};
-
-const SLOTS_PER_ROW: u16 = 12;
-
 pub fn move_to_slot(id: u16) {
     let mut pos = *SLOT_FIRST;
     // Rows wrap around after some slots

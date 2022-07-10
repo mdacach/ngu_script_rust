@@ -1,7 +1,14 @@
 pub mod inventory {
     use lazy_static::lazy_static;
 
-    use crate::coords::InGamePosition;
+    use crate::coords::{InGamePosition, Size};
+
+    pub const SLOT_SIZE: Size = Size {
+        width: 66,
+        height: 67,
+    };
+
+    pub const SLOTS_PER_ROW: u16 = 12;
 
     lazy_static! {
         pub static ref SLOT_FIRST: InGamePosition = InGamePosition::from_coords(470, 440);
