@@ -1,7 +1,6 @@
 use std::thread;
 use std::time::Duration;
 
-use image::Rgb;
 use lazy_static::lazy_static;
 use rdev::Key;
 
@@ -156,31 +155,12 @@ fn is_enemy_alive() -> bool {
 
 fn is_enemy_boss() -> bool {
     let color = get_pixel_rgb(*BOSS_CROWN_PIXEL);
-    color == Colors::BOSS_CROWN_RGB
+    color == colors::BOSS_CROWN_RGB
 }
 
 fn is_idle_mode() -> bool {
     let color = get_pixel_rgb(*pixel::IDLE_MODE_PIXEL);
     color == pixel::IDLE_MODE_ON_RGB
-}
-
-/// Adventure mode skill keys.
-#[non_exhaustive]
-struct Keys;
-
-impl Keys {
-    const REGULAR_ATTACK: Key = Key::KeyW;
-    const STRONG_ATTACK: Key = Key::KeyE;
-    const PARRY: Key = Key::KeyR;
-    const PIERCING_ATTACK: Key = Key::KeyT;
-    const ULTIMATE_ATTACK: Key = Key::KeyY;
-
-    const BLOCK: Key = Key::KeyA;
-    const DEFENSIVE_BUFF: Key = Key::KeyS;
-    const HEAL: Key = Key::KeyD;
-    const OFFENSIVE_BUFF: Key = Key::KeyF;
-    const CHARGE: Key = Key::KeyG;
-    const ULTIMATE_BUFF: Key = Key::KeyH;
 }
 
 struct AdventureSkill {
@@ -199,20 +179,12 @@ impl AdventureSkill {
     }
 }
 
-struct Colors;
-
-impl Colors {
-    const FIRST_ROW_COOLDOWN_RGB: Rgb<u8> = Rgb([124, 78, 78]);
-    const SECOND_ROW_COOLDOWN_RGB: Rgb<u8> = Rgb([51, 68, 82]);
-    const BOSS_CROWN_RGB: Rgb<u8> = Rgb([247, 239, 41]);
-}
-
 impl Skill for AdventureSkill {
     fn is_available(&self) -> bool {
-        let current_color = get_pixel_rgb(self.pixel_coords.into());
+        let current_color = get_pixel_rgb(self.pixel_coords);
         match self.row_number {
-            1 => current_color != Colors::FIRST_ROW_COOLDOWN_RGB,
-            2 => current_color != Colors::SECOND_ROW_COOLDOWN_RGB,
+            1 => current_color != colors::FIRST_ROW_COOLDOWN_RGB,
+            2 => current_color != colors::SECOND_ROW_COOLDOWN_RGB,
             _ => panic!("Unexpected row number"),
         }
     }
@@ -229,23 +201,23 @@ impl Skill for AdventureSkill {
 
 lazy_static! {
     static ref REGULAR_ATTACK: AdventureSkill =
-        AdventureSkill::new(Keys::REGULAR_ATTACK, *REGULAR_ATTACK_PIXEL, 1);
+        AdventureSkill::new(keys::REGULAR_ATTACK, *REGULAR_ATTACK_PIXEL, 1);
     static ref STRONG_ATTACK: AdventureSkill =
-        AdventureSkill::new(Keys::STRONG_ATTACK, *STRONG_ATTACK_PIXEL, 1);
-    static ref PARRY: AdventureSkill = AdventureSkill::new(Keys::PARRY, *PARRY_PIXEL, 1);
+        AdventureSkill::new(keys::STRONG_ATTACK, *STRONG_ATTACK_PIXEL, 1);
+    static ref PARRY: AdventureSkill = AdventureSkill::new(keys::PARRY, *PARRY_PIXEL, 1);
     static ref PIERCING_ATTACK: AdventureSkill =
-        AdventureSkill::new(Keys::PIERCING_ATTACK, *PIERCING_ATTACK_PIXEL, 1);
+        AdventureSkill::new(keys::PIERCING_ATTACK, *PIERCING_ATTACK_PIXEL, 1);
     static ref ULTIMATE_ATTACK: AdventureSkill =
-        AdventureSkill::new(Keys::ULTIMATE_ATTACK, *ULTIMATE_ATTACK_PIXEL, 1);
-    static ref BLOCK: AdventureSkill = AdventureSkill::new(Keys::BLOCK, *BLOCK_PIXEL, 2);
+        AdventureSkill::new(keys::ULTIMATE_ATTACK, *ULTIMATE_ATTACK_PIXEL, 1);
+    static ref BLOCK: AdventureSkill = AdventureSkill::new(keys::BLOCK, *BLOCK_PIXEL, 2);
     static ref DEFENSIVE_BUFF: AdventureSkill =
-        AdventureSkill::new(Keys::DEFENSIVE_BUFF, *DEFENSIVE_BUFF_PIXEL, 2);
-    static ref HEAL: AdventureSkill = AdventureSkill::new(Keys::HEAL, *HEAL_PIXEL, 2);
+        AdventureSkill::new(keys::DEFENSIVE_BUFF, *DEFENSIVE_BUFF_PIXEL, 2);
+    static ref HEAL: AdventureSkill = AdventureSkill::new(keys::HEAL, *HEAL_PIXEL, 2);
     static ref OFFENSIVE_BUFF: AdventureSkill =
-        AdventureSkill::new(Keys::OFFENSIVE_BUFF, *OFFENSIVE_BUFF_PIXEL, 2);
-    static ref CHARGE: AdventureSkill = AdventureSkill::new(Keys::CHARGE, *CHARGE_PIXEL, 2);
+        AdventureSkill::new(keys::OFFENSIVE_BUFF, *OFFENSIVE_BUFF_PIXEL, 2);
+    static ref CHARGE: AdventureSkill = AdventureSkill::new(keys::CHARGE, *CHARGE_PIXEL, 2);
     static ref ULTIMATE_BUFF: AdventureSkill =
-        AdventureSkill::new(Keys::ULTIMATE_BUFF, *ULTIMATE_BUFF_PIXEL, 2);
+        AdventureSkill::new(keys::ULTIMATE_BUFF, *ULTIMATE_BUFF_PIXEL, 2);
 }
 
 trait Skill {
