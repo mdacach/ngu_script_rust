@@ -17,7 +17,7 @@ mod pixel;
 fn main() {
     thread::spawn(|| loop {
         menu::navigate(Menu::Adventure);
-        adventure::kill_monsters_at_zone(15, AdventureZone::Sky);
+        adventure::kill_monsters_at_zone(25, AdventureZone::Forest);
         adventure::go_to_zone(AdventureZone::Safe);
 
         menu::navigate(Menu::Inventory);

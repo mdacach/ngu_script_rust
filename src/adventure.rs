@@ -4,7 +4,7 @@ use std::time::Duration;
 use lazy_static::lazy_static;
 use rdev::Key;
 
-use crate::constants::coords::adventure::*;
+use crate::constants::adventure::*;
 use crate::coords::InGamePosition;
 use crate::input::{right_click_at, send_key};
 use crate::pixel;
@@ -179,6 +179,17 @@ impl AdventureSkill {
     }
 }
 
+trait Skill {
+    /// Returns true if skill is currently available to be used, false otherwise.
+    fn is_available(&self) -> bool;
+
+    /// Attempts to cast the skill. Returns true if cast was successful.
+    ///
+    /// A cast is successful if the skill was ready (i.e is_available() is true).
+    /// Otherwise, the cast fails and nothing happens.
+    fn cast(&self) -> bool;
+}
+
 impl Skill for AdventureSkill {
     fn is_available(&self) -> bool {
         let current_color = get_pixel_rgb(self.pixel_coords);
@@ -218,15 +229,4 @@ lazy_static! {
     static ref CHARGE: AdventureSkill = AdventureSkill::new(keys::CHARGE, *CHARGE_PIXEL, 2);
     static ref ULTIMATE_BUFF: AdventureSkill =
         AdventureSkill::new(keys::ULTIMATE_BUFF, *ULTIMATE_BUFF_PIXEL, 2);
-}
-
-trait Skill {
-    /// Returns true if skill is currently available to be used, false otherwise.
-    fn is_available(&self) -> bool;
-
-    /// Attempts to cast the skill. Returns true if cast was successful.
-    ///
-    /// A cast is successful if the skill was ready (i.e is_available() is true).
-    /// Otherwise, the cast fails and nothing happens.
-    fn cast(&self) -> bool;
 }

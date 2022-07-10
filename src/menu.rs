@@ -1,7 +1,7 @@
 use std::thread;
 use std::time::Duration;
 
-use crate::constants::coords::menu::*;
+use crate::constants::menu::*;
 use crate::coords::InGamePosition;
 use crate::input::click_at;
 

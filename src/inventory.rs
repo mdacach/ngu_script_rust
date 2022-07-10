@@ -1,6 +1,6 @@
 use rdev::Key;
 
-use crate::constants::coords::inventory::*;
+use crate::constants::inventory::*;
 use crate::coords::{InGamePosition, Size};
 use crate::input;
 use crate::input::{click_at, right_click_at};
