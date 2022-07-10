@@ -95,7 +95,7 @@ pub enum AdventureZone {
 pub fn go_to_zone(zone: AdventureZone) {
     // First we must start from 0: The Safe Zone
     // Right clicking adventure's left arrow makes us go to Safe
-    right_click_at(*RETREAT_ZONE_PIXEL);
+    right_click_at(*coords::RETREAT_ZONE_PIXEL);
 
     // Then, we get how much to go forward by Zone Numbering
     let forward_steps = zone as u8;
@@ -106,7 +106,7 @@ pub fn go_to_zone(zone: AdventureZone) {
 
 fn go_to_latest() {
     // Right clicking adventure's right arrow makes us to go to latest available zone
-    right_click_at(*ADVANCE_ZONE_PIXEL);
+    right_click_at(*coords::ADVANCE_ZONE_PIXEL);
 }
 
 fn advance_zone() {
@@ -154,7 +154,7 @@ fn is_enemy_alive() -> bool {
 }
 
 fn is_enemy_boss() -> bool {
-    let color = get_pixel_rgb(*BOSS_CROWN_PIXEL);
+    let color = get_pixel_rgb(*coords::BOSS_CROWN_PIXEL);
     color == colors::BOSS_CROWN_RGB
 }
 
@@ -212,21 +212,21 @@ impl Skill for AdventureSkill {
 
 lazy_static! {
     static ref REGULAR_ATTACK: AdventureSkill =
-        AdventureSkill::new(keys::REGULAR_ATTACK, *REGULAR_ATTACK_PIXEL, 1);
+        AdventureSkill::new(keys::REGULAR_ATTACK, *coords::REGULAR_ATTACK_PIXEL, 1);
     static ref STRONG_ATTACK: AdventureSkill =
-        AdventureSkill::new(keys::STRONG_ATTACK, *STRONG_ATTACK_PIXEL, 1);
-    static ref PARRY: AdventureSkill = AdventureSkill::new(keys::PARRY, *PARRY_PIXEL, 1);
+        AdventureSkill::new(keys::STRONG_ATTACK, *coords::STRONG_ATTACK_PIXEL, 1);
+    static ref PARRY: AdventureSkill = AdventureSkill::new(keys::PARRY, *coords::PARRY_PIXEL, 1);
     static ref PIERCING_ATTACK: AdventureSkill =
-        AdventureSkill::new(keys::PIERCING_ATTACK, *PIERCING_ATTACK_PIXEL, 1);
+        AdventureSkill::new(keys::PIERCING_ATTACK, *coords::PIERCING_ATTACK_PIXEL, 1);
     static ref ULTIMATE_ATTACK: AdventureSkill =
-        AdventureSkill::new(keys::ULTIMATE_ATTACK, *ULTIMATE_ATTACK_PIXEL, 1);
-    static ref BLOCK: AdventureSkill = AdventureSkill::new(keys::BLOCK, *BLOCK_PIXEL, 2);
+        AdventureSkill::new(keys::ULTIMATE_ATTACK, *coords::ULTIMATE_ATTACK_PIXEL, 1);
+    static ref BLOCK: AdventureSkill = AdventureSkill::new(keys::BLOCK, *coords::BLOCK_PIXEL, 2);
     static ref DEFENSIVE_BUFF: AdventureSkill =
-        AdventureSkill::new(keys::DEFENSIVE_BUFF, *DEFENSIVE_BUFF_PIXEL, 2);
-    static ref HEAL: AdventureSkill = AdventureSkill::new(keys::HEAL, *HEAL_PIXEL, 2);
+        AdventureSkill::new(keys::DEFENSIVE_BUFF, *coords::DEFENSIVE_BUFF_PIXEL, 2);
+    static ref HEAL: AdventureSkill = AdventureSkill::new(keys::HEAL, *coords::HEAL_PIXEL, 2);
     static ref OFFENSIVE_BUFF: AdventureSkill =
-        AdventureSkill::new(keys::OFFENSIVE_BUFF, *OFFENSIVE_BUFF_PIXEL, 2);
-    static ref CHARGE: AdventureSkill = AdventureSkill::new(keys::CHARGE, *CHARGE_PIXEL, 2);
+        AdventureSkill::new(keys::OFFENSIVE_BUFF, *coords::OFFENSIVE_BUFF_PIXEL, 2);
+    static ref CHARGE: AdventureSkill = AdventureSkill::new(keys::CHARGE, *coords::CHARGE_PIXEL, 2);
     static ref ULTIMATE_BUFF: AdventureSkill =
-        AdventureSkill::new(keys::ULTIMATE_BUFF, *ULTIMATE_BUFF_PIXEL, 2);
+        AdventureSkill::new(keys::ULTIMATE_BUFF, *coords::ULTIMATE_BUFF_PIXEL, 2);
 }

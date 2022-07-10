@@ -18,12 +18,12 @@ pub enum Menu {
 /// Navigates between main menus.
 pub fn navigate(menu: Menu) {
     match menu {
-        Menu::BasicTraining => navigate_to(*BASIC_TRAINING),
-        Menu::FightBoss => navigate_to(*FIGHT_BOSS),
-        Menu::MoneyPit => navigate_to(*MONEY_PIT),
-        Menu::Adventure => navigate_to(*ADVENTURE),
-        Menu::Inventory => navigate_to(*INVENTORY),
-        Menu::Augmentation => navigate_to(*AUGMENTATION),
+        Menu::BasicTraining => navigate_to(*coords::BASIC_TRAINING),
+        Menu::FightBoss => navigate_to(*coords::FIGHT_BOSS),
+        Menu::MoneyPit => navigate_to(*coords::MONEY_PIT),
+        Menu::Adventure => navigate_to(*coords::ADVENTURE),
+        Menu::Inventory => navigate_to(*coords::INVENTORY),
+        Menu::Augmentation => navigate_to(*coords::AUGMENTATION),
     }
     // Give it time for the game to load
     thread::sleep(Duration::from_millis(100));

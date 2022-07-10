@@ -1,7 +1,3 @@
-use lazy_static::lazy_static;
-
-use crate::coords::InGamePosition;
-
 pub mod colors {
     use image::Rgb;
 
@@ -27,19 +23,27 @@ pub mod keys {
     pub const ULTIMATE_BUFF: Key = Key::KeyH;
 }
 
-lazy_static! {
-    pub static ref REGULAR_ATTACK_PIXEL: InGamePosition = InGamePosition::from_coords(620, 128);
-    pub static ref STRONG_ATTACK_PIXEL: InGamePosition = InGamePosition::from_coords(768, 128);
-    pub static ref PARRY_PIXEL: InGamePosition = InGamePosition::from_coords(906, 128);
-    pub static ref PIERCING_ATTACK_PIXEL: InGamePosition = InGamePosition::from_coords(1051, 128);
-    pub static ref ULTIMATE_ATTACK_PIXEL: InGamePosition = InGamePosition::from_coords(1189, 128);
-    pub static ref BLOCK_PIXEL: InGamePosition = InGamePosition::from_coords(485, 175);
-    pub static ref DEFENSIVE_BUFF_PIXEL: InGamePosition = InGamePosition::from_coords(631, 128);
-    pub static ref HEAL_PIXEL: InGamePosition = InGamePosition::from_coords(766, 128);
-    pub static ref OFFENSIVE_BUFF_PIXEL: InGamePosition = InGamePosition::from_coords(910, 128);
-    pub static ref CHARGE_PIXEL: InGamePosition = InGamePosition::from_coords(1050, 128);
-    pub static ref ULTIMATE_BUFF_PIXEL: InGamePosition = InGamePosition::from_coords(1190, 128);
-    pub static ref BOSS_CROWN_PIXEL: InGamePosition = InGamePosition::from_coords(986, 377);
-    pub static ref RETREAT_ZONE_PIXEL: InGamePosition = InGamePosition::from_coords(976, 283);
-    pub static ref ADVANCE_ZONE_PIXEL: InGamePosition = InGamePosition::from_coords(1257, 283);
+pub mod coords {
+    use lazy_static::lazy_static;
+
+    use crate::coords::InGamePosition;
+
+    lazy_static! {
+        pub static ref REGULAR_ATTACK_PIXEL: InGamePosition = InGamePosition::from_coords(620, 128);
+        pub static ref STRONG_ATTACK_PIXEL: InGamePosition = InGamePosition::from_coords(768, 128);
+        pub static ref PARRY_PIXEL: InGamePosition = InGamePosition::from_coords(906, 128);
+        pub static ref PIERCING_ATTACK_PIXEL: InGamePosition =
+            InGamePosition::from_coords(1051, 128);
+        pub static ref ULTIMATE_ATTACK_PIXEL: InGamePosition =
+            InGamePosition::from_coords(1189, 128);
+        pub static ref BLOCK_PIXEL: InGamePosition = InGamePosition::from_coords(485, 175);
+        pub static ref DEFENSIVE_BUFF_PIXEL: InGamePosition = InGamePosition::from_coords(631, 128);
+        pub static ref HEAL_PIXEL: InGamePosition = InGamePosition::from_coords(766, 128);
+        pub static ref OFFENSIVE_BUFF_PIXEL: InGamePosition = InGamePosition::from_coords(910, 128);
+        pub static ref CHARGE_PIXEL: InGamePosition = InGamePosition::from_coords(1050, 128);
+        pub static ref ULTIMATE_BUFF_PIXEL: InGamePosition = InGamePosition::from_coords(1190, 128);
+        pub static ref BOSS_CROWN_PIXEL: InGamePosition = InGamePosition::from_coords(986, 377);
+        pub static ref RETREAT_ZONE_PIXEL: InGamePosition = InGamePosition::from_coords(976, 283);
+        pub static ref ADVANCE_ZONE_PIXEL: InGamePosition = InGamePosition::from_coords(1257, 283);
+    }
 }

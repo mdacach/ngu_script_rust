@@ -6,7 +6,7 @@ use crate::input;
 use crate::input::{click_at, right_click_at};
 
 pub fn move_to_slot(id: u16) {
-    let mut pos = *SLOT_FIRST;
+    let mut pos = *coords::SLOT_FIRST;
     // Rows wrap around after some slots
     let move_right = id % SLOTS_PER_ROW;
     let move_down = id / SLOTS_PER_ROW;
@@ -33,27 +33,27 @@ pub fn boost_slot(id: u16) {
 }
 
 pub fn merge_equips() {
-    merge_at(*WEAPON);
-    merge_at(*HELMET);
-    merge_at(*CHEST);
-    merge_at(*LEGS);
-    merge_at(*BOOTS);
-    merge_at(*ACC1);
-    merge_at(*ACC2);
+    merge_at(*coords::WEAPON);
+    merge_at(*coords::HELMET);
+    merge_at(*coords::CHEST);
+    merge_at(*coords::LEGS);
+    merge_at(*coords::BOOTS);
+    merge_at(*coords::ACC1);
+    merge_at(*coords::ACC2);
 }
 
 pub fn boost_equips() {
     // Order here will change depending on game's progression.
     // Put the most important items first, so that boost is used
     // more efficiently.
-    boost_at(*WEAPON);
+    boost_at(*coords::WEAPON);
     // Accessories start to be more important now.
-    boost_at(*ACC1);
-    boost_at(*ACC2);
-    boost_at(*HELMET);
-    boost_at(*CHEST);
-    boost_at(*LEGS);
-    boost_at(*BOOTS);
+    boost_at(*coords::ACC1);
+    boost_at(*coords::ACC2);
+    boost_at(*coords::HELMET);
+    boost_at(*coords::CHEST);
+    boost_at(*coords::LEGS);
+    boost_at(*coords::BOOTS);
 }
 
 fn merge_at(pos: InGamePosition) {
@@ -77,5 +77,5 @@ fn boost() {
 /// Infinity Cube is a special accessory meant to consume boosts.
 /// Instead of boosting as usually, it uses a right click instead.
 pub fn boost_cube() {
-    right_click_at(*CUBE);
+    right_click_at(*coords::CUBE);
 }
