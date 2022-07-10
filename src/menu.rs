@@ -1,8 +1,7 @@
 use std::thread;
 use std::time::Duration;
 
-use lazy_static::lazy_static;
-
+use crate::constants::coords::menu::*;
 use crate::coords::InGamePosition;
 use crate::input::click_at;
 
@@ -14,15 +13,6 @@ pub enum Menu {
     Adventure,
     Inventory,
     Augmentation,
-}
-
-lazy_static! {
-    static ref BASIC_TRAINING: InGamePosition = InGamePosition::from_coords(315, 30);
-    static ref FIGHT_BOSS: InGamePosition = InGamePosition::from_coords(315, 70);
-    static ref MONEY_PIT: InGamePosition = InGamePosition::from_coords(315, 110);
-    static ref ADVENTURE: InGamePosition = InGamePosition::from_coords(315, 140);
-    static ref INVENTORY: InGamePosition = InGamePosition::from_coords(315, 180);
-    static ref AUGMENTATION: InGamePosition = InGamePosition::from_coords(315, 210);
 }
 
 /// Navigates between main menus.

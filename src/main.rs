@@ -7,6 +7,7 @@ use crate::input::{release, InputPress};
 use crate::menu::Menu;
 
 mod adventure;
+mod constants;
 mod coords;
 mod input;
 mod inventory;
