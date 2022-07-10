@@ -5,6 +5,7 @@ use image::Rgb;
 use lazy_static::lazy_static;
 use rdev::Key;
 
+use crate::constants::coords::adventure::*;
 use crate::coords::InGamePosition;
 use crate::input::{right_click_at, send_key};
 use crate::pixel;
@@ -196,23 +197,6 @@ impl AdventureSkill {
             row_number,
         }
     }
-}
-
-lazy_static! {
-    static ref REGULAR_ATTACK_PIXEL: InGamePosition = InGamePosition::from_coords(620, 128);
-    static ref STRONG_ATTACK_PIXEL: InGamePosition = InGamePosition::from_coords(768, 128);
-    static ref PARRY_PIXEL: InGamePosition = InGamePosition::from_coords(906, 128);
-    static ref PIERCING_ATTACK_PIXEL: InGamePosition = InGamePosition::from_coords(1051, 128);
-    static ref ULTIMATE_ATTACK_PIXEL: InGamePosition = InGamePosition::from_coords(1189, 128);
-    static ref BLOCK_PIXEL: InGamePosition = InGamePosition::from_coords(485, 175);
-    static ref DEFENSIVE_BUFF_PIXEL: InGamePosition = InGamePosition::from_coords(631, 128);
-    static ref HEAL_PIXEL: InGamePosition = InGamePosition::from_coords(766, 128);
-    static ref OFFENSIVE_BUFF_PIXEL: InGamePosition = InGamePosition::from_coords(910, 128);
-    static ref CHARGE_PIXEL: InGamePosition = InGamePosition::from_coords(1050, 128);
-    static ref ULTIMATE_BUFF_PIXEL: InGamePosition = InGamePosition::from_coords(1190, 128);
-    static ref BOSS_CROWN_PIXEL: InGamePosition = InGamePosition::from_coords(986, 377);
-    static ref RETREAT_ZONE_PIXEL: InGamePosition = InGamePosition::from_coords(976, 283);
-    static ref ADVANCE_ZONE_PIXEL: InGamePosition = InGamePosition::from_coords(1257, 283);
 }
 
 struct Colors;
