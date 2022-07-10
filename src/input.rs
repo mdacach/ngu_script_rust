@@ -5,6 +5,7 @@ use rdev::{listen, simulate, Button, Event, EventType, Key, SimulateError};
 
 use crate::coords::GameAwarePosition;
 
+/// Moves the mouse to `pos`.
 pub fn mouse_move(pos: GameAwarePosition) {
     send(&EventType::MouseMove {
         x: pos.x.into(),
@@ -12,40 +13,51 @@ pub fn mouse_move(pos: GameAwarePosition) {
     });
 }
 
+/// Left-clicks on current position.
 pub fn click() {
     send(&EventType::ButtonPress(Button::Left));
     thread::sleep(Duration::from_millis(20));
     send(&EventType::ButtonRelease(Button::Left));
 }
 
+/// Right-clicks on current position.
 pub fn right_click() {
     send(&EventType::ButtonPress(Button::Right));
     thread::sleep(Duration::from_millis(20));
     send(&EventType::ButtonRelease(Button::Right));
 }
 
+/// Moves the mouse to `pos` and right-clicks.
 pub fn right_click_at(pos: GameAwarePosition) {
     mouse_move(pos);
     right_click();
 }
 
+/// Moves the mouse to `pos` and left-clicks.
 pub fn click_at(pos: GameAwarePosition) {
     mouse_move(pos);
     click();
 }
 
+/// Sends `key` as if it were pressed by the keyboard.
 pub fn send_key(key: Key) {
     send(&EventType::KeyPress(key));
     thread::sleep(Duration::from_millis(20));
     send(&EventType::KeyRelease(key));
 }
 
+/// Represents a object that can perform a "press" event.
+///
+/// This is used to handle "pressed" keys that were not "released".
 #[derive(PartialEq)]
 pub enum InputPress {
     Key(Key),
     Button(Button),
 }
 
+/// "Releases" a pressed input.
+/// If you have pressed "a" before, it will stay pressed until it is released.
+/// Note that when typing on a keyboard, you release the key by manually letting go of the physical key.
 pub fn release(input: &InputPress) {
     match input {
         InputPress::Key(k) => send(&EventType::KeyRelease(*k)),
@@ -53,6 +65,7 @@ pub fn release(input: &InputPress) {
     }
 }
 
+/// Wrapper around `rdev` functionality.
 fn send(event_type: &EventType) {
     let delay = Duration::from_millis(20);
     match simulate(event_type) {

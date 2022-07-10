@@ -23,6 +23,8 @@ pub fn get_pixel_rgb(pos: GameAwarePosition) -> Rgb<u8> {
     *image.get_pixel(x.into(), y.into())
 }
 
+/// Returns a screenshot of leftmost display.
+/// TODO: This is probably having a memory leak somewhere, investigate.
 fn get_screenshot() -> RgbImage {
     let left_monitor = Screen::from_point(100, 100).expect("Could not find display screen");
     let screenshot = left_monitor.capture().expect("Could not screenshot");
@@ -30,13 +32,13 @@ fn get_screenshot() -> RgbImage {
     std::fs::write("images/screenshot.png", screenshot.buffer())
         .expect("Could not save screenshot");
 
-    let screenshot = open("images/screenshot.png")
+    open("images/screenshot.png")
         .expect("Could not open previous screenshot")
-        .to_rgb8();
-
-    screenshot
+        .to_rgb8()
 }
 
+/// Returns a screenshot of secondary display.
+/// Requires that you have two monitors.
 pub fn get_screenshot_from_scrap() -> RgbImage {
     use scrap::{Capturer, Display};
     use std::io::ErrorKind::WouldBlock;

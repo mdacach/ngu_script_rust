@@ -10,7 +10,9 @@ use crate::input::{right_click_at, send_key};
 use crate::pixel;
 use crate::pixel::get_pixel_rgb;
 
-/// Kills `quantity` monsters in the current Adventure Zone. Will disable Idle Mode if needed.
+/// Kills `quantity` monsters in the current Adventure Zone.
+/// Will disable Idle Mode if needed.
+/// Requires the game to be in "Adventure" menu.
 pub fn kill_monsters(quantity: u16) {
     if is_idle_mode() {
         send_key(Key::KeyQ); // Disable Idle Mode
@@ -33,7 +35,9 @@ pub fn kill_monsters(quantity: u16) {
     }
 }
 
-/// Kills `quantity` bosses in the current Adventure Zone. Will disable Idle Mode if needed.
+/// Kills `quantity` bosses in the current Adventure Zone.
+/// Will disable Idle Mode if needed.
+/// Requires the game to be in "Adventure" menu.
 pub fn kill_bosses(quantity: u16) {
     if is_idle_mode() {
         send_key(Key::KeyQ); // Disable Idle Mode
@@ -66,23 +70,26 @@ pub fn kill_bosses(quantity: u16) {
     }
 }
 
-/// Kills `quantity` monsters in the Adventure Zone chosen. Will disable Idle Mode if needed.
+/// Kills `quantity` monsters in the Adventure Zone chosen.
+/// Will disable Idle Mode if needed.
+/// Requires the game to be in "Adventure" menu.
 pub fn kill_monsters_at_zone(quantity: u16, zone: AdventureZone) {
     go_to_zone(zone);
     kill_monsters(quantity);
 }
 
-/// Kills `quantity` bosses in the Adventure Zone chosen. Will disable Idle Mode if needed.
+/// Kills `quantity` bosses in the Adventure Zone chosen.
+/// Will disable Idle Mode if needed.
+/// Requires the game to be in "Adventure" menu.
 pub fn kill_bosses_at_zone(quantity: u16, zone: AdventureZone) {
     go_to_zone(zone);
     kill_bosses(quantity);
 }
 
-/// Zones in Adventure Menu.
-///
-/// Note that order here is important, as we use the zone
-/// numbering as the amount of right presses to get there.
+/// Zones in Adventure Menu, ordered by appearance.
 pub enum AdventureZone {
+    // This is meant to be updated as you progress through the game.
+    /// Note that order here is important, as it's used for navigating between zones.
     Safe,
     Tutorial,
     Sewers,
@@ -92,6 +99,8 @@ pub enum AdventureZone {
     HSB,
 }
 
+/// Navigates to corresponding zone.
+/// Requires the game to be in "Adventure" menu.
 pub fn go_to_zone(zone: AdventureZone) {
     // First we must start from 0: The Safe Zone
     // Right clicking adventure's left arrow makes us go to Safe
@@ -163,10 +172,13 @@ fn is_idle_mode() -> bool {
     color == pixel::IDLE_MODE_ON_RGB
 }
 
+/// Represents a castable adventure skill.
 struct AdventureSkill {
     key: Key,
+    // Key used to cast the skill.
     pixel_coords: GameAwarePosition,
-    row_number: u8,
+    // Pixel to check if the skill is available.
+    row_number: u8, // Row the skill is at, from 1 to 3.
 }
 
 impl AdventureSkill {
@@ -210,6 +222,7 @@ impl Skill for AdventureSkill {
     }
 }
 
+// Create the skills with constants from `constants` module.
 lazy_static! {
     static ref REGULAR_ATTACK: AdventureSkill =
         AdventureSkill::new(keys::REGULAR_ATTACK, *coords::REGULAR_ATTACK_PIXEL, 1);

@@ -5,7 +5,7 @@ use crate::constants::menu::*;
 use crate::coords::GameAwarePosition;
 use crate::input::click_at;
 
-// Represents a main menu.
+// Represents a main menu that you can navigate to.
 pub enum Menu {
     BasicTraining,
     FightBoss,
@@ -15,7 +15,7 @@ pub enum Menu {
     Augmentation,
 }
 
-/// Navigates between main menus.
+/// Navigates between menus.
 pub fn navigate(menu: Menu) {
     match menu {
         Menu::BasicTraining => navigate_to(*coords::BASIC_TRAINING),
