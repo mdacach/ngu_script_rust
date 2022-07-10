@@ -1,7 +1,7 @@
 use rdev::Key;
 
 use crate::constants::inventory::*;
-use crate::coords::{InGamePosition, Size};
+use crate::coords::InGamePosition;
 use crate::input;
 use crate::input::{click_at, right_click_at};
 
@@ -47,12 +47,13 @@ pub fn boost_equips() {
     // Put the most important items first, so that boost is used
     // more efficiently.
     boost_at(*WEAPON);
+    // Accessories start to be more important now.
+    boost_at(*ACC1);
+    boost_at(*ACC2);
     boost_at(*HELMET);
     boost_at(*CHEST);
     boost_at(*LEGS);
     boost_at(*BOOTS);
-    boost_at(*ACC1);
-    boost_at(*ACC2);
 }
 
 fn merge_at(pos: InGamePosition) {
