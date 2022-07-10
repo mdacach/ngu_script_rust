@@ -1,6 +1,6 @@
-use lazy_static::lazy_static;
 use rdev::Key;
 
+use crate::constants::coords::inventory::*;
 use crate::coords::{InGamePosition, Size};
 use crate::input;
 use crate::input::{click_at, right_click_at};
@@ -11,18 +11,6 @@ const SLOT_SIZE: Size = Size {
 };
 
 const SLOTS_PER_ROW: u16 = 12;
-
-lazy_static! {
-    static ref SLOT_FIRST: InGamePosition = InGamePosition::from_coords(470, 440);
-    static ref HELMET: InGamePosition = InGamePosition::from_coords(705, 88);
-    static ref CHEST: InGamePosition = InGamePosition::from_coords(705, 157);
-    static ref LEGS: InGamePosition = InGamePosition::from_coords(705, 224);
-    static ref BOOTS: InGamePosition = InGamePosition::from_coords(705, 289);
-    static ref WEAPON: InGamePosition = InGamePosition::from_coords(775, 157);
-    static ref ACC1: InGamePosition = InGamePosition::from_coords(639, 88);
-    static ref ACC2: InGamePosition = InGamePosition::from_coords(639, 157);
-    static ref CUBE: InGamePosition = InGamePosition::from_coords(840, 157);
-}
 
 pub fn move_to_slot(id: u16) {
     let mut pos = *SLOT_FIRST;
