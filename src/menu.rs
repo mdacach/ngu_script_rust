@@ -2,7 +2,7 @@ use std::thread;
 use std::time::Duration;
 
 use crate::constants::menu::*;
-use crate::coords::InGamePosition;
+use crate::coords::GameAwarePosition;
 use crate::input::click_at;
 
 // Represents a main menu.
@@ -29,6 +29,6 @@ pub fn navigate(menu: Menu) {
     thread::sleep(Duration::from_millis(100));
 }
 
-fn navigate_to(pos: InGamePosition) {
+fn navigate_to(pos: GameAwarePosition) {
     click_at(pos);
 }

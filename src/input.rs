@@ -3,9 +3,9 @@ use std::time::Duration;
 
 use rdev::{listen, simulate, Button, Event, EventType, Key, SimulateError};
 
-use crate::coords::InGamePosition;
+use crate::coords::GameAwarePosition;
 
-pub fn mouse_move(pos: InGamePosition) {
+pub fn mouse_move(pos: GameAwarePosition) {
     send(&EventType::MouseMove {
         x: pos.x.into(),
         y: pos.y.into(),
@@ -24,12 +24,12 @@ pub fn right_click() {
     send(&EventType::ButtonRelease(Button::Right));
 }
 
-pub fn right_click_at(pos: InGamePosition) {
+pub fn right_click_at(pos: GameAwarePosition) {
     mouse_move(pos);
     right_click();
 }
 
-pub fn click_at(pos: InGamePosition) {
+pub fn click_at(pos: GameAwarePosition) {
     mouse_move(pos);
     click();
 }

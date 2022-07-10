@@ -1,4 +1,4 @@
-use image::{GenericImage, GrayImage, Luma, open};
+use image::{open, GenericImage, GrayImage, Luma};
 use imageproc::definitions::Image;
 use imageproc::map::map_colors;
 use imageproc::template_matching::{find_extremes, match_template, MatchTemplateMethod};
@@ -12,37 +12,38 @@ pub struct Size {
 }
 
 /// Represents absolute coordinates on a screen.
-/// Position{ x: 0, y: 0 } represents the upper left corner.
+/// AbsolutePosition{ x: 0, y: 0 } represents the upper left corner.
 /// x increases from left to right, and y increases from top to bottom.
 #[derive(Copy, Clone)]
-pub struct Position {
+pub struct AbsolutePosition {
     pub x: u16,
     pub y: u16,
 }
 
-/// Represents in-game coordinates.
-/// InGamePosition{ x: 0, y: 0 } represents the GAME's upper left corner.
-/// Depending on where the game's window is located in your screen, Position and InGamePosition will differ.
+/// Represents clickable coordinates in game.
+/// GameAwarePosition{ x: 0, y: 0 } represents the GAME's upper left corner.
+/// Depending on where the game's window is located in your screen, AbsolutePosition and GameAwarePosition will differ.
 ///
 /// Example:
-/// Position{ x: 50, y: 50 } represents coordinates on your screen. The game may not even be in that area.
-/// InGamePosition{ x: 50, y: 50 } represents coordinates inside the game, close to the upper left corner.
-/// In reality, InGamePosition{ x: 50, y: 50 } could be a Position{ x: 550, y: 800 } (if the game corner is
-/// on { x: 500, y: 750 }).
+/// AbsolutePosition{ x: 50, y: 50 } represents coordinates on your screen, close to your display upper left corner.
+/// The game may not even be in that area.
+/// GameAwarePosition{ x: 50, y: 50 } represents coordinates inside the game, close to the upper left corner.
+/// GameAwarePosition is calculated from a given AbsolutePosition. (We find the game corner and update the position
+/// accordingly so that it is inside the game's window).
 #[derive(Copy, Clone)]
-pub struct InGamePosition {
+pub struct GameAwarePosition {
     pub x: u16,
     pub y: u16,
 }
 
-impl InGamePosition {
-    pub fn from_coords(x: u16, y: u16) -> InGamePosition {
-        let Position {
+impl GameAwarePosition {
+    pub fn from_coords(x: u16, y: u16) -> GameAwarePosition {
+        let AbsolutePosition {
             x: corner_x,
             y: corner_y,
         } = *CORNER;
 
-        InGamePosition {
+        GameAwarePosition {
             x: x + corner_x,
             y: y + corner_y,
         }
@@ -50,8 +51,8 @@ impl InGamePosition {
 }
 
 lazy_static! {
-    /// Position of game's upper left corner, at the start of the script.
-    pub static ref CORNER: Position = {
+    /// Absolute position of game's upper left corner, at the start of the script.
+    pub static ref CORNER: AbsolutePosition = {
         let left_monitor = Screen::from_point(100, 100).expect("Could not find display screen");
         let screenshot = left_monitor.capture().expect("Could not screenshot");
         // TODO: avoid the extra write to file, we already have the image here
@@ -71,7 +72,7 @@ lazy_static! {
 /// The game is windowed and can be moved around the screen, so we do not
 /// want to hard-code any coordinates here.
 /// Reference: https://github.com/image-rs/imageproc/blob/master/examples/template_matching.rs
-fn find_game_corner(screenshot: &GrayImage) -> Position {
+fn find_game_corner(screenshot: &GrayImage) -> AbsolutePosition {
     let corner_image = open("images/corner_game.png")
         .expect("Could not open cropped image!")
         .to_luma8();
@@ -98,7 +99,7 @@ fn find_game_corner(screenshot: &GrayImage) -> Position {
     x = x.saturating_sub(corner_image.width() / 2);
     y = y.saturating_sub(corner_image.height() / 2);
 
-    Position {
+    AbsolutePosition {
         x: x as u16,
         y: y as u16,
     }

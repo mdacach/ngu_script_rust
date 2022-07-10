@@ -2,20 +2,22 @@ use image::{open, ImageBuffer, Rgb, RgbImage};
 use lazy_static::lazy_static;
 use screenshots::Screen;
 
-use crate::coords::InGamePosition;
+use crate::coords::GameAwarePosition;
 
 lazy_static! {
-    pub static ref ENEMY_BAR_RIGHT_PIXEL: InGamePosition = InGamePosition::from_coords(1240, 555);
-    pub static ref ENEMY_BAR_LEFT_PIXEL: InGamePosition = InGamePosition::from_coords(984, 555);
-    pub static ref IDLE_MODE_PIXEL: InGamePosition = InGamePosition::from_coords(554, 119);
+    pub static ref ENEMY_BAR_RIGHT_PIXEL: GameAwarePosition =
+        GameAwarePosition::from_coords(1240, 555);
+    pub static ref ENEMY_BAR_LEFT_PIXEL: GameAwarePosition =
+        GameAwarePosition::from_coords(984, 555);
+    pub static ref IDLE_MODE_PIXEL: GameAwarePosition = GameAwarePosition::from_coords(554, 119);
 }
 
 pub const ENEMY_ALIVE_RGB: Rgb<u8> = Rgb([236, 52, 52]);
 pub const NO_ENEMY_RGB: Rgb<u8> = Rgb([255, 255, 255]);
 pub const IDLE_MODE_ON_RGB: Rgb<u8> = Rgb([255, 235, 4]);
 
-pub fn get_pixel_rgb(pos: InGamePosition) -> Rgb<u8> {
-    let InGamePosition { x, y } = pos;
+pub fn get_pixel_rgb(pos: GameAwarePosition) -> Rgb<u8> {
+    let GameAwarePosition { x, y } = pos;
     let image = get_screenshot_from_scrap();
 
     *image.get_pixel(x.into(), y.into())

@@ -5,7 +5,7 @@ use lazy_static::lazy_static;
 use rdev::Key;
 
 use crate::constants::adventure::*;
-use crate::coords::InGamePosition;
+use crate::coords::GameAwarePosition;
 use crate::input::{right_click_at, send_key};
 use crate::pixel;
 use crate::pixel::get_pixel_rgb;
@@ -165,12 +165,12 @@ fn is_idle_mode() -> bool {
 
 struct AdventureSkill {
     key: Key,
-    pixel_coords: InGamePosition,
+    pixel_coords: GameAwarePosition,
     row_number: u8,
 }
 
 impl AdventureSkill {
-    const fn new(key: Key, pixel_coords: InGamePosition, row_number: u8) -> Self {
+    const fn new(key: Key, pixel_coords: GameAwarePosition, row_number: u8) -> Self {
         Self {
             key,
             pixel_coords,

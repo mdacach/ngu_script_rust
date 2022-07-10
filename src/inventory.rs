@@ -1,7 +1,7 @@
 use rdev::Key;
 
 use crate::constants::inventory::*;
-use crate::coords::InGamePosition;
+use crate::coords::GameAwarePosition;
 use crate::input;
 use crate::input::{click_at, right_click_at};
 
@@ -56,12 +56,12 @@ pub fn boost_equips() {
     boost_at(*coords::BOOTS);
 }
 
-fn merge_at(pos: InGamePosition) {
+fn merge_at(pos: GameAwarePosition) {
     click_at(pos);
     merge();
 }
 
-fn boost_at(pos: InGamePosition) {
+fn boost_at(pos: GameAwarePosition) {
     click_at(pos);
     boost();
 }
