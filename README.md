@@ -61,6 +61,10 @@ Related, the user may terminate the script while it is in the middle of some act
 
 `pkg-config`
 
+`libxcb-randr0-dev`
+
+`libxcb-shm0-dev`
+
 ##### Related:
 - During development, I've found an [issue with one crate](https://github.com/nashaofu/display-info/issues/1)
 - And asked for a [feature request](https://github.com/nashaofu/screenshots-rs/issues/6) too
