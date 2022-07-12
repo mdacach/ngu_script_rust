@@ -3,6 +3,7 @@ use std::time::Duration;
 
 use rdev::{listen, simulate, Button, Event, EventType, Key, SimulateError};
 
+use crate::constants;
 use crate::coords::GameAwarePosition;
 
 /// Moves the mouse to `pos`.
@@ -16,14 +17,12 @@ pub fn mouse_move(pos: GameAwarePosition) {
 /// Left-clicks on current position.
 pub fn click() {
     send(&EventType::ButtonPress(Button::Left));
-    thread::sleep(Duration::from_millis(20));
     send(&EventType::ButtonRelease(Button::Left));
 }
 
 /// Right-clicks on current position.
 pub fn right_click() {
     send(&EventType::ButtonPress(Button::Right));
-    thread::sleep(Duration::from_millis(20));
     send(&EventType::ButtonRelease(Button::Right));
 }
 
@@ -42,7 +41,6 @@ pub fn click_at(pos: GameAwarePosition) {
 /// Sends `key` as if it were pressed by the keyboard.
 pub fn send_key(key: Key) {
     send(&EventType::KeyPress(key));
-    thread::sleep(Duration::from_millis(20));
     send(&EventType::KeyRelease(key));
 }
 
@@ -67,7 +65,7 @@ pub fn release(input: &InputPress) {
 
 /// Wrapper around `rdev` functionality.
 fn send(event_type: &EventType) {
-    let delay = Duration::from_millis(20);
+    let delay = Duration::from_millis(constants::FAST_SLEEP);
     match simulate(event_type) {
         Ok(()) => (),
         Err(SimulateError) => {

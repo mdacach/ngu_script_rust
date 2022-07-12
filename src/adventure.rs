@@ -20,16 +20,17 @@ pub fn kill_monsters(quantity: u16) {
 
     for kills in 1..=quantity {
         while !is_enemy_alive() {
-            thread::sleep(Duration::from_millis(50));
+            thread::sleep(Duration::from_millis(crate::constants::FAST_SLEEP));
         }
 
         while is_enemy_alive() {
             attack_highest_available();
-            thread::sleep(Duration::from_millis(50));
+            thread::sleep(Duration::from_millis(crate::constants::FAST_SLEEP));
         }
         // It's possible that the monster is still alive, but we can not see it
         // because the bar is almost completely white
-        thread::sleep(Duration::from_millis(1050));
+        let a_bit_more_than_a_sec = Duration::from_millis(1050);
+        thread::sleep(a_bit_more_than_a_sec);
         attack(); // So we attack an extra time
         println!("[LOG] Kill Counter: {kills}");
     }
@@ -42,12 +43,12 @@ fn fast_kill_monsters(quantity: u16) {
 
     for kills in 1..=quantity {
         while !is_enemy_alive() {
-            thread::sleep(Duration::from_millis(50));
+            thread::sleep(Duration::from_millis(crate::constants::FAST_SLEEP));
         }
 
         while is_enemy_alive() {
             attack();
-            thread::sleep(Duration::from_millis(50));
+            thread::sleep(Duration::from_millis(crate::constants::FAST_SLEEP));
         }
         println!("[LOG] Kill Counter: {kills}");
     }
@@ -64,7 +65,7 @@ pub fn kill_bosses(quantity: u16) {
     let mut kill_counter = 0;
     while kill_counter < quantity {
         while !is_enemy_alive() {
-            thread::sleep(Duration::from_millis(50));
+            thread::sleep(Duration::from_millis(crate::constants::FAST_SLEEP));
         }
 
         if is_enemy_boss() {
@@ -77,11 +78,12 @@ pub fn kill_bosses(quantity: u16) {
 
         while is_enemy_alive() {
             attack_highest_available();
-            thread::sleep(Duration::from_millis(50));
+            thread::sleep(Duration::from_millis(crate::constants::FAST_SLEEP));
         }
         // It's possible that the monster is still alive, but we can not see it
         // because the bar is almost completely white
-        thread::sleep(Duration::from_millis(1050));
+        let a_bit_more_than_a_sec = Duration::from_millis(1050);
+        thread::sleep(a_bit_more_than_a_sec);
         attack(); // So we attack an extra time
         kill_counter += 1;
         println!("[LOG] Kill Counter: {kill_counter}");

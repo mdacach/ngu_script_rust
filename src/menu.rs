@@ -1,6 +1,7 @@
 use std::thread;
 use std::time::Duration;
 
+use crate::constants;
 use crate::constants::menu::*;
 use crate::coords::GameAwarePosition;
 use crate::input::click_at;
@@ -26,7 +27,7 @@ pub fn navigate(menu: Menu) {
         Menu::Augmentation => navigate_to(*coords::AUGMENTATION),
     }
     // Give it time for the game to load
-    thread::sleep(Duration::from_millis(100));
+    thread::sleep(Duration::from_millis(constants::LONG_SLEEP));
 }
 
 fn navigate_to(pos: GameAwarePosition) {
