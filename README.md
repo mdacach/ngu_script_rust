@@ -54,6 +54,13 @@ Related, the user may terminate the script while it is in the middle of some act
 * [lazy_static](https://crates.io/crates/lazy_static)
 * [scrap](https://crates.io/crates/scrap)
 
+##### Dependencies
+`xorg-dev`
+
+`libdbus-1-dev`
+
+`pkg-config`
+
 ##### Related:
 - During development, I've found an [issue with one crate](https://github.com/nashaofu/display-info/issues/1)
 - And asked for a [feature request](https://github.com/nashaofu/screenshots-rs/issues/6) too
