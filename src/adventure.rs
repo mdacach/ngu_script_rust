@@ -35,6 +35,24 @@ pub fn kill_monsters(quantity: u16) {
     }
 }
 
+fn fast_kill_monsters(quantity: u16) {
+    if is_idle_mode() {
+        send_key(Key::KeyQ); // Disable Idle Mode
+    }
+
+    for kills in 1..=quantity {
+        while !is_enemy_alive() {
+            thread::sleep(Duration::from_millis(50));
+        }
+
+        while is_enemy_alive() {
+            attack();
+            thread::sleep(Duration::from_millis(50));
+        }
+        println!("[LOG] Kill Counter: {kills}");
+    }
+}
+
 /// Kills `quantity` bosses in the current Adventure Zone.
 /// Will disable Idle Mode if needed.
 /// Requires the game to be in "Adventure" menu.
@@ -78,6 +96,11 @@ pub fn kill_monsters_at_zone(quantity: u16, zone: AdventureZone) {
     kill_monsters(quantity);
 }
 
+pub fn fast_kill_monsters_at_zone(quantity: u16, zone: AdventureZone) {
+    go_to_zone(zone);
+    fast_kill_monsters(quantity);
+}
+
 /// Kills `quantity` bosses in the Adventure Zone chosen.
 /// Will disable Idle Mode if needed.
 /// Requires the game to be in "Adventure" menu.
@@ -97,6 +120,8 @@ pub enum AdventureZone {
     Cave,
     Sky,
     HSB,
+    GRB,
+    Clock,
 }
 
 /// Navigates to corresponding zone.
