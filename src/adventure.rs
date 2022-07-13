@@ -35,7 +35,7 @@ pub fn kill_monsters_at_zone(quantity: u16, zone: AdventureZone) {
         let a_bit_more_than_a_sec = Duration::from_millis(1050);
         thread::sleep(a_bit_more_than_a_sec);
         attack(); // So we attack an extra time
-        println!("[LOG] Kill Counter: {kills}");
+        println!("[LOG] Kill Counter: {}", kills);
     }
 }
 
@@ -55,7 +55,7 @@ pub fn fast_kill_monsters_at_zone(quantity: u16, zone: AdventureZone) {
             attack();
             thread::sleep(Duration::from_millis(constants::FAST_SLEEP));
         }
-        println!("[LOG] Kill Counter: {kills}");
+        println!("[LOG] Kill Counter: {}", kills);
     }
 }
 
@@ -93,7 +93,7 @@ pub fn kill_bosses_at_zone(quantity: u16, zone: AdventureZone) {
         thread::sleep(a_bit_more_than_a_sec);
         attack(); // So we attack an extra time
         kill_counter += 1;
-        println!("[LOG] Kill Counter: {kill_counter}");
+        println!("[LOG] Kill Counter: {}", kill_counter);
     }
 }
 
