@@ -64,7 +64,7 @@ pub mod coords {
         pub static ref ITOPOD_START_FLOOR_INPUT_PIXEL: GameAwarePosition =
             GameAwarePosition::from_coords(833, 261);
         pub static ref ITOPOD_END_FLOOR_INPUT_PIXEL: GameAwarePosition =
-            GameAwarePosition::from_coords(860, 131);
+            GameAwarePosition::from_coords(860, 314);
         pub static ref ITOPOD_CLOSE_PIXEL: GameAwarePosition =
             GameAwarePosition::from_coords(771, 596);
     }
