@@ -11,6 +11,23 @@ use crate::input::{click_at, right_click_at, send_key};
 use crate::pixel;
 use crate::pixel::get_pixel_rgb;
 
+/// Zones in Adventure Menu, ordered by appearance.
+pub enum AdventureZone {
+    // This is meant to be updated as you progress through the game.
+    /// Note that order here is important, as it's used for navigating between zones.
+    Safe,
+    Tutorial,
+    Sewers,
+    Forest,
+    Cave,
+    Sky,
+    HSB,
+    GRB,
+    Clock,
+    GCT,
+    TwoD,
+}
+
 /// Kills `quantity` enemies on ITOPOD's optimal floor.
 /// Requires the game to be in "Adventure" menu.
 pub fn fast_itopod(quantity: u16) {
@@ -174,21 +191,6 @@ pub fn kill_bosses_at_zone(quantity: u16, zone: AdventureZone) {
         kill_counter += 1;
         println!("[LOG] Kill Counter: {}", kill_counter);
     }
-}
-
-/// Zones in Adventure Menu, ordered by appearance.
-pub enum AdventureZone {
-    // This is meant to be updated as you progress through the game.
-    /// Note that order here is important, as it's used for navigating between zones.
-    Safe,
-    Tutorial,
-    Sewers,
-    Forest,
-    Cave,
-    Sky,
-    HSB,
-    GRB,
-    Clock,
 }
 
 /// Navigates to corresponding zone.
