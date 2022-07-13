@@ -1,9 +1,9 @@
 ## NGU Script
 This is a learning project in my Rust journey. 
 
-The objective of this script is to automate the playing of an incremental game called [NGU](https://store.steampowered.com/app/1147690/NGU_IDLE/).
+The objective of this script is to automate the gameplay of an incremental game called [NGU](https://store.steampowered.com/app/1147690/NGU_IDLE/).
 
-NGU is a complex game with many unwrapping features and requires user input to play optimally. 
+NGU is a complex game with many unwrapping features and playing it optimally requires constant user input. 
 Note that this is still under active development and is not meant to be used by the public.
 
 ### Code and Feature Highlights
