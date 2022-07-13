@@ -7,9 +7,42 @@ use rdev::Key;
 use crate::constants;
 use crate::constants::adventure::*;
 use crate::coords::GameAwarePosition;
-use crate::input::{right_click_at, send_key};
+use crate::input::{click_at, right_click_at, send_key};
 use crate::pixel;
 use crate::pixel::get_pixel_rgb;
+
+/// Kills `quantity` enemies on itopod's optimal floor.
+/// Requires the game to be in "Adventure" menu.
+pub fn fast_itopod(quantity: u16) {
+    // Enter itopod and choose optimal floor
+    click_at(*coords::ITOPOD_ENTER_PIXEL);
+    thread::sleep(constants::LONG_SLEEP);
+    click_at(*coords::ITOPOD_OPTIMAL_FLOOR_PIXEL);
+    thread::sleep(constants::LONG_SLEEP);
+    click_at(*coords::ITOPOD_ENTER_CONFIRMATION_PIXEL);
+    thread::sleep(constants::LONG_SLEEP);
+
+    if is_idle_mode() {
+        send_key(Key::KeyQ); // Disable Idle Mode
+    }
+
+    for kills in 1..=quantity {
+        while !is_enemy_alive() {
+            thread::sleep(constants::FAST_SLEEP);
+        }
+
+        while is_enemy_alive() {
+            attack();
+            thread::sleep(constants::FAST_SLEEP);
+        }
+
+        println!("[LOG] Kill Counter: {}", kills);
+    }
+
+    if !is_idle_mode() {
+        send_key(Key::KeyQ); // Disable Idle Mode
+    }
+}
 
 /// Kills `quantity` monsters in the Adventure Zone chosen.
 /// Will disable Idle Mode if needed.
