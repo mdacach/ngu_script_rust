@@ -27,7 +27,7 @@ pub fn navigate(menu: Menu) {
         Menu::Augmentation => navigate_to(*coords::AUGMENTATION),
     }
     // Give it time for the game to load
-    thread::sleep(Duration::from_millis(constants::LONG_SLEEP));
+    thread::sleep(constants::LONG_SLEEP);
 }
 
 fn navigate_to(pos: GameAwarePosition) {

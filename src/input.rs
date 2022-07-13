@@ -65,7 +65,6 @@ pub fn release(input: &InputPress) {
 
 /// Wrapper around `rdev` functionality.
 fn send(event_type: &EventType) {
-    let delay = Duration::from_millis(constants::FAST_SLEEP);
     match simulate(event_type) {
         Ok(()) => (),
         Err(SimulateError) => {
@@ -73,7 +72,7 @@ fn send(event_type: &EventType) {
         }
     }
     // Let the OS catchup (at least MacOS)
-    thread::sleep(delay);
+    thread::sleep(constants::FAST_SLEEP);
 }
 
 /// Handles script termination by listening for a "z" key press.

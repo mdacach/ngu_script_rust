@@ -23,12 +23,12 @@ pub fn kill_monsters_at_zone(quantity: u16, zone: AdventureZone) {
 
     for kills in 1..=quantity {
         while !is_enemy_alive() {
-            thread::sleep(Duration::from_millis(constants::FAST_SLEEP));
+            thread::sleep(constants::FAST_SLEEP);
         }
 
         while is_enemy_alive() {
             attack_highest_available();
-            thread::sleep(Duration::from_millis(constants::FAST_SLEEP));
+            thread::sleep(constants::FAST_SLEEP);
         }
         // It's possible that the monster is still alive, but we can not see it
         // because the bar is almost completely white
@@ -48,12 +48,12 @@ pub fn fast_kill_monsters_at_zone(quantity: u16, zone: AdventureZone) {
 
     for kills in 1..=quantity {
         while !is_enemy_alive() {
-            thread::sleep(Duration::from_millis(constants::FAST_SLEEP));
+            thread::sleep(constants::FAST_SLEEP);
         }
 
         while is_enemy_alive() {
             attack();
-            thread::sleep(Duration::from_millis(constants::FAST_SLEEP));
+            thread::sleep(constants::FAST_SLEEP);
         }
         println!("[LOG] Kill Counter: {}", kills);
     }
@@ -72,7 +72,7 @@ pub fn kill_bosses_at_zone(quantity: u16, zone: AdventureZone) {
     let mut kill_counter = 0;
     while kill_counter < quantity {
         while !is_enemy_alive() {
-            thread::sleep(Duration::from_millis(constants::FAST_SLEEP));
+            thread::sleep(constants::FAST_SLEEP);
         }
 
         if is_enemy_boss() {
@@ -85,7 +85,7 @@ pub fn kill_bosses_at_zone(quantity: u16, zone: AdventureZone) {
 
         while is_enemy_alive() {
             attack_highest_available();
-            thread::sleep(Duration::from_millis(constants::FAST_SLEEP));
+            thread::sleep(constants::FAST_SLEEP);
         }
         // It's possible that the monster is still alive, but we can not see it
         // because the bar is almost completely white
