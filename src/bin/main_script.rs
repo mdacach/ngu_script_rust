@@ -7,7 +7,7 @@ use ngu_script::{adventure, input, inventory, menu};
 fn main() {
     thread::spawn(|| loop {
         menu::navigate(Menu::Adventure);
-        adventure::fast_itopod(25);
+        adventure::push_itopod();
         // adventure::kill_monsters_at_zone(25, AdventureZone::Forest);
         // adventure::go_to_zone(AdventureZone::Safe);
 

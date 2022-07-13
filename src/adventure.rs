@@ -11,7 +11,7 @@ use crate::input::{click_at, right_click_at, send_key};
 use crate::pixel;
 use crate::pixel::get_pixel_rgb;
 
-/// Kills `quantity` enemies on itopod's optimal floor.
+/// Kills `quantity` enemies on ITOPOD's optimal floor.
 /// Requires the game to be in "Adventure" menu.
 pub fn fast_itopod(quantity: u16) {
     // Enter itopod and choose optimal floor
@@ -41,6 +41,52 @@ pub fn fast_itopod(quantity: u16) {
 
     if !is_idle_mode() {
         send_key(Key::KeyQ); // Disable Idle Mode
+    }
+}
+
+/// Pushes the max floor of ITOPOD. Repeats if player dies.
+/// Requires the game to be in "Adventure" menu.
+pub fn push_itopod() {
+    // Enter itopod
+    click_at(*coords::ITOPOD_ENTER_PIXEL);
+    thread::sleep(constants::LONG_SLEEP);
+
+    // Set initial floor to MAX
+    click_at(*coords::ITOPOD_MAX_FLOOR_PIXEL);
+    thread::sleep(constants::LONG_SLEEP);
+
+    // Set end floor to some big enough number
+    click_at(*coords::ITOPOD_END_FLOOR_INPUT_PIXEL);
+    thread::sleep(constants::LONG_SLEEP);
+    send_key(Key::Num9);
+    send_key(Key::Num9);
+    send_key(Key::Num9);
+
+    // Confirm Enter
+    click_at(*coords::ITOPOD_ENTER_CONFIRMATION_PIXEL);
+    thread::sleep(constants::LONG_SLEEP);
+
+    if is_idle_mode() {
+        send_key(Key::KeyQ); // Disable Idle Mode
+    }
+
+    let mut kill_counter = 0;
+    loop {
+        while !is_enemy_alive() {
+            thread::sleep(constants::FAST_SLEEP);
+        }
+
+        while is_enemy_alive() {
+            attack_highest_available();
+            thread::sleep(constants::FAST_SLEEP);
+        }
+        // It's possible that the monster is still alive, but we can not see it
+        // because the bar is almost completely white
+        let a_bit_more_than_a_sec = Duration::from_millis(1050);
+        thread::sleep(a_bit_more_than_a_sec);
+        attack(); // So we attack an extra time
+        kill_counter += 1;
+        println!("[LOG] Kill counter: {}", kill_counter);
     }
 }
 
