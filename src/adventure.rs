@@ -4,28 +4,31 @@ use std::time::Duration;
 use lazy_static::lazy_static;
 use rdev::Key;
 
+use crate::constants;
 use crate::constants::adventure::*;
 use crate::coords::GameAwarePosition;
 use crate::input::{right_click_at, send_key};
 use crate::pixel;
 use crate::pixel::get_pixel_rgb;
 
-/// Kills `quantity` monsters in the current Adventure Zone.
+/// Kills `quantity` monsters in the Adventure Zone chosen.
 /// Will disable Idle Mode if needed.
 /// Requires the game to be in "Adventure" menu.
-pub fn kill_monsters(quantity: u16) {
+pub fn kill_monsters_at_zone(quantity: u16, zone: AdventureZone) {
+    go_to_zone(zone);
+
     if is_idle_mode() {
         send_key(Key::KeyQ); // Disable Idle Mode
     }
 
     for kills in 1..=quantity {
         while !is_enemy_alive() {
-            thread::sleep(Duration::from_millis(crate::constants::FAST_SLEEP));
+            thread::sleep(Duration::from_millis(constants::FAST_SLEEP));
         }
 
         while is_enemy_alive() {
             attack_highest_available();
-            thread::sleep(Duration::from_millis(crate::constants::FAST_SLEEP));
+            thread::sleep(Duration::from_millis(constants::FAST_SLEEP));
         }
         // It's possible that the monster is still alive, but we can not see it
         // because the bar is almost completely white
@@ -36,28 +39,32 @@ pub fn kill_monsters(quantity: u16) {
     }
 }
 
-fn fast_kill_monsters(quantity: u16) {
+pub fn fast_kill_monsters_at_zone(quantity: u16, zone: AdventureZone) {
+    go_to_zone(zone);
+
     if is_idle_mode() {
         send_key(Key::KeyQ); // Disable Idle Mode
     }
 
     for kills in 1..=quantity {
         while !is_enemy_alive() {
-            thread::sleep(Duration::from_millis(crate::constants::FAST_SLEEP));
+            thread::sleep(Duration::from_millis(constants::FAST_SLEEP));
         }
 
         while is_enemy_alive() {
             attack();
-            thread::sleep(Duration::from_millis(crate::constants::FAST_SLEEP));
+            thread::sleep(Duration::from_millis(constants::FAST_SLEEP));
         }
         println!("[LOG] Kill Counter: {kills}");
     }
 }
 
-/// Kills `quantity` bosses in the current Adventure Zone.
+/// Kills `quantity` bosses in the Adventure Zone chosen.
 /// Will disable Idle Mode if needed.
 /// Requires the game to be in "Adventure" menu.
-pub fn kill_bosses(quantity: u16) {
+pub fn kill_bosses_at_zone(quantity: u16, zone: AdventureZone) {
+    go_to_zone(zone);
+
     if is_idle_mode() {
         send_key(Key::KeyQ); // Disable Idle Mode
     }
@@ -65,7 +72,7 @@ pub fn kill_bosses(quantity: u16) {
     let mut kill_counter = 0;
     while kill_counter < quantity {
         while !is_enemy_alive() {
-            thread::sleep(Duration::from_millis(crate::constants::FAST_SLEEP));
+            thread::sleep(Duration::from_millis(constants::FAST_SLEEP));
         }
 
         if is_enemy_boss() {
@@ -78,7 +85,7 @@ pub fn kill_bosses(quantity: u16) {
 
         while is_enemy_alive() {
             attack_highest_available();
-            thread::sleep(Duration::from_millis(crate::constants::FAST_SLEEP));
+            thread::sleep(Duration::from_millis(constants::FAST_SLEEP));
         }
         // It's possible that the monster is still alive, but we can not see it
         // because the bar is almost completely white
@@ -88,27 +95,6 @@ pub fn kill_bosses(quantity: u16) {
         kill_counter += 1;
         println!("[LOG] Kill Counter: {kill_counter}");
     }
-}
-
-/// Kills `quantity` monsters in the Adventure Zone chosen.
-/// Will disable Idle Mode if needed.
-/// Requires the game to be in "Adventure" menu.
-pub fn kill_monsters_at_zone(quantity: u16, zone: AdventureZone) {
-    go_to_zone(zone);
-    kill_monsters(quantity);
-}
-
-pub fn fast_kill_monsters_at_zone(quantity: u16, zone: AdventureZone) {
-    go_to_zone(zone);
-    fast_kill_monsters(quantity);
-}
-
-/// Kills `quantity` bosses in the Adventure Zone chosen.
-/// Will disable Idle Mode if needed.
-/// Requires the game to be in "Adventure" menu.
-pub fn kill_bosses_at_zone(quantity: u16, zone: AdventureZone) {
-    go_to_zone(zone);
-    kill_bosses(quantity);
 }
 
 /// Zones in Adventure Menu, ordered by appearance.
