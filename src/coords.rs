@@ -30,7 +30,7 @@ pub struct AbsolutePosition {
 /// GameAwarePosition{ x: 50, y: 50 } represents coordinates inside the game, close to the upper left corner.
 /// GameAwarePosition is calculated from a given AbsolutePosition. (We find the game corner and update the position
 /// accordingly so that it is inside the game's window).
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, Debug)]
 pub struct GameAwarePosition {
     pub x: u16,
     pub y: u16,
