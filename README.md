@@ -11,7 +11,7 @@ Note that this is still under active development and is not meant to be used by 
 * [Rust Type System prevents clicking on wrong coordinates](#rust-type-system-prevents-clicking-on-wrong-coordinates)
 * [Check for ready skills with image processing](#check-for-ready-skills-with-image-processing)
 * [Check for Boss encounters with image processing](#check-for-boss-encounters-with-image-processing)
-* [User input termination](#user-input-termination)
+* [User input termination through concurrency](#user-input-termination-through-concurrency)
 
 #### Script finds the game anywhere on display with template matching
 https://user-images.githubusercontent.com/43617028/178321227-21eb6cda-5275-4d83-b1a0-8b0c262a6ee1.mp4
@@ -41,7 +41,7 @@ https://user-images.githubusercontent.com/43617028/178348007-c4abab08-f7b9-42bb-
 
 Boss enemies have a yellow crown beside their names. By checking if it is present, the script can choose to only kill bosses. (Bosses are the only enemies which drop **items**, skipping regular enemies is more efficient for item farming).
 
-#### User input termination
+#### User input termination through concurrency
 As the script takes control of the mouse and keyboard, trying to stop it manually can be a pain. To solve this problem, the script is always listening for keyboard events: As soon as it sees a "z" pressed, it terminates.
 To handle the above, a new thread is spawned to work on the actual scripting (e.g., killing enemies), and the main thread keeps listening for keyboard events.
 Related, the user may terminate the script while it is in the middle of some action (e.g., pressing "y" for an "Ultimate Attack"). In that case, after termination, the "y" would STILL keep being pressed and would never be released. To solve this potential case, the script tracks all of the current pressed (and not released) inputs and will [release all of them](https://github.com/mdacach/ngu_script_rust/blob/26676a075ffe6fc801af4ae4254e59baa396fbeb/src/input.rs#L81) before terminating.
