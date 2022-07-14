@@ -75,7 +75,7 @@ fn boost() {
 /// Boosts infinity cube.
 /// Infinity Cube is a special accessory meant to consume boosts.
 /// Requires the game to be in "Inventory" menu.
-pub fn boost_cube() {
+fn boost_cube() {
     // Instead of boosting as usually (pressing "a"), cube uses a right click instead.
     right_click_at(*coords::CUBE);
 }
