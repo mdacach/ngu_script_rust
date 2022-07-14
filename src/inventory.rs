@@ -1,3 +1,5 @@
+use std::iter::from_fn;
+
 use rdev::Key;
 
 use crate::constants::inventory::*;
@@ -122,13 +124,37 @@ pub fn is_slot_empty(id: u16) -> bool {
     // of the same color. TODO: Add redundancy here (e.g., check for a couple pixels more)
 }
 
+/// Returns the number of empty slots in inventory.
 pub fn count_empty_slots() -> u16 {
     let empty_count = (0..SLOTS_AVAILABLE).filter(|&id| is_slot_empty(id)).count();
     empty_count as u16
+}
+
+/// Iterates over all available inventory slots positions.
+// TODO: Make a struct to represent a (an?) inventory slot
+pub fn inventory_slots() -> impl Iterator<Item = GameAwarePosition> {
+    let mut current_id = 0;
+    let get_slot = move || {
+        if current_id < SLOTS_AVAILABLE {
+            current_id += 1;
+            Some(get_coords_of_slot(current_id))
+        } else {
+            None
+        }
+    };
+    from_fn(get_slot)
 }
 
 #[test]
 fn test_empty_slots() {
     let empty_count = count_empty_slots();
     println!("Empty slots: {}", empty_count);
+}
+
+#[test]
+fn test_iterator() {
+    inventory_slots().for_each(|s| {
+        merge_at(s);
+        boost_at(s);
+    });
 }
