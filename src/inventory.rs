@@ -130,14 +130,46 @@ pub fn count_empty_slots() -> u16 {
     empty_count as u16
 }
 
+#[derive(Copy, Clone)]
+pub struct InventorySlot {
+    coords: GameAwarePosition,
+}
+
+impl InventorySlot {
+    pub fn from_id(id: u16) -> Self {
+        Self {
+            coords: get_coords_of_slot(id),
+        }
+    }
+}
+
+impl Boost for InventorySlot {
+    fn boost(&self) {
+        boost_at(self.coords);
+    }
+}
+
+impl Merge for InventorySlot {
+    fn merge(&self) {
+        merge_at(self.coords);
+    }
+}
+
+pub trait Boost {
+    fn boost(&self);
+}
+
+pub trait Merge {
+    fn merge(&self);
+}
+
 /// Iterates over all available inventory slots positions.
-// TODO: Make a struct to represent a (an?) inventory slot
-pub fn inventory_slots() -> impl Iterator<Item = GameAwarePosition> {
+pub fn inventory_slots() -> impl Iterator<Item = InventorySlot> {
     let mut current_id = 0;
     let get_slot = move || {
         if current_id < SLOTS_AVAILABLE {
             current_id += 1;
-            Some(get_coords_of_slot(current_id))
+            Some(InventorySlot::from_id(current_id))
         } else {
             None
         }
@@ -154,7 +186,7 @@ fn test_empty_slots() {
 #[test]
 fn test_iterator() {
     inventory_slots().for_each(|s| {
-        merge_at(s);
-        boost_at(s);
+        s.merge();
+        s.boost();
     });
 }
