@@ -207,7 +207,7 @@ pub fn go_to_zone(zone: AdventureZone) {
     }
 }
 
-fn go_to_latest() {
+pub fn go_to_latest() {
     // Right clicking adventure's right arrow makes us to go to latest available zone
     right_click_at(*coords::ADVANCE_ZONE_PIXEL);
 }
