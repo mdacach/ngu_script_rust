@@ -2,20 +2,26 @@ use rdev::Key;
 
 use crate::constants::inventory::*;
 use crate::coords::GameAwarePosition;
-use crate::input;
 use crate::input::{click_at, right_click_at};
+use crate::{input, pixel};
 
 /// Moves the mouse to corresponding slot in inventory tab.
 /// Slots are numbered from left to right and top to down, starting at 0.
 /// Requires the game to be in "Inventory" menu.
 pub fn move_to_slot(id: u16) {
+    let pos = get_coords_of_slot(id);
+    input::mouse_move(pos);
+}
+
+pub fn get_coords_of_slot(id: u16) -> GameAwarePosition {
     let mut pos = *coords::SLOT_FIRST;
     // Rows wrap around after some slots
     let move_right = id % SLOTS_PER_ROW;
     let move_down = id / SLOTS_PER_ROW;
     pos.x += move_right * SLOT_SIZE.width;
     pos.y += move_down * SLOT_SIZE.height;
-    input::mouse_move(pos);
+
+    pos
 }
 
 /// Moves the mouse to corresponding slot in inventory tab and left-clicks it.
