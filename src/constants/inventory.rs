@@ -7,6 +7,9 @@ pub const SLOT_SIZE: Size = Size {
 
 pub const SLOTS_PER_ROW: u16 = 12;
 
+/// Inventory slots are earned throughout the game.
+pub const SLOTS_AVAILABLE: u16 = 53;
+
 pub mod colors {
     use image::Rgb;
 

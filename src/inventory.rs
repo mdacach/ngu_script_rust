@@ -123,7 +123,7 @@ pub fn is_slot_empty(id: u16) -> bool {
 }
 
 pub fn count_empty_slots() -> u16 {
-    let empty_count = (0..60).filter(|&id| is_slot_empty(id)).count();
+    let empty_count = (0..SLOTS_AVAILABLE).filter(|&id| is_slot_empty(id)).count();
     empty_count as u16
 }
 
