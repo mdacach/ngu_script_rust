@@ -7,6 +7,12 @@ pub const SLOT_SIZE: Size = Size {
 
 pub const SLOTS_PER_ROW: u16 = 12;
 
+pub mod colors {
+    use image::Rgb;
+
+    pub const EMPTY_SLOT_RGB: Rgb<u8> = Rgb([130, 130, 130]);
+}
+
 pub mod coords {
     use lazy_static::lazy_static;
 

@@ -110,3 +110,25 @@ pub fn boost_cube() {
     // Instead of boosting as usually (pressing "a"), cube uses a right click instead.
     right_click_at(*coords::CUBE);
 }
+
+/// Returns true if inventory slot is empty.
+pub fn is_slot_empty(id: u16) -> bool {
+    let coords = get_coords_of_slot(id);
+    let color = pixel::get_pixel_rgb(coords);
+    color == colors::EMPTY_SLOT_RGB
+    // This checks a specific pixel in the inventory slot.
+    // If the pixel is gray (as empty slots are), the slot is considered empty.
+    // This can mistakenly identify a slot as empty if the item in there happens to be
+    // of the same color. TODO: Add redundancy here (e.g., check for a couple pixels more)
+}
+
+pub fn count_empty_slots() -> u16 {
+    let empty_count = (0..60).filter(|&id| is_slot_empty(id)).count();
+    empty_count as u16
+}
+
+#[test]
+fn test_empty_slots() {
+    let empty_count = count_empty_slots();
+    println!("Empty slots: {}", empty_count);
+}
