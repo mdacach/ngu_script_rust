@@ -7,14 +7,6 @@ use crate::coords::GameAwarePosition;
 use crate::input::{click_at, right_click_at};
 use crate::{input, pixel};
 
-/// Moves the mouse to corresponding slot in inventory tab.
-/// Slots are numbered from left to right and top to down, starting at 0.
-/// Requires the game to be in "Inventory" menu.
-pub fn move_to_slot(id: u16) {
-    let pos = get_coords_of_slot(id);
-    input::mouse_move(pos);
-}
-
 pub fn get_coords_of_slot(id: u16) -> GameAwarePosition {
     let mut pos = *coords::SLOT_FIRST;
     // Rows wrap around after some slots
@@ -24,34 +16,6 @@ pub fn get_coords_of_slot(id: u16) -> GameAwarePosition {
     pos.y += move_down * SLOT_SIZE.height;
 
     pos
-}
-
-/// Moves the mouse to corresponding slot in inventory tab and left-clicks it.
-/// Slots are numbered from left to right and top to down, starting at 0.
-/// Requires the game to be in "Inventory" menu.
-pub fn click_slot(id: u16) {
-    move_to_slot(id);
-    input::click();
-}
-
-/// Merges the item in corresponding slot.
-/// If the slot is empty, nothing happens.
-/// Slots are numbered from left to right and top to down, starting at 0.
-/// Requires the game to be in "Inventory" menu.
-pub fn merge_slot(id: u16) {
-    // Clicking is better than just moving because it puts the game in focus
-    click_slot(id);
-    merge();
-}
-
-/// Boosts the item in corresponding slot.
-/// If the slot is empty, nothing happens.
-/// Slots are numbered from left to right and top to down, starting at 0.
-/// Requires the game to be in "Inventory" menu.
-pub fn boost_slot(id: u16) {
-    // Clicking is better than just moving because it puts the game in focus
-    click_slot(id);
-    boost();
 }
 
 /// Merges all equipments slots.
@@ -114,9 +78,8 @@ pub fn boost_cube() {
 }
 
 /// Returns true if inventory slot is empty.
-pub fn is_slot_empty(id: u16) -> bool {
-    let coords = get_coords_of_slot(id);
-    let color = pixel::get_pixel_rgb(coords);
+pub fn is_slot_empty(slot: InventorySlot) -> bool {
+    let color = pixel::get_pixel_rgb(slot.coords);
     color == colors::EMPTY_SLOT_RGB
     // This checks a specific pixel in the inventory slot.
     // If the pixel is gray (as empty slots are), the slot is considered empty.
@@ -126,8 +89,9 @@ pub fn is_slot_empty(id: u16) -> bool {
 
 /// Returns the number of empty slots in inventory.
 pub fn count_empty_slots() -> u16 {
-    let empty_count = (0..SLOTS_AVAILABLE).filter(|&id| is_slot_empty(id)).count();
-    empty_count as u16
+    inventory_slots()
+        .filter(|&slot| is_slot_empty(slot))
+        .count() as u16
 }
 
 #[derive(Copy, Clone)]
