@@ -21,13 +21,15 @@ pub fn get_coords_of_slot(id: u16) -> GameAwarePosition {
 /// Merges all equipments slots.
 /// Requires the game to be in "Inventory" menu.
 pub fn merge_equips() {
-    merge_at(*coords::WEAPON);
-    merge_at(*coords::HELMET);
-    merge_at(*coords::CHEST);
-    merge_at(*coords::LEGS);
-    merge_at(*coords::BOOTS);
-    merge_at(*coords::ACC1);
-    merge_at(*coords::ACC2);
+    use EquipmentSlot::*;
+    // Order here is not as relevant as in boosting
+    merge_equip(Weapon);
+    merge_equip(Helmet);
+    merge_equip(Chest);
+    merge_equip(Legs);
+    merge_equip(Boots);
+    merge_equip(Acc1);
+    merge_equip(Acc2);
 }
 
 /// Boosts all equipments slots.
@@ -37,14 +39,15 @@ pub fn boost_equips() {
     // Order here will change depending on game's progression.
     // Put the most important items first, so that boost is used
     // more efficiently.
-    boost_at(*coords::WEAPON);
+    use EquipmentSlot::*;
+    boost_equip(Weapon);
     // Accessories start to be more important now.
-    boost_at(*coords::ACC1);
-    boost_at(*coords::ACC2);
-    boost_at(*coords::HELMET);
-    boost_at(*coords::CHEST);
-    boost_at(*coords::LEGS);
-    boost_at(*coords::BOOTS);
+    boost_equip(Acc1);
+    boost_equip(Acc2);
+    boost_equip(Helmet);
+    boost_equip(Chest);
+    boost_equip(Legs);
+    boost_equip(Boots);
 }
 
 fn merge_at(pos: GameAwarePosition) {
@@ -154,4 +157,50 @@ fn test_iterator() {
         s.merge();
         s.boost();
     });
+}
+
+pub enum EquipmentSlot {
+    Weapon,
+    Acc1,
+    Acc2,
+    Helmet,
+    Chest,
+    Legs,
+    Boots,
+    Cube,
+}
+
+pub fn merge_equip(slot: EquipmentSlot) {
+    use EquipmentSlot::*;
+    match slot {
+        Weapon => merge_at(*coords::WEAPON),
+        Acc1 => merge_at(*coords::ACC1),
+        Acc2 => merge_at(*coords::ACC2),
+        Helmet => merge_at(*coords::HELMET),
+        Chest => merge_at(*coords::CHEST),
+        Legs => merge_at(*coords::LEGS),
+        Boots => merge_at(*coords::BOOTS),
+        Cube => (), // Cube does not merge
+    }
+}
+
+pub fn boost_equip(slot: EquipmentSlot) {
+    use EquipmentSlot::*;
+    match slot {
+        Weapon => boost_at(*coords::WEAPON),
+        Acc1 => boost_at(*coords::ACC1),
+        Acc2 => boost_at(*coords::ACC2),
+        Helmet => boost_at(*coords::HELMET),
+        Chest => boost_at(*coords::CHEST),
+        Legs => boost_at(*coords::LEGS),
+        Boots => boost_at(*coords::BOOTS),
+        Cube => boost_cube(), // Cube does not boost
+    }
+}
+
+#[test]
+fn test_equip_slots() {
+    merge_equips();
+    boost_equips();
+    boost_equip(EquipmentSlot::Cube);
 }
