@@ -21,33 +21,13 @@ pub fn get_coords_of_slot(id: u16) -> GameAwarePosition {
 /// Merges all equipments slots.
 /// Requires the game to be in "Inventory" menu.
 pub fn merge_equips() {
-    use EquipmentSlot::*;
-    // Order here is not as relevant as in boosting
-    merge_equip(Weapon);
-    merge_equip(Helmet);
-    merge_equip(Chest);
-    merge_equip(Legs);
-    merge_equip(Boots);
-    merge_equip(Acc1);
-    merge_equip(Acc2);
+    equip_slots().for_each(merge_equip);
 }
 
 /// Boosts all equipments slots.
-/// Order of boosting must be hard-coded.
 /// Requires the game to be in "Inventory" menu.
 pub fn boost_equips() {
-    // Order here will change depending on game's progression.
-    // Put the most important items first, so that boost is used
-    // more efficiently.
-    use EquipmentSlot::*;
-    boost_equip(Weapon);
-    // Accessories start to be more important now.
-    boost_equip(Acc1);
-    boost_equip(Acc2);
-    boost_equip(Helmet);
-    boost_equip(Chest);
-    boost_equip(Legs);
-    boost_equip(Boots);
+    equip_slots().for_each(boost_equip);
 }
 
 fn merge_at(pos: GameAwarePosition) {
@@ -170,32 +150,44 @@ pub enum EquipmentSlot {
     Cube,
 }
 
-pub fn merge_equip(slot: EquipmentSlot) {
-    use EquipmentSlot::*;
-    match slot {
-        Weapon => merge_at(*coords::WEAPON),
-        Acc1 => merge_at(*coords::ACC1),
-        Acc2 => merge_at(*coords::ACC2),
-        Helmet => merge_at(*coords::HELMET),
-        Chest => merge_at(*coords::CHEST),
-        Legs => merge_at(*coords::LEGS),
-        Boots => merge_at(*coords::BOOTS),
-        Cube => (), // Cube does not merge
+impl Boost for EquipmentSlot {
+    fn boost(&self) {
+        use EquipmentSlot::*;
+        match self {
+            Weapon => boost_at(*coords::WEAPON),
+            Acc1 => boost_at(*coords::ACC1),
+            Acc2 => boost_at(*coords::ACC2),
+            Helmet => boost_at(*coords::HELMET),
+            Chest => boost_at(*coords::CHEST),
+            Legs => boost_at(*coords::LEGS),
+            Boots => boost_at(*coords::BOOTS),
+            Cube => boost_cube(),
+        }
     }
 }
 
-pub fn boost_equip(slot: EquipmentSlot) {
-    use EquipmentSlot::*;
-    match slot {
-        Weapon => boost_at(*coords::WEAPON),
-        Acc1 => boost_at(*coords::ACC1),
-        Acc2 => boost_at(*coords::ACC2),
-        Helmet => boost_at(*coords::HELMET),
-        Chest => boost_at(*coords::CHEST),
-        Legs => boost_at(*coords::LEGS),
-        Boots => boost_at(*coords::BOOTS),
-        Cube => boost_cube(), // Cube does not boost
+impl Merge for EquipmentSlot {
+    fn merge(&self) {
+        use EquipmentSlot::*;
+        match self {
+            Weapon => merge_at(*coords::WEAPON),
+            Acc1 => merge_at(*coords::ACC1),
+            Acc2 => merge_at(*coords::ACC2),
+            Helmet => merge_at(*coords::HELMET),
+            Chest => merge_at(*coords::CHEST),
+            Legs => merge_at(*coords::LEGS),
+            Boots => merge_at(*coords::BOOTS),
+            Cube => (), // Cube does not merge
+        }
     }
+}
+
+pub fn merge_equip(slot: EquipmentSlot) {
+    slot.merge();
+}
+
+pub fn boost_equip(slot: EquipmentSlot) {
+    slot.boost();
 }
 
 #[test]
@@ -203,4 +195,28 @@ fn test_equip_slots() {
     merge_equips();
     boost_equips();
     boost_equip(EquipmentSlot::Cube);
+}
+
+/// Iterator over equipment slots.
+pub fn equip_slots() -> impl Iterator<Item = EquipmentSlot> {
+    // Order here will change depending on game's progression.
+    // Put the most important items first, so that boost is used
+    // more efficiently.
+    let mut order = Vec::new();
+    use EquipmentSlot::*;
+    order.push(Weapon);
+    order.push(Acc1);
+    order.push(Acc2);
+    order.push(Boots);
+    order.push(Helmet);
+    order.push(Chest);
+    order.push(Legs);
+
+    order.into_iter()
+}
+
+#[test]
+fn test_equip_slots_iterator() {
+    merge_equips();
+    boost_equips();
 }
