@@ -131,12 +131,13 @@ pub trait Merge {
 pub fn inventory_slots() -> impl Iterator<Item = InventorySlot> {
     let mut current_id = 0;
     let get_slot = move || {
-        if current_id < SLOTS_AVAILABLE {
-            current_id += 1;
+        let slot = if current_id < SLOTS_AVAILABLE {
             Some(InventorySlot::from_id(current_id))
         } else {
             None
-        }
+        };
+        current_id += 1;
+        slot
     };
     from_fn(get_slot)
 }
