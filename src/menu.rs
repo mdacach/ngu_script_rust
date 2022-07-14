@@ -1,5 +1,4 @@
 use std::thread;
-use std::time::Duration;
 
 use crate::constants;
 use crate::constants::menu::*;
