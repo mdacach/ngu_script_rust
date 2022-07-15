@@ -5,7 +5,7 @@ use rdev::Key;
 use crate::constants::inventory::*;
 use crate::coords::GameAwarePosition;
 use crate::input::{click_at, right_click_at};
-use crate::{input, pixel};
+use crate::{constants, input, pixel};
 
 pub fn get_coords_of_slot(id: u16) -> GameAwarePosition {
     let mut pos = *coords::SLOT_FIRST;
@@ -114,7 +114,7 @@ pub trait Merge {
 pub fn inventory_slots() -> impl Iterator<Item = InventorySlot> {
     let mut current_id = 0;
     let get_slot = move || {
-        let slot = if current_id < SLOTS_AVAILABLE {
+        let slot = if current_id < constants::user::SLOTS_AVAILABLE {
             Some(InventorySlot::from_id(current_id))
         } else {
             None

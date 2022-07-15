@@ -33,11 +33,11 @@ pub enum AdventureZone {
 pub fn fast_itopod(quantity: u16) {
     // Enter itopod and choose optimal floor
     click_at(*coords::ITOPOD_ENTER_PIXEL);
-    thread::sleep(constants::LONG_SLEEP);
+    thread::sleep(constants::user::LONG_SLEEP);
     click_at(*coords::ITOPOD_OPTIMAL_FLOOR_PIXEL);
-    thread::sleep(constants::LONG_SLEEP);
+    thread::sleep(constants::user::LONG_SLEEP);
     click_at(*coords::ITOPOD_ENTER_CONFIRMATION_PIXEL);
-    thread::sleep(constants::LONG_SLEEP);
+    thread::sleep(constants::user::LONG_SLEEP);
 
     if is_idle_mode() {
         send_key(Key::KeyQ); // Disable Idle Mode
@@ -45,12 +45,12 @@ pub fn fast_itopod(quantity: u16) {
 
     for kills in 1..=quantity {
         while !is_enemy_alive() {
-            thread::sleep(constants::FAST_SLEEP);
+            thread::sleep(constants::user::FAST_SLEEP);
         }
 
         while is_enemy_alive() {
             attack();
-            thread::sleep(constants::FAST_SLEEP);
+            thread::sleep(constants::user::FAST_SLEEP);
         }
 
         println!("[LOG] Kill Counter: {}", kills);
@@ -66,22 +66,22 @@ pub fn fast_itopod(quantity: u16) {
 pub fn push_itopod() {
     // Enter itopod
     click_at(*coords::ITOPOD_ENTER_PIXEL);
-    thread::sleep(constants::LONG_SLEEP);
+    thread::sleep(constants::user::LONG_SLEEP);
 
     // Set initial floor to MAX
     click_at(*coords::ITOPOD_MAX_FLOOR_PIXEL);
-    thread::sleep(constants::LONG_SLEEP);
+    thread::sleep(constants::user::LONG_SLEEP);
 
     // Set end floor to some big enough number
     click_at(*coords::ITOPOD_END_FLOOR_INPUT_PIXEL);
-    thread::sleep(constants::LONG_SLEEP);
+    thread::sleep(constants::user::LONG_SLEEP);
     send_key(Key::Num9);
     send_key(Key::Num9);
     send_key(Key::Num9);
 
     // Confirm Enter
     click_at(*coords::ITOPOD_ENTER_CONFIRMATION_PIXEL);
-    thread::sleep(constants::LONG_SLEEP);
+    thread::sleep(constants::user::LONG_SLEEP);
 
     if is_idle_mode() {
         send_key(Key::KeyQ); // Disable Idle Mode
@@ -90,12 +90,12 @@ pub fn push_itopod() {
     let mut kill_counter = 0;
     loop {
         while !is_enemy_alive() {
-            thread::sleep(constants::FAST_SLEEP);
+            thread::sleep(constants::user::FAST_SLEEP);
         }
 
         while is_enemy_alive() {
             attack_highest_available();
-            thread::sleep(constants::FAST_SLEEP);
+            thread::sleep(constants::user::FAST_SLEEP);
         }
         // It's possible that the monster is still alive, but we can not see it
         // because the bar is almost completely white
@@ -119,12 +119,12 @@ pub fn kill_monsters_at_zone(quantity: u16, zone: AdventureZone) {
 
     for kills in 1..=quantity {
         while !is_enemy_alive() {
-            thread::sleep(constants::FAST_SLEEP);
+            thread::sleep(constants::user::FAST_SLEEP);
         }
 
         while is_enemy_alive() {
             attack_highest_available();
-            thread::sleep(constants::FAST_SLEEP);
+            thread::sleep(constants::user::FAST_SLEEP);
         }
         // It's possible that the monster is still alive, but we can not see it
         // because the bar is almost completely white
@@ -144,12 +144,12 @@ pub fn fast_kill_monsters_at_zone(quantity: u16, zone: AdventureZone) {
 
     for kills in 1..=quantity {
         while !is_enemy_alive() {
-            thread::sleep(constants::FAST_SLEEP);
+            thread::sleep(constants::user::FAST_SLEEP);
         }
 
         while is_enemy_alive() {
             attack();
-            thread::sleep(constants::FAST_SLEEP);
+            thread::sleep(constants::user::FAST_SLEEP);
         }
         println!("[LOG] Kill Counter: {}", kills);
     }
@@ -168,7 +168,7 @@ pub fn kill_bosses_at_zone(quantity: u16, zone: AdventureZone) {
     let mut kill_counter = 0;
     while kill_counter < quantity {
         while !is_enemy_alive() {
-            thread::sleep(constants::FAST_SLEEP);
+            thread::sleep(constants::user::FAST_SLEEP);
         }
 
         if is_enemy_boss() {
@@ -181,7 +181,7 @@ pub fn kill_bosses_at_zone(quantity: u16, zone: AdventureZone) {
 
         while is_enemy_alive() {
             attack_highest_available();
-            thread::sleep(constants::FAST_SLEEP);
+            thread::sleep(constants::user::FAST_SLEEP);
         }
         // It's possible that the monster is still alive, but we can not see it
         // because the bar is almost completely white

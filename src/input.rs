@@ -71,7 +71,7 @@ fn send(event_type: &EventType) {
         }
     }
     // Let the OS catchup (at least MacOS)
-    thread::sleep(constants::FAST_SLEEP);
+    thread::sleep(constants::user::FAST_SLEEP);
 }
 
 /// Handles script termination by listening for a "z" key press.
