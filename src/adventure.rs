@@ -26,6 +26,8 @@ pub enum AdventureZone {
     Clock,
     GCT,
     TwoD,
+    AB,
+    Jake,
 }
 
 /// Kills `quantity` enemies on ITOPOD's optimal floor.
