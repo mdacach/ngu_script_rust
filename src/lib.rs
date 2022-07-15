@@ -4,4 +4,5 @@ pub mod coords;
 pub mod input;
 pub mod inventory;
 pub mod menu;
+pub mod ocr;
 pub mod pixel;
