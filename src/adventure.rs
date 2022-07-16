@@ -1,15 +1,17 @@
 use std::thread;
 use std::time::Duration;
 
+use imageproc::math::cast;
 use lazy_static::lazy_static;
 use rdev::Key;
 
-use crate::constants;
 use crate::constants::adventure::*;
+use crate::constants::user::{FAST_SLEEP, LONG_SLEEP};
 use crate::coords::GameAwarePosition;
 use crate::input::{click_at, right_click_at, send_key};
 use crate::pixel;
 use crate::pixel::get_pixel_rgb;
+use crate::{constants, menu};
 
 /// Zones in Adventure Menu, ordered by appearance.
 pub enum AdventureZone {
@@ -28,6 +30,12 @@ pub enum AdventureZone {
     TwoD,
     AB,
     Jake,
+}
+
+fn disable_idle_mode_if_needed() {
+    if is_idle_mode() {
+        send_key(Key::KeyQ); // Disable Idle Mode key.
+    }
 }
 
 /// Kills `quantity` enemies on ITOPOD's optimal floor.
@@ -61,6 +69,32 @@ pub fn fast_itopod(quantity: u16) {
     if !is_idle_mode() {
         send_key(Key::KeyQ); // Disable Idle Mode
     }
+}
+
+/// Performs regular attacks until enemy is dead.
+/// Enemy must be already in screen when function is called. (Wait for it to spawn *before* calling it).
+/// Best used if you are considerably stronger than the enemy, and can kill it
+/// in few hits.
+fn fast_kill_enemy() {
+    while is_enemy_alive() {
+        attack();
+        thread::sleep(constants::user::FAST_SLEEP);
+    }
+}
+
+/// Performs the strongs available skills until enemy is dead.
+/// Enemy must be already in screen when function is called. (Wait for it to spawn *before* calling it).
+/// TODO: Change this to "cache" available skills (remove the need of regular screenshots).
+fn kill_enemy() {
+    while is_enemy_alive() {
+        attack_highest_available();
+        thread::sleep(constants::user::FAST_SLEEP);
+    }
+    // It's possible that the monster is still alive, but we can not see it
+    // because the bar is almost completely white
+    let a_bit_more_than_a_sec = Duration::from_millis(1050);
+    thread::sleep(a_bit_more_than_a_sec);
+    attack(); // So we attack an extra time
 }
 
 /// Pushes the max floor of ITOPOD. Repeats if player dies.
@@ -338,4 +372,84 @@ lazy_static! {
     static ref CHARGE: AdventureSkill = AdventureSkill::new(keys::CHARGE, *coords::CHARGE_PIXEL, 2);
     static ref ULTIMATE_BUFF: AdventureSkill =
         AdventureSkill::new(keys::ULTIMATE_BUFF, *coords::ULTIMATE_BUFF_PIXEL, 2);
+}
+
+/// Performs a specific routine to kill one boss at desired zone.
+/// 1. Wait for 100% HP in Safe Zone
+/// 2. Use Charge and Parry
+/// 3. Recharge Charge and Parry cooldowns
+/// 4. Wait for Offensive and Ultimate Buffs to be available
+/// 5. Go to zone and wait for boss
+pub fn snipe_boss_at_zone(zone: AdventureZone) {
+    let wait_for = |skill: &AdventureSkill| {
+        thread::sleep(5 * LONG_SLEEP); // Let the game catch-up.
+        while !skill.is_available() {
+            thread::sleep(FAST_SLEEP);
+        }
+    };
+
+    let cast_when_available = |skill: &AdventureSkill| {
+        // This is needed because of between-attacks cooldown.
+        wait_for(skill);
+        skill.cast();
+        thread::sleep(LONG_SLEEP); // Let the game catch-up.
+    };
+
+    let initial_attack_routine = || {
+        cast_when_available(&OFFENSIVE_BUFF);
+        cast_when_available(&ULTIMATE_BUFF);
+        cast_when_available(&ULTIMATE_ATTACK);
+        cast_when_available(&PIERCING_ATTACK);
+    };
+
+    menu::navigate(menu::Menu::Adventure);
+    println!("Navigated");
+
+    // We need to pre-charge our skills in SafeZone.
+    go_to_zone(AdventureZone::Safe);
+    disable_idle_mode_if_needed();
+    println!("Disabled IDLE");
+    println!("Waiting for CHARGE");
+    cast_when_available(&CHARGE);
+    println!("Waiting for PARRY");
+    cast_when_available(&PARRY);
+
+    // Now we need to wait for the skills to recharge.
+    println!("Waiting for CHARGE to end cooldown");
+    wait_for(&CHARGE);
+    println!("Waiting for PARRY ot end cooldown");
+    wait_for(&PARRY);
+
+    // We must have our offensive buffs prepared too.
+    println!("Waiting for OFFENSIVE_BUFF cooldown");
+    wait_for(&OFFENSIVE_BUFF);
+    println!("Waiting for ULTIMATE_BUFF cooldown");
+    wait_for(&ULTIMATE_BUFF);
+    // TODO: Wait for 100% HP too.
+    // TODO: Remove comments.
+
+    go_to_zone(zone);
+    loop {
+        while !is_enemy_alive() {
+            thread::sleep(FAST_SLEEP);
+        }
+        // TODO: this DOES NOT work for Titans! (Infinite loop)
+        //       Create specific function for killing Titans
+        if is_enemy_boss() {
+            initial_attack_routine();
+            kill_enemy();
+            break; // Eventually we will encounter some boss.
+        } else {
+            refresh_zone();
+        }
+    }
+    // We are done with one sniping.
+}
+
+#[test]
+fn snipe_boss() {
+    menu::navigate(menu::Menu::Adventure);
+    loop {
+        snipe_boss_at_zone(AdventureZone::AB);
+    }
 }
