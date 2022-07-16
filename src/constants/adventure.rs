@@ -40,13 +40,13 @@ pub mod coords {
             GameAwarePosition::from_coords(1189, 128);
         pub static ref BLOCK_PIXEL: GameAwarePosition = GameAwarePosition::from_coords(485, 175);
         pub static ref DEFENSIVE_BUFF_PIXEL: GameAwarePosition =
-            GameAwarePosition::from_coords(631, 128);
-        pub static ref HEAL_PIXEL: GameAwarePosition = GameAwarePosition::from_coords(766, 128);
+            GameAwarePosition::from_coords(631, 175);
+        pub static ref HEAL_PIXEL: GameAwarePosition = GameAwarePosition::from_coords(766, 175);
         pub static ref OFFENSIVE_BUFF_PIXEL: GameAwarePosition =
-            GameAwarePosition::from_coords(910, 128);
-        pub static ref CHARGE_PIXEL: GameAwarePosition = GameAwarePosition::from_coords(1050, 128);
+            GameAwarePosition::from_coords(910, 175);
+        pub static ref CHARGE_PIXEL: GameAwarePosition = GameAwarePosition::from_coords(1050, 175);
         pub static ref ULTIMATE_BUFF_PIXEL: GameAwarePosition =
-            GameAwarePosition::from_coords(1190, 128);
+            GameAwarePosition::from_coords(1190, 175);
         pub static ref BOSS_CROWN_PIXEL: GameAwarePosition =
             GameAwarePosition::from_coords(986, 377);
         pub static ref RETREAT_ZONE_PIXEL: GameAwarePosition =
