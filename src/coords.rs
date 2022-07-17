@@ -31,6 +31,8 @@ pub struct AbsolutePosition {
 /// GameAwarePosition is calculated from a given AbsolutePosition. (We find the game corner and update the position
 /// accordingly so that it is inside the game's window).
 #[derive(Copy, Clone, Debug)]
+// Non-exhaustive makes the struct only constructable from `from_coords` below.
+#[non_exhaustive] // Reference: https://stackoverflow.com/a/70965787
 pub struct GameAwarePosition {
     pub x: u16,
     pub y: u16,
