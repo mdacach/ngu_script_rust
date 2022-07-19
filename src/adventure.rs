@@ -99,6 +99,20 @@ fn kill_enemy() {
     attack(); // So we attack an extra time
 }
 
+fn kill_hard_enemy() {
+    while is_enemy_alive() {
+        attack_or_defense_highest_available();
+        thread::sleep(FAST_SLEEP);
+    }
+    // It's possible that the monster is still alive, but we can not see it
+    // because the bar is almost completely white
+    for _ in 0..3 {
+        let a_bit_more_than_a_sec = Duration::from_millis(1050);
+        thread::sleep(a_bit_more_than_a_sec);
+        attack(); // So we attack an extra time
+    }
+}
+
 /// Pushes the max floor of ITOPOD. Repeats if player dies.
 /// Requires the game to be in "Adventure" menu.
 pub fn push_itopod() {
@@ -263,6 +277,27 @@ fn refresh_zone() {
     advance_zone();
 }
 
+fn attack_or_defense_highest_available() {
+    // Attempt to cast all skills, stronger first
+    // This (generally) amounts to using the strongest skill available
+    // TODO: refactor this to
+    //       1 - Know which ones are in cooldown (get button pixel color)
+    //       2 - Use skills in order for maximum effectiveness
+
+    ULTIMATE_BUFF.cast();
+    DEFENSIVE_BUFF.cast();
+    HYPER_REGEN.cast();
+    HEAL.cast();
+    BLOCK.cast();
+    PARRY.cast();
+    OFFENSIVE_BUFF.cast();
+    ULTIMATE_ATTACK.cast();
+    PIERCING_ATTACK.cast();
+    CHARGE.cast();
+    STRONG_ATTACK.cast();
+    REGULAR_ATTACK.cast();
+}
+
 fn attack_highest_available() {
     // Attempt to cast all skills, stronger first
     // This (generally) amounts to using the strongest skill available
@@ -340,6 +375,7 @@ impl Skill for AdventureSkill {
         match self.row_number {
             1 => current_color != colors::FIRST_ROW_COOLDOWN_RGB,
             2 => current_color != colors::SECOND_ROW_COOLDOWN_RGB,
+            3 => current_color != colors::THIRD_ROW_COOLDOWN_RGB,
             _ => panic!("Unexpected row number"),
         }
     }
@@ -380,8 +416,8 @@ lazy_static! {
 
 /// Performs a specific routine to kill one boss at desired zone.
 /// 1. Wait for 100% HP in Safe Zone
-/// 2. Use Charge and Parry
-/// 3. Recharge Charge and Parry cooldowns
+/// 2. Use Charge
+/// 3. Recharge Charge cooldown
 /// 4. Wait for Offensive and Ultimate Buffs to be available
 /// 5. Go to zone and wait for boss
 pub fn snipe_boss_at_zone(zone: AdventureZone) {
@@ -403,6 +439,7 @@ pub fn snipe_boss_at_zone(zone: AdventureZone) {
         cast_when_available(&OFFENSIVE_BUFF);
         cast_when_available(&ULTIMATE_BUFF);
         cast_when_available(&ULTIMATE_ATTACK);
+        cast_when_available(&CHARGE);
         cast_when_available(&PIERCING_ATTACK);
     };
 
@@ -416,7 +453,7 @@ pub fn snipe_boss_at_zone(zone: AdventureZone) {
     println!("Waiting for CHARGE");
     cast_when_available(&CHARGE);
     println!("Waiting for PARRY");
-    cast_when_available(&PARRY);
+    // cast_when_available(&PARRY);
 
     // Now we need to wait for the skills to recharge.
     println!("Waiting for CHARGE to end cooldown");
@@ -441,7 +478,7 @@ pub fn snipe_boss_at_zone(zone: AdventureZone) {
         //       Create specific function for killing Titans
         if is_enemy_boss() {
             initial_attack_routine();
-            kill_enemy();
+            kill_hard_enemy();
             break; // Eventually we will encounter some boss.
         } else {
             refresh_zone();
@@ -454,6 +491,6 @@ pub fn snipe_boss_at_zone(zone: AdventureZone) {
 fn snipe_boss() {
     menu::navigate(menu::Menu::Adventure);
     loop {
-        snipe_boss_at_zone(AdventureZone::AB);
+        snipe_boss_at_zone(AdventureZone::Mega);
     }
 }
