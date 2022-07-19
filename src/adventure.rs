@@ -29,6 +29,9 @@ pub enum AdventureZone {
     TwoD,
     AB,
     Jake,
+    AVSP,
+    Mega,
+    UUG,
 }
 
 fn disable_idle_mode_if_needed() {
