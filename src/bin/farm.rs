@@ -9,22 +9,22 @@ fn main() {
     let script_routine = || {
         // Get initial count of empty slots for tracking.
         menu::navigate(Menu::Inventory);
-        let previous_empty_slots = inventory::count_empty_slots();
+        let mut previous_empty_slots = inventory::count_empty_slots();
 
         let mut kill_counter = 0;
         loop {
             menu::navigate(Menu::Adventure);
 
-            let quantity = 20;
-            adventure::fast_kill_monsters_at_zone(quantity, AdventureZone::HSB);
+            let quantity = 50;
+            adventure::fast_kill_monsters_at_zone(quantity, AdventureZone::AVSP);
             kill_counter += quantity;
-            // adventure::go_to_zone(AdventureZone::Safe);
+            adventure::go_to_zone(AdventureZone::Safe);
 
             menu::navigate(Menu::Inventory);
             let inventory_routine = || {
                 inventory::merge_equips();
                 inventory::boost_equips();
-                inventory::inventory_slots().for_each(|slot| {
+                inventory::inventory_slots().take(36).for_each(|slot| {
                     slot.merge();
                     slot.boost();
                 });
@@ -42,6 +42,7 @@ fn main() {
                 println!("Performing Inventory routine");
                 inventory_routine();
             }
+            previous_empty_slots = inventory::count_empty_slots();
         }
     };
 
