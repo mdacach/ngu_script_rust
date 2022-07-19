@@ -363,9 +363,9 @@ dependencies = [
 
 [[package]]
 name = "display-info"
-version = "0.1.3"
+version = "0.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a7e6621b1544a24b9f1746081096360491614c8be73f8509be333c28045173b0"
+checksum = "f37080ef928e1bf7cf10aced7e394a1b5ea6791cfcefd6a6a3032d462e899d00"
 dependencies = [
  "core-graphics 0.22.3",
  "sfhash",
@@ -522,9 +522,9 @@ checksum = "9a3a5bfb195931eeb336b2a7b4d761daec841b97f947d34394601737a7bba5e4"
 
 [[package]]
 name = "image"
-version = "0.24.2"
+version = "0.24.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "28edd9d7bc256be2502e325ac0628bde30b7001b9b52e0abe31a1a9dc2701212"
+checksum = "7e30ca2ecf7666107ff827a8e481de6a132a9b687ed3bb20bb1c144a36c00964"
 dependencies = [
  "bytemuck",
  "byteorder",
@@ -532,7 +532,6 @@ dependencies = [
  "exr",
  "gif",
  "jpeg-decoder",
- "num-iter",
  "num-rational",
  "num-traits",
  "png",
@@ -1135,9 +1134,9 @@ dependencies = [
 
 [[package]]
 name = "screenshots"
-version = "0.3.3"
+version = "0.4.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7533c972290fc97a0e4d0ba065fd804e7f73e3ee5178113d5141078e89351f06"
+checksum = "8dede9069e9b4c7fe5d873ca9a93b4297e7ea3dfc28ccd2c21ed9952db4e39da"
 dependencies = [
  "core-graphics 0.22.3",
  "dbus",
@@ -1301,9 +1300,9 @@ checksum = "dcf81ac59edc17cc8697ff311e8f5ef2d99fcbd9817b34cec66f90b6c3dfd987"
 
 [[package]]
 name = "unicode-ident"
-version = "1.0.1"
+version = "1.0.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5bd2fe26506023ed7b5e1e315add59d6f584c621d037f9368fea9cfb988f368c"
+checksum = "15c61ba63f9235225a22310255a29b806b907c9b8c964bcbd0a2c70f3f2deea7"
 
 [[package]]
 name = "unicode-width"
