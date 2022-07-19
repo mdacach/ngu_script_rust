@@ -3,6 +3,7 @@ pub mod colors {
 
     pub const FIRST_ROW_COOLDOWN_RGB: Rgb<u8> = Rgb([124, 78, 78]);
     pub const SECOND_ROW_COOLDOWN_RGB: Rgb<u8> = Rgb([51, 68, 82]);
+    pub const THIRD_ROW_COOLDOWN_RGB: Rgb<u8> = Rgb([98, 74, 74]);
     pub const BOSS_CROWN_RGB: Rgb<u8> = Rgb([247, 239, 41]);
 }
 
@@ -21,6 +22,8 @@ pub mod keys {
     pub const OFFENSIVE_BUFF: Key = Key::KeyF;
     pub const CHARGE: Key = Key::KeyG;
     pub const ULTIMATE_BUFF: Key = Key::KeyH;
+
+    pub const HYPER_REGEN: Key = Key::KeyX;
 }
 
 pub mod coords {
@@ -47,6 +50,8 @@ pub mod coords {
         pub static ref CHARGE_PIXEL: GameAwarePosition = GameAwarePosition::from_coords(1050, 175);
         pub static ref ULTIMATE_BUFF_PIXEL: GameAwarePosition =
             GameAwarePosition::from_coords(1190, 175);
+        pub static ref HYPER_REGEN_PIXEL: GameAwarePosition =
+            GameAwarePosition::from_coords(627, 225);
         pub static ref BOSS_CROWN_PIXEL: GameAwarePosition =
             GameAwarePosition::from_coords(986, 377);
         pub static ref RETREAT_ZONE_PIXEL: GameAwarePosition =

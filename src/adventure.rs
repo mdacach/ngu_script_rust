@@ -374,6 +374,8 @@ lazy_static! {
     static ref CHARGE: AdventureSkill = AdventureSkill::new(keys::CHARGE, *coords::CHARGE_PIXEL, 2);
     static ref ULTIMATE_BUFF: AdventureSkill =
         AdventureSkill::new(keys::ULTIMATE_BUFF, *coords::ULTIMATE_BUFF_PIXEL, 2);
+    static ref HYPER_REGEN: AdventureSkill =
+        AdventureSkill::new(keys::HYPER_REGEN, *coords::HYPER_REGEN_PIXEL, 2);
 }
 
 /// Performs a specific routine to kill one boss at desired zone.
