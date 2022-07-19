@@ -13,6 +13,12 @@ Note that this is still under active development and is not meant to be used by 
 * [Check for Boss encounters with image processing](#check-for-boss-encounters-with-image-processing)
 * [User input termination through concurrency](#user-input-termination-through-concurrency)
 
+### Open source contributions during development
+* [X Connection issue in `display-info`](https://github.com/nashaofu/display-info/issues/1)
+* [Feature request for `screenshots`](https://github.com/nashaofu/screenshots-rs/issues/6)
+* [X Memory leak fix in `display-info`](https://github.com/nashaofu/display-info/pull/4)
+* [X Memory leak fix in `screenshots`](https://github.com/nashaofu/screenshots-rs/pull/12)
+
 #### Script finds the game anywhere on display with template matching
 https://user-images.githubusercontent.com/43617028/178321227-21eb6cda-5275-4d83-b1a0-8b0c262a6ee1.mp4
 
@@ -64,11 +70,6 @@ Related, the user may terminate the script while it is in the middle of some act
 `libxcb-randr0-dev`
 
 `libxcb-shm0-dev`
-
-##### Related:
-- During development, I've found an [issue with one crate](https://github.com/nashaofu/display-info/issues/1)
-- And asked for a [feature request](https://github.com/nashaofu/screenshots-rs/issues/6) too
-
 
 ##### References:
 - Some years ago, I wrote a [similar script](https://github.com/mdacach/ngu_script_python) with Python.
