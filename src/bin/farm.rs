@@ -10,13 +10,14 @@ fn main() {
         // Get initial count of empty slots for tracking.
         menu::navigate(Menu::Inventory);
         let mut previous_empty_slots = inventory::count_empty_slots();
+        println!("Initial empty slots: {}", previous_empty_slots);
 
         let mut kill_counter = 0;
         loop {
             menu::navigate(Menu::Adventure);
 
-            let quantity = 50;
-            adventure::fast_kill_monsters_at_zone(quantity, AdventureZone::AVSP);
+            let quantity = 10;
+            adventure::fast_kill_monsters_at_zone(quantity, AdventureZone::TwoD);
             kill_counter += quantity;
             adventure::go_to_zone(AdventureZone::Safe);
 
@@ -34,7 +35,7 @@ fn main() {
             println!("[LOG] Total kill counter: {}", kill_counter);
 
             let empty_slots = inventory::count_empty_slots();
-            let items_dropped = previous_empty_slots - empty_slots;
+            let items_dropped = empty_slots - previous_empty_slots;
             println!("[LOG] Empty slots: {}", empty_slots);
             println!("[LOG] Items dropped: {}", items_dropped);
             if items_dropped > empty_slots {
