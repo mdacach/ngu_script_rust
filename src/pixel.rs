@@ -23,6 +23,16 @@ pub fn get_pixel_rgb(pos: GameAwarePosition) -> Rgb<u8> {
     *image.get_pixel(x.into(), y.into())
 }
 
+pub fn approximately_equal(lhs: Rgb<u8>, rhs: Rgb<u8>) -> bool {
+    let eps = 5;
+    let lhs = lhs.0;
+    let rhs = rhs.0;
+
+    lhs.iter()
+        .zip(rhs.iter())
+        .any(|(&l, &r)| l > r + eps || r > l + eps)
+}
+
 /// Returns a screenshot of leftmost display.
 /// TODO: This is probably having a memory leak somewhere, investigate.
 fn get_screenshot() -> RgbImage {

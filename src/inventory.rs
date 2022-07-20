@@ -63,7 +63,7 @@ fn boost_cube() {
 /// Returns true if inventory slot is empty.
 pub fn is_slot_empty(slot: InventorySlot) -> bool {
     let color = pixel::get_pixel_rgb(slot.coords);
-    color == colors::EMPTY_SLOT_RGB
+    pixel::approximately_equal(color, colors::EMPTY_SLOT_RGB)
     // This checks a specific pixel in the inventory slot.
     // If the pixel is gray (as empty slots are), the slot is considered empty.
     // This can mistakenly identify a slot as empty if the item in there happens to be
