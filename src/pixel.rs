@@ -18,7 +18,7 @@ pub const IDLE_MODE_ON_RGB: Rgb<u8> = Rgb([255, 235, 4]);
 
 pub fn get_pixel_rgb(pos: GameAwarePosition) -> Rgb<u8> {
     let GameAwarePosition { x, y } = pos;
-    let image = get_screenshot_from_scrap();
+    let image = get_screenshot();
 
     *image.get_pixel(x.into(), y.into())
 }
@@ -34,7 +34,6 @@ pub fn approximately_equal(lhs: Rgb<u8>, rhs: Rgb<u8>) -> bool {
 }
 
 /// Returns a screenshot of leftmost display.
-/// TODO: This is probably having a memory leak somewhere, investigate.
 fn get_screenshot() -> RgbImage {
     let left_monitor = Screen::from_point(100, 100).expect("Could not find display screen");
     let screenshot = left_monitor.capture().expect("Could not screenshot");
