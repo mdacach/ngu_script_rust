@@ -52,6 +52,29 @@ impl GameAwarePosition {
     }
 }
 
+#[non_exhaustive]
+pub struct GameAwareRectangle {
+    pub x: u16,
+    pub y: u16,
+    pub width: u16,
+    pub height: u16,
+}
+
+impl GameAwareRectangle {
+    pub fn from_coords(x: u16, y: u16, width: u16, height: u16) -> Self {
+        let AbsolutePosition {
+            x: corner_x,
+            y: corner_y,
+        } = *CORNER;
+        Self {
+            x: x + corner_x,
+            y: y + corner_y,
+            width,
+            height,
+        }
+    }
+}
+
 lazy_static! {
     /// Absolute position of game's upper left corner, at the start of the script.
     pub static ref CORNER: AbsolutePosition = {
