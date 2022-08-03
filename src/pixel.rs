@@ -1,3 +1,5 @@
+use std::path::Path;
+
 use image::{open, ImageBuffer, Rgb, RgbImage};
 use lazy_static::lazy_static;
 use screenshots::Screen;
@@ -36,19 +38,19 @@ pub fn approximately_equal(lhs: Rgb<u8>, rhs: Rgb<u8>) -> bool {
 
 /// Returns a screenshot of leftmost display.
 pub fn get_screenshot() -> RgbImage {
-    let left_monitor = Screen::from_point(100, 100).expect("Could not find display screen");
-    let screenshot = left_monitor.capture().expect("Could not screenshot");
-    // TODO: avoid the extra write to file, we already have the image here
-    std::fs::write("images/screenshot.png", screenshot.buffer())
-        .expect("Could not save screenshot");
-
-    open("images/screenshot.png")
+    save_screenshot_to(Path::new("images/temporary_screenshot.png"));
+    open("images/temporary_screenshot.png")
         .expect("Could not open previous screenshot")
         .to_rgb8()
 }
 
-/// Returns a screenshot of leftmost display.
-pub fn get_screenshot_area(area: coords::GameAwareRectangle) -> RgbImage {
+pub fn save_screenshot_to(path: &Path) {
+    let left_monitor = Screen::from_point(100, 100).expect("Could not find display screen");
+    let screenshot = left_monitor.capture().expect("Could not screenshot");
+    std::fs::write(path, screenshot.buffer()).expect("Could not save screenshot");
+}
+
+pub fn save_screenshot_area_to(area: coords::GameAwareRectangle, path: &Path) {
     let left_monitor = Screen::from_point(100, 100).expect("Could not find display screen");
     let screenshot = left_monitor
         .capture_area(
@@ -58,11 +60,13 @@ pub fn get_screenshot_area(area: coords::GameAwareRectangle) -> RgbImage {
             area.height as u32,
         )
         .expect("Could not screenshot area");
-    // TODO: avoid the extra write to file, we already have the image here
-    std::fs::write("images/screenshot.png", screenshot.buffer())
-        .expect("Could not save screenshot");
+    std::fs::write(path, screenshot.buffer()).expect("Could not save screenshot");
+}
 
-    open("images/screenshot.png")
+/// Returns a screenshot of leftmost display.
+pub fn get_screenshot_area(area: coords::GameAwareRectangle) -> RgbImage {
+    save_screenshot_area_to(area, Path::new("images/temporary_screenshot.png"));
+    open("images/temporary_screenshot.png")
         .expect("Could not open previous screenshot")
         .to_rgb8()
 }
