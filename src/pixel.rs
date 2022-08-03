@@ -2,6 +2,7 @@ use image::{open, ImageBuffer, Rgb, RgbImage};
 use lazy_static::lazy_static;
 use screenshots::Screen;
 
+use crate::coords;
 use crate::coords::GameAwarePosition;
 
 lazy_static! {
@@ -34,9 +35,29 @@ pub fn approximately_equal(lhs: Rgb<u8>, rhs: Rgb<u8>) -> bool {
 }
 
 /// Returns a screenshot of leftmost display.
-fn get_screenshot() -> RgbImage {
+pub fn get_screenshot() -> RgbImage {
     let left_monitor = Screen::from_point(100, 100).expect("Could not find display screen");
     let screenshot = left_monitor.capture().expect("Could not screenshot");
+    // TODO: avoid the extra write to file, we already have the image here
+    std::fs::write("images/screenshot.png", screenshot.buffer())
+        .expect("Could not save screenshot");
+
+    open("images/screenshot.png")
+        .expect("Could not open previous screenshot")
+        .to_rgb8()
+}
+
+/// Returns a screenshot of leftmost display.
+pub fn get_screenshot_area(area: coords::GameAwareRectangle) -> RgbImage {
+    let left_monitor = Screen::from_point(100, 100).expect("Could not find display screen");
+    let screenshot = left_monitor
+        .capture_area(
+            area.x as i32,
+            area.y as i32,
+            area.width as u32,
+            area.height as u32,
+        )
+        .expect("Could not screenshot area");
     // TODO: avoid the extra write to file, we already have the image here
     std::fs::write("images/screenshot.png", screenshot.buffer())
         .expect("Could not save screenshot");
