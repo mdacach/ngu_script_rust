@@ -32,6 +32,9 @@ pub enum AdventureZone {
     AVSP,
     Mega,
     UUG,
+    Beard,
+    Walderp,
+    BDW,
 }
 
 fn disable_idle_mode_if_needed() {
