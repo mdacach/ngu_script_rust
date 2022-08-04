@@ -20,9 +20,5 @@ fn main() {
         }
     };
 
-    thread::spawn(move || {
-        script_routine();
-    });
-
-    input::handle_user_termination();
+    ngu_script::run(script_routine);
 }
