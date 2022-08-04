@@ -7,6 +7,7 @@ pub mod itopod;
 pub mod menu;
 pub mod ocr;
 pub mod pixel;
+pub mod yggdrasil;
 
 pub fn run<F>(script_routine: F)
 where

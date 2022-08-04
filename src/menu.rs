@@ -13,6 +13,12 @@ pub enum Menu {
     Adventure,
     Inventory,
     Augmentation,
+    AdvTraining,
+    TimeMachine,
+    BloodMagic,
+    Wandoos,
+    NGU,
+    Yggdrasil,
 }
 
 /// Navigates between menus.
@@ -24,6 +30,12 @@ pub fn navigate(menu: Menu) {
         Menu::Adventure => navigate_to(*coords::ADVENTURE),
         Menu::Inventory => navigate_to(*coords::INVENTORY),
         Menu::Augmentation => navigate_to(*coords::AUGMENTATION),
+        Menu::AdvTraining => navigate_to(*coords::ADV_TRAINING),
+        Menu::TimeMachine => navigate_to(*coords::TIME_MACHINE),
+        Menu::BloodMagic => navigate_to(*coords::BLOOD_MAGIC),
+        Menu::Wandoos => navigate_to(*coords::WANDOOS),
+        Menu::NGU => navigate_to(*coords::NGU),
+        Menu::Yggdrasil => navigate_to(*coords::YGGDRASIL),
     }
     // Give it time for the game to load
     thread::sleep(constants::user::LONG_SLEEP);
