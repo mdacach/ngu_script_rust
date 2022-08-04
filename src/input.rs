@@ -43,6 +43,26 @@ pub fn send_key(key: Key) {
     send(&EventType::KeyRelease(key));
 }
 
+pub fn input_number(number: u64) {
+    let number = number.to_string();
+
+    let input_char = |c: char| match c {
+        '0' => send_key(Key::Num0),
+        '1' => send_key(Key::Num1),
+        '2' => send_key(Key::Num2),
+        '3' => send_key(Key::Num3),
+        '4' => send_key(Key::Num4),
+        '5' => send_key(Key::Num5),
+        '6' => send_key(Key::Num6),
+        '7' => send_key(Key::Num7),
+        '8' => send_key(Key::Num8),
+        '9' => send_key(Key::Num9),
+        _ => (),
+    };
+
+    number.chars().for_each(input_char);
+}
+
 /// Represents a object that can perform a "press" event.
 ///
 /// This is used to handle "pressed" keys that were not "released".
