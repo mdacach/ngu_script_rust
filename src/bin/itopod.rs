@@ -1,7 +1,5 @@
-use std::thread;
-
 use ngu_script::menu::Menu;
-use ngu_script::{input, itopod, menu};
+use ngu_script::{itopod, menu};
 
 fn main() {
     let script_routine = || {

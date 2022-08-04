@@ -7,7 +7,7 @@ use rdev::Key;
 use crate::constants::adventure::*;
 use crate::constants::user::{FAST_SLEEP, LONG_SLEEP};
 use crate::coords::GameAwarePosition;
-use crate::input::{click_at, right_click_at, send_key};
+use crate::input::{right_click_at, send_key};
 use crate::menu;
 use crate::pixel;
 use crate::pixel::get_pixel_rgb;
@@ -47,7 +47,7 @@ fn disable_idle_mode_if_needed() {
 /// Enemy must be already in screen when function is called. (Wait for it to spawn *before* calling it).
 /// Best used if you are considerably stronger than the enemy, and can kill it
 /// in few hits.
-fn fast_kill_enemy() {
+pub fn fast_kill_enemy() {
     while is_enemy_alive() {
         attack();
         thread::sleep(FAST_SLEEP);
@@ -57,7 +57,7 @@ fn fast_kill_enemy() {
 /// Performs the strongs available skills until enemy is dead.
 /// Enemy must be already in screen when function is called. (Wait for it to spawn *before* calling it).
 /// TODO: Change this to "cache" available skills (remove the need of regular screenshots).
-fn kill_enemy() {
+pub fn kill_enemy() {
     while is_enemy_alive() {
         attack_highest_available();
         thread::sleep(FAST_SLEEP);

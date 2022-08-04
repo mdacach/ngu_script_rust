@@ -1,9 +1,7 @@
-use std::thread;
-
 use ngu_script::adventure::AdventureZone;
 use ngu_script::inventory::{Boost, EquipmentSlot, Merge};
 use ngu_script::menu::Menu;
-use ngu_script::{adventure, constants, input, inventory, menu};
+use ngu_script::{adventure, inventory, menu};
 
 fn main() {
     let script_routine = || {

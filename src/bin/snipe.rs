@@ -3,7 +3,7 @@ use std::time::Duration;
 
 use ngu_script::adventure::AdventureZone;
 use ngu_script::menu::Menu;
-use ngu_script::{adventure, input, inventory, menu};
+use ngu_script::{adventure, menu};
 
 fn main() {
     let script_routine = || {
