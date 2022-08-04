@@ -3,6 +3,7 @@ pub mod constants;
 pub mod coords;
 pub mod input;
 pub mod inventory;
+pub mod itopod;
 pub mod menu;
 pub mod ocr;
 pub mod pixel;

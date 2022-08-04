@@ -40,39 +40,6 @@ fn disable_idle_mode_if_needed() {
     }
 }
 
-/// Kills `quantity` enemies on ITOPOD's optimal floor.
-/// Requires the game to be in "Adventure" menu.
-pub fn fast_itopod(quantity: u16) {
-    // Enter itopod and choose optimal floor
-    click_at(*coords::ITOPOD_ENTER_PIXEL);
-    thread::sleep(LONG_SLEEP);
-    click_at(*coords::ITOPOD_OPTIMAL_FLOOR_PIXEL);
-    thread::sleep(LONG_SLEEP);
-    click_at(*coords::ITOPOD_ENTER_CONFIRMATION_PIXEL);
-    thread::sleep(LONG_SLEEP);
-
-    if is_idle_mode() {
-        send_key(Key::KeyQ); // Disable Idle Mode
-    }
-
-    for kills in 1..=quantity {
-        while !is_enemy_alive() {
-            thread::sleep(FAST_SLEEP);
-        }
-
-        while is_enemy_alive() {
-            attack();
-            thread::sleep(FAST_SLEEP);
-        }
-
-        println!("[LOG] Kill Counter: {}", kills);
-    }
-
-    if !is_idle_mode() {
-        send_key(Key::KeyQ); // Disable Idle Mode
-    }
-}
-
 /// Performs regular attacks until enemy is dead.
 /// Enemy must be already in screen when function is called. (Wait for it to spawn *before* calling it).
 /// Best used if you are considerably stronger than the enemy, and can kill it
@@ -110,52 +77,6 @@ fn kill_hard_enemy() {
         let a_bit_more_than_a_sec = Duration::from_millis(1050);
         thread::sleep(a_bit_more_than_a_sec);
         attack(); // So we attack an extra time
-    }
-}
-
-/// Pushes the max floor of ITOPOD. Repeats if player dies.
-/// Requires the game to be in "Adventure" menu.
-pub fn push_itopod() {
-    // Enter itopod
-    click_at(*coords::ITOPOD_ENTER_PIXEL);
-    thread::sleep(LONG_SLEEP);
-
-    // Set initial floor to MAX
-    click_at(*coords::ITOPOD_MAX_FLOOR_PIXEL);
-    thread::sleep(LONG_SLEEP);
-
-    // Set end floor to some big enough number
-    click_at(*coords::ITOPOD_END_FLOOR_INPUT_PIXEL);
-    thread::sleep(LONG_SLEEP);
-    send_key(Key::Num9);
-    send_key(Key::Num9);
-    send_key(Key::Num9);
-
-    // Confirm Enter
-    click_at(*coords::ITOPOD_ENTER_CONFIRMATION_PIXEL);
-    thread::sleep(LONG_SLEEP);
-
-    if is_idle_mode() {
-        send_key(Key::KeyQ); // Disable Idle Mode
-    }
-
-    let mut kill_counter = 0;
-    loop {
-        while !is_enemy_alive() {
-            thread::sleep(FAST_SLEEP);
-        }
-
-        while is_enemy_alive() {
-            attack_highest_available();
-            thread::sleep(FAST_SLEEP);
-        }
-        // It's possible that the monster is still alive, but we can not see it
-        // because the bar is almost completely white
-        let a_bit_more_than_a_sec = Duration::from_millis(1050);
-        thread::sleep(a_bit_more_than_a_sec);
-        attack(); // So we attack an extra time
-        kill_counter += 1;
-        println!("[LOG] Kill counter: {}", kill_counter);
     }
 }
 
@@ -298,7 +219,7 @@ fn attack_or_defense_highest_available() {
     REGULAR_ATTACK.cast();
 }
 
-fn attack_highest_available() {
+pub fn attack_highest_available() {
     // Attempt to cast all skills, stronger first
     // This (generally) amounts to using the strongest skill available
     // TODO: refactor this to
@@ -320,21 +241,21 @@ fn attack_highest_available() {
     // HEAL.cast();
 }
 
-fn attack() {
+pub fn attack() {
     send_key(Key::KeyW); // Regular attack
 }
 
-fn is_enemy_alive() -> bool {
+pub fn is_enemy_alive() -> bool {
     let color = get_pixel_rgb(*pixel::ENEMY_BAR_LEFT_PIXEL);
     color == pixel::ENEMY_ALIVE_RGB
 }
 
-fn is_enemy_boss() -> bool {
+pub fn is_enemy_boss() -> bool {
     let color = get_pixel_rgb(*coords::BOSS_CROWN_PIXEL);
     color == colors::BOSS_CROWN_RGB
 }
 
-fn is_idle_mode() -> bool {
+pub fn is_idle_mode() -> bool {
     let color = get_pixel_rgb(*pixel::IDLE_MODE_PIXEL);
     color == pixel::IDLE_MODE_ON_RGB
 }
