@@ -52,6 +52,7 @@ impl GameAwarePosition {
     }
 }
 
+#[derive(Copy, Clone, Debug)]
 #[non_exhaustive]
 pub struct GameAwareRectangle {
     pub x: u16,
