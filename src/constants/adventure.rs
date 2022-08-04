@@ -58,19 +58,5 @@ pub mod coords {
             GameAwarePosition::from_coords(976, 283);
         pub static ref ADVANCE_ZONE_PIXEL: GameAwarePosition =
             GameAwarePosition::from_coords(1257, 283);
-        pub static ref ITOPOD_ENTER_PIXEL: GameAwarePosition =
-            GameAwarePosition::from_coords(496, 302);
-        pub static ref ITOPOD_OPTIMAL_FLOOR_PIXEL: GameAwarePosition =
-            GameAwarePosition::from_coords(940, 275);
-        pub static ref ITOPOD_MAX_FLOOR_PIXEL: GameAwarePosition =
-            GameAwarePosition::from_coords(970, 325);
-        pub static ref ITOPOD_ENTER_CONFIRMATION_PIXEL: GameAwarePosition =
-            GameAwarePosition::from_coords(833, 400);
-        pub static ref ITOPOD_START_FLOOR_INPUT_PIXEL: GameAwarePosition =
-            GameAwarePosition::from_coords(833, 261);
-        pub static ref ITOPOD_END_FLOOR_INPUT_PIXEL: GameAwarePosition =
-            GameAwarePosition::from_coords(860, 314);
-        pub static ref ITOPOD_CLOSE_PIXEL: GameAwarePosition =
-            GameAwarePosition::from_coords(771, 596);
     }
 }

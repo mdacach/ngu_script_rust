@@ -1,7 +1,7 @@
 use std::thread;
 
 use crate::adventure;
-use crate::constants::adventure::coords;
+use crate::constants::itopod::coords;
 use crate::constants::user::*;
 use crate::input;
 
@@ -9,12 +9,12 @@ use crate::input;
 /// Requires the game to be in "Adventure" menu.
 pub fn fast_itopod(quantity: u16) {
     // Enter itopod and choose optimal floor
-    input::click_at(*coords::ITOPOD_ENTER_PIXEL);
+    input::click_at(*coords::ENTER_PIXEL);
 
     thread::sleep(LONG_SLEEP);
-    input::click_at(*coords::ITOPOD_OPTIMAL_FLOOR_PIXEL);
+    input::click_at(*coords::OPTIMAL_FLOOR_PIXEL);
     thread::sleep(LONG_SLEEP);
-    input::click_at(*coords::ITOPOD_ENTER_CONFIRMATION_PIXEL);
+    input::click_at(*coords::ENTER_CONFIRMATION_PIXEL);
     thread::sleep(LONG_SLEEP);
 
     if adventure::is_idle_mode() {
@@ -43,22 +43,22 @@ pub fn fast_itopod(quantity: u16) {
 /// Requires the game to be in "Adventure" menu.
 pub fn push_itopod() {
     // Enter itopod
-    input::click_at(*coords::ITOPOD_ENTER_PIXEL);
+    input::click_at(*coords::ENTER_PIXEL);
     thread::sleep(LONG_SLEEP);
 
     // Set initial floor to MAX
-    input::click_at(*coords::ITOPOD_MAX_FLOOR_PIXEL);
+    input::click_at(*coords::MAX_FLOOR_PIXEL);
     thread::sleep(LONG_SLEEP);
 
     // Set end floor to some big enough number
-    input::click_at(*coords::ITOPOD_END_FLOOR_INPUT_PIXEL);
+    input::click_at(*coords::END_FLOOR_INPUT_PIXEL);
     thread::sleep(LONG_SLEEP);
     input::send_key(rdev::Key::Num9);
     input::send_key(rdev::Key::Num9);
     input::send_key(rdev::Key::Num9);
 
     // Confirm Enter
-    input::click_at(*coords::ITOPOD_ENTER_CONFIRMATION_PIXEL);
+    input::click_at(*coords::ENTER_CONFIRMATION_PIXEL);
     thread::sleep(LONG_SLEEP);
 
     if adventure::is_idle_mode() {
