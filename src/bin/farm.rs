@@ -14,8 +14,8 @@ fn main() {
         loop {
             menu::navigate(Menu::Adventure);
 
-            let quantity = 10;
-            adventure::fast_kill_monsters_at_zone(quantity, AdventureZone::TwoD);
+            let quantity = 30;
+            adventure::fast_kill_monsters_at_zone(quantity, AdventureZone::Mega);
             kill_counter += quantity;
             adventure::go_to_zone(AdventureZone::Safe);
 
