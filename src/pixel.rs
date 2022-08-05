@@ -27,9 +27,11 @@ pub fn approximately_equal(lhs: Rgb<u8>, rhs: Rgb<u8>) -> bool {
     let lhs = lhs.0;
     let rhs = rhs.0;
 
-    !lhs.iter()
-        .zip(rhs.iter())
-        .any(|(&l, &r)| l > r + eps || r > l + eps)
+    !lhs.iter().zip(rhs.iter()).any(|(&l, &r)| {
+        let l_plus_eps = l.saturating_add(eps);
+        let r_plus_eps = r.saturating_add(eps);
+        r > l_plus_eps || l > r_plus_eps
+    })
 }
 
 /// Returns a screenshot of leftmost display.
