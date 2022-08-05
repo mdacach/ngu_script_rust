@@ -37,7 +37,7 @@ pub enum AdventureZone {
     BDW,
 }
 
-fn disable_idle_mode_if_needed() {
+pub fn disable_idle_mode_if_needed() {
     if is_idle_mode() {
         send_key(Key::KeyQ); // Disable Idle Mode key.
     }

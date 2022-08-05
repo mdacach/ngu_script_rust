@@ -125,6 +125,47 @@ pub fn get_tier_next_rewards_of_floor(floor: u16) -> u8 {
     get_current_tier_next_rewards()
 }
 
+pub fn itopod_exploit() {
+    let floor_max_counter: Vec<_> = (20..40).rev().collect();
+    let mut floor_to_count = Vec::new();
+    (0..=200).step_by(50).for_each(|floor| {
+        let count = get_tier_next_rewards_of_floor(floor);
+        floor_to_count.push(count);
+    });
+
+    let process_kill = |counters: &mut Vec<_>| {
+        for (index, count) in counters.iter_mut().enumerate() {
+            if *count == 0 {
+                *count = floor_max_counter[index];
+            } else {
+                *count -= 1;
+            }
+        }
+    };
+
+    println!("Initiating the itopod routine");
+    thread::sleep(LONG_SLEEP * 3);
+    println!("Disable idle");
+    adventure::disable_idle_mode_if_needed();
+    let mut current_floor = 9999;
+    loop {
+        let min_count = floor_to_count.iter().min().unwrap();
+        let next_floor = floor_to_count.iter().position(|x| x == min_count).unwrap() * 50;
+        println!("Min count {} at floor {}", min_count, next_floor);
+        println!("Killing one enemy at floor {}", next_floor);
+        if next_floor != current_floor {
+            enter_itopod_at_floor(next_floor as _);
+            current_floor = next_floor;
+        }
+        while !adventure::is_enemy_alive() {
+            thread::sleep(FAST_SLEEP);
+        }
+        adventure::fast_kill_enemy();
+        process_kill(&mut floor_to_count);
+        println!("Killed one enemy. Updated counters {:?}", floor_to_count);
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use crate::menu;
