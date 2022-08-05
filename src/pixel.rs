@@ -27,11 +27,11 @@ pub fn get_pixel_rgb(pos: GameAwarePosition) -> Rgb<u8> {
 }
 
 pub fn approximately_equal(lhs: Rgb<u8>, rhs: Rgb<u8>) -> bool {
-    let eps = 5;
+    let eps = 3;
     let lhs = lhs.0;
     let rhs = rhs.0;
 
-    lhs.iter()
+    !lhs.iter()
         .zip(rhs.iter())
         .any(|(&l, &r)| l > r + eps || r > l + eps)
 }
