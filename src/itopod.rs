@@ -135,7 +135,7 @@ pub fn itopod_exploit() {
 
     let process_kill = |counters: &mut Vec<_>| {
         for (index, count) in counters.iter_mut().enumerate() {
-            if *count == 0 {
+            if *count == 1 {
                 *count = floor_max_counter[index];
             } else {
                 *count -= 1;
