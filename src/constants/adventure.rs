@@ -5,6 +5,10 @@ pub mod colors {
     pub const SECOND_ROW_COOLDOWN_RGB: Rgb<u8> = Rgb([51, 68, 82]);
     pub const THIRD_ROW_COOLDOWN_RGB: Rgb<u8> = Rgb([98, 74, 74]);
     pub const BOSS_CROWN_RGB: Rgb<u8> = Rgb([247, 239, 41]);
+    pub const ENEMY_ALIVE_RGB_MAIN: Rgb<u8> = Rgb([236, 52, 52]);
+    pub const ENEMY_ALIVE_RGB_SECONDARY: Rgb<u8> = Rgb([158, 35, 35]);
+    pub const NO_ENEMY_RGB: Rgb<u8> = Rgb([255, 255, 255]);
+    pub const IDLE_MODE_ON_RGB: Rgb<u8> = Rgb([255, 235, 4]);
 }
 
 pub mod keys {
