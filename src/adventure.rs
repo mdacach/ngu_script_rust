@@ -250,17 +250,28 @@ pub fn attack() {
 
 pub fn is_enemy_alive() -> bool {
     let color = get_pixel_rgb(*pixel::ENEMY_BAR_LEFT_PIXEL);
-    color == pixel::ENEMY_ALIVE_RGB
+    // Depending on screen properties, the pixel we are looking at may be the main red color of
+    // the bar, or the closest-to-black brown, so we check both of them (approximately, as the colors vary
+    // a bit from screen to screen)
+    pixel::approximately_equal(color, colors::ENEMY_ALIVE_RGB_MAIN)
+        || pixel::approximately_equal(color, colors::ENEMY_ALIVE_RGB_SECONDARY)
+}
+
+#[test]
+fn test_enemy_alive_pixel() {
+    loop {
+        println!("{}", is_enemy_alive());
+    }
 }
 
 pub fn is_enemy_boss() -> bool {
     let color = get_pixel_rgb(*coords::BOSS_CROWN_PIXEL);
-    color == colors::BOSS_CROWN_RGB
+    pixel::approximately_equal(color, colors::BOSS_CROWN_RGB)
 }
 
 pub fn is_idle_mode() -> bool {
     let color = get_pixel_rgb(*pixel::IDLE_MODE_PIXEL);
-    color == pixel::IDLE_MODE_ON_RGB
+    pixel::approximately_equal(color, colors::IDLE_MODE_ON_RGB)
 }
 
 /// Represents a castable adventure skill.
