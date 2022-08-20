@@ -1,9 +1,14 @@
+use std::io::ErrorKind::WouldBlock;
 use std::path::Path;
+use std::thread;
+use std::time::Duration;
 
 use image::{open, ImageBuffer, Rgb, RgbImage};
 use lazy_static::lazy_static;
+use scrap::{Capturer, Display};
 use screenshots::Screen;
 
+use crate::constants::user::{Monitor, MONITOR_USED};
 use crate::coords;
 use crate::coords::GameAwarePosition;
 
@@ -16,10 +21,7 @@ lazy_static! {
 }
 
 pub fn get_pixel_rgb(pos: GameAwarePosition) -> Rgb<u8> {
-    let GameAwarePosition { x, y } = pos;
-    let image = get_screenshot();
-
-    *image.get_pixel(x.into(), y.into())
+    get_pixel_from_scrap(pos)
 }
 
 pub fn approximately_equal(lhs: Rgb<u8>, rhs: Rgb<u8>) -> bool {
@@ -36,18 +38,17 @@ pub fn approximately_equal(lhs: Rgb<u8>, rhs: Rgb<u8>) -> bool {
 
 /// Returns a screenshot of leftmost display.
 pub fn get_screenshot() -> RgbImage {
-    save_screenshot_to(Path::new("images/temporary_screenshot.png"));
-    open("images/temporary_screenshot.png")
-        .expect("Could not open previous screenshot")
-        .to_rgb8()
+    get_screenshot_from_scrap()
 }
 
 pub fn save_screenshot_to(path: &Path) {
-    let left_monitor = Screen::from_point(100, 100).expect("Could not find display screen");
-    let screenshot = left_monitor.capture().expect("Could not screenshot");
-    std::fs::write(path, screenshot.buffer()).expect("Could not save screenshot");
+    get_screenshot()
+        .save(path)
+        .expect("Could not save screenshot");
 }
 
+// TODO: scrap is faster than screenshots
+//       crop the image from scrap instead of capturing area from screenshots
 pub fn save_screenshot_area_to(area: coords::GameAwareRectangle, path: &Path) {
     let left_monitor = Screen::from_point(100, 100).expect("Could not find display screen");
     let screenshot = left_monitor
@@ -69,24 +70,66 @@ pub fn get_screenshot_area(area: coords::GameAwareRectangle) -> RgbImage {
         .to_rgb8()
 }
 
-/// Returns a screenshot of secondary display.
-/// Requires that you have two monitors.
-pub fn get_screenshot_from_scrap() -> RgbImage {
-    use scrap::{Capturer, Display};
-    use std::io::ErrorKind::WouldBlock;
-    use std::thread;
-    use std::time::Duration;
-
+pub fn get_pixel_from_scrap(pos: GameAwarePosition) -> Rgb<u8> {
     let one_second = Duration::new(1, 0);
     let one_frame = one_second / 60;
 
-    let mut all_displays = Display::all().expect("Could not find all displays.");
-    let secondary = all_displays.remove(1);
-    let mut capturer = Capturer::new(secondary).expect("Couldn't begin capture.");
-    let (w, h) = (capturer.width(), capturer.height());
+    let display = match MONITOR_USED {
+        Monitor::Primary => Display::primary().expect("Could not find display"),
+        Monitor::Secondary => {
+            let mut all_displays = Display::all().unwrap();
+            all_displays.remove(1)
+        }
+    };
+    let mut capturer = Capturer::new(display).expect("Couldn't begin capture.");
 
     loop {
         // Wait until there's a frame.
+
+        let buffer = match capturer.frame() {
+            Ok(buffer) => buffer,
+            Err(error) => {
+                if error.kind() == WouldBlock {
+                    // Keep spinning.
+                    thread::sleep(one_frame);
+                    continue;
+                } else {
+                    panic!("Error: {}", error);
+                }
+            }
+        };
+        // Flip the ARGB image into a RGB image.
+        // It seems  ^  this is wrong actually, more like the original image was ABGR
+        let GameAwarePosition { x, y } = pos;
+        let height = 1080;
+        let stride = buffer.len() / height;
+        let i = stride * y as usize + 4 * x as usize;
+
+        let b = buffer[i];
+        let g = buffer[i + 1];
+        let r = buffer[i + 2];
+        return Rgb([r, g, b]);
+    }
+}
+
+/// Returns a screenshot of secondary display.
+/// Requires that you have two monitors.
+pub fn get_screenshot_from_scrap() -> RgbImage {
+    let one_second = Duration::new(1, 0);
+    let one_frame = one_second / 60;
+
+    let display = match MONITOR_USED {
+        Monitor::Primary => Display::primary().expect("Could not find display"),
+        Monitor::Secondary => {
+            let mut all_displays = Display::all().unwrap();
+            all_displays.remove(1)
+        }
+    };
+    let mut capturer = Capturer::new(display).expect("Couldn't begin capture.");
+
+    loop {
+        // Wait until there's a frame.
+
         let buffer = match capturer.frame() {
             Ok(buffer) => buffer,
             Err(error) => {
@@ -102,10 +145,12 @@ pub fn get_screenshot_from_scrap() -> RgbImage {
 
         // Flip the ARGB image into a RGB image.
         // It seems  ^  this is wrong actually, more like the original image was ABGR
-        let mut bitflipped = Vec::with_capacity(w * h * 3);
-        let stride = buffer.len() / h;
-        for y in 0..h {
-            for x in 0..w {
+        let width = 1920;
+        let height = 1080;
+        let mut bitflipped = Vec::with_capacity(width * height * 3);
+        let stride = buffer.len() / height;
+        for y in 0..height {
+            for x in 0..width {
                 let i = stride * y + 4 * x;
                 bitflipped.push(buffer[i + 2]);
                 bitflipped.push(buffer[i + 1]);
@@ -114,6 +159,6 @@ pub fn get_screenshot_from_scrap() -> RgbImage {
         }
 
         let raw_data = bitflipped;
-        return ImageBuffer::from_raw(w as u32, h as u32, raw_data).unwrap();
+        return ImageBuffer::from_raw(width as u32, height as u32, raw_data).unwrap();
     }
 }
