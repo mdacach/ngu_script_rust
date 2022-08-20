@@ -5,6 +5,7 @@ use lazy_static::lazy_static;
 use rdev::Key;
 
 use crate::constants::adventure::*;
+use crate::constants::user;
 use crate::constants::user::{FAST_SLEEP, LONG_SLEEP};
 use crate::coords::GameAwarePosition;
 use crate::input::{right_click_at, send_key};
@@ -54,35 +55,6 @@ pub fn fast_kill_enemy() {
     }
 }
 
-/// Performs the strongs available skills until enemy is dead.
-/// Enemy must be already in screen when function is called. (Wait for it to spawn *before* calling it).
-/// TODO: Change this to "cache" available skills (remove the need of regular screenshots).
-pub fn kill_enemy() {
-    while is_enemy_alive() {
-        attack_highest_available();
-        thread::sleep(FAST_SLEEP);
-    }
-    // It's possible that the monster is still alive, but we can not see it
-    // because the bar is almost completely white
-    let a_bit_more_than_a_sec = Duration::from_millis(1050);
-    thread::sleep(a_bit_more_than_a_sec);
-    attack(); // So we attack an extra time
-}
-
-fn kill_hard_enemy() {
-    while is_enemy_alive() {
-        attack_or_defense_highest_available();
-        thread::sleep(FAST_SLEEP);
-    }
-    // It's possible that the monster is still alive, but we can not see it
-    // because the bar is almost completely white
-    for _ in 0..3 {
-        let a_bit_more_than_a_sec = Duration::from_millis(1050);
-        thread::sleep(a_bit_more_than_a_sec);
-        attack(); // So we attack an extra time
-    }
-}
-
 /// Kills `quantity` monsters in the Adventure Zone chosen.
 /// Will disable Idle Mode if needed.
 /// Requires the game to be in "Adventure" menu.
@@ -98,16 +70,56 @@ pub fn kill_monsters_at_zone(quantity: u16, zone: AdventureZone) {
             thread::sleep(FAST_SLEEP);
         }
 
-        while is_enemy_alive() {
-            attack_highest_available();
-            thread::sleep(FAST_SLEEP);
-        }
-        // It's possible that the monster is still alive, but we can not see it
-        // because the bar is almost completely white
-        let a_bit_more_than_a_sec = Duration::from_millis(1050);
-        thread::sleep(a_bit_more_than_a_sec);
-        attack(); // So we attack an extra time
+        kill_enemy();
         println!("[LOG] Kill Counter: {}", kills);
+    }
+}
+
+/// Performs the strongest available skills until enemy is dead.
+/// Enemy must be already in screen when function is called. (Wait for it to spawn *before* calling it).
+fn kill_enemy() {
+    'outer: while is_enemy_alive() {
+        println!("Checking available skills");
+        let mut available_skills = get_available_attack_skills();
+        dbg!(&available_skills);
+
+        for skill in available_skills {
+            println!("Casting skill {:?}", skill);
+            skill.cast();
+            if !is_enemy_alive() {
+                break 'outer;
+            }
+            thread::sleep(user::ATTACK_COOLDOWN + FAST_SLEEP);
+        }
+        thread::sleep(FAST_SLEEP);
+    }
+
+    // It's possible that the monster is still alive, but we can not see it
+    // because the bar is almost completely white
+    thread::sleep(user::ATTACK_COOLDOWN);
+    attack(); // So we attack an extra time
+}
+
+fn kill_hard_enemy() {
+    'outer: while is_enemy_alive() {
+        let mut available_skills = get_available_defense_skills();
+        available_skills.extend(get_available_attack_skills());
+
+        for skill in available_skills {
+            skill.cast();
+            if !is_enemy_alive() {
+                break 'outer;
+            }
+            thread::sleep(user::ATTACK_COOLDOWN);
+        }
+        thread::sleep(FAST_SLEEP);
+    }
+
+    // It's possible that the monster is still alive, but we can not see it
+    // because the bar is almost completely white
+    for _ in 0..3 {
+        thread::sleep(user::ATTACK_COOLDOWN);
+        attack(); // So we attack an extra time
     }
 }
 
@@ -155,15 +167,7 @@ pub fn kill_bosses_at_zone(quantity: u16, zone: AdventureZone) {
             continue;
         }
 
-        while is_enemy_alive() {
-            attack_highest_available();
-            thread::sleep(FAST_SLEEP);
-        }
-        // It's possible that the monster is still alive, but we can not see it
-        // because the bar is almost completely white
-        let a_bit_more_than_a_sec = Duration::from_millis(1050);
-        thread::sleep(a_bit_more_than_a_sec);
-        attack(); // So we attack an extra time
+        kill_enemy();
         kill_counter += 1;
         println!("[LOG] Kill Counter: {}", kill_counter);
     }
@@ -199,6 +203,48 @@ fn retreat_zone() {
 fn refresh_zone() {
     retreat_zone();
     advance_zone();
+}
+
+fn get_available_defense_skills() -> Vec<AdventureSkill> {
+    let mut available_skills = Vec::new();
+    let mut add_if_available = |skill: AdventureSkill| {
+        if skill.is_available() {
+            available_skills.push(skill);
+        }
+    };
+    add_if_available(*ULTIMATE_BUFF);
+    add_if_available(*DEFENSIVE_BUFF);
+    add_if_available(*HYPER_REGEN);
+    add_if_available(*HEAL);
+    add_if_available(*BLOCK);
+    add_if_available(*PARRY);
+    available_skills
+}
+
+/// Returns the list of available-to-cast skills in order of priority
+fn get_available_attack_skills() -> Vec<AdventureSkill> {
+    let mut available_skills = Vec::new();
+    let mut add_if_available = |skill: AdventureSkill| {
+        if skill.is_available() {
+            available_skills.push(skill);
+        }
+    };
+    add_if_available(*ULTIMATE_BUFF);
+    add_if_available(*OFFENSIVE_BUFF);
+    add_if_available(*CHARGE);
+    add_if_available(*ULTIMATE_ATTACK);
+    add_if_available(*PIERCING_ATTACK);
+    add_if_available(*STRONG_ATTACK);
+    add_if_available(*REGULAR_ATTACK);
+    available_skills
+}
+
+#[test]
+fn test_available_skills() {
+    dbg!(get_available_attack_skills());
+    loop {
+        kill_hard_enemy();
+    }
 }
 
 fn attack_or_defense_highest_available() {
@@ -274,6 +320,7 @@ pub fn is_idle_mode() -> bool {
     pixel::approximately_equal(color, colors::IDLE_MODE_ON_RGB)
 }
 
+#[derive(Debug, Clone, Copy)]
 /// Represents a castable adventure skill.
 struct AdventureSkill {
     key: Key,
