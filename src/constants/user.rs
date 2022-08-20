@@ -13,3 +13,5 @@ pub enum Monitor {
 }
 
 pub const MONITOR_USED: Monitor = Monitor::Secondary;
+
+pub const ATTACK_COOLDOWN: Duration = Duration::from_millis(800);
