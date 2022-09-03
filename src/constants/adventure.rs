@@ -12,22 +12,22 @@ pub mod colors {
 }
 
 pub mod keys {
-    use rdev::Key;
+    use enigo::Key;
 
-    pub const REGULAR_ATTACK: Key = Key::KeyW;
-    pub const STRONG_ATTACK: Key = Key::KeyE;
-    pub const PARRY: Key = Key::KeyR;
-    pub const PIERCING_ATTACK: Key = Key::KeyT;
-    pub const ULTIMATE_ATTACK: Key = Key::KeyY;
+    pub const REGULAR_ATTACK: Key = Key::Layout('w');
+    pub const STRONG_ATTACK: Key = Key::Layout('e');
+    pub const PARRY: Key = Key::Layout('r');
+    pub const PIERCING_ATTACK: Key = Key::Layout('t');
+    pub const ULTIMATE_ATTACK: Key = Key::Layout('y');
 
-    pub const BLOCK: Key = Key::KeyA;
-    pub const DEFENSIVE_BUFF: Key = Key::KeyS;
-    pub const HEAL: Key = Key::KeyD;
-    pub const OFFENSIVE_BUFF: Key = Key::KeyF;
-    pub const CHARGE: Key = Key::KeyG;
-    pub const ULTIMATE_BUFF: Key = Key::KeyH;
+    pub const BLOCK: Key = Key::Layout('a');
+    pub const DEFENSIVE_BUFF: Key = Key::Layout('s');
+    pub const HEAL: Key = Key::Layout('d');
+    pub const OFFENSIVE_BUFF: Key = Key::Layout('f');
+    pub const CHARGE: Key = Key::Layout('g');
+    pub const ULTIMATE_BUFF: Key = Key::Layout('h');
 
-    pub const HYPER_REGEN: Key = Key::KeyX;
+    pub const HYPER_REGEN: Key = Key::Layout('x');
 }
 
 pub mod coords {

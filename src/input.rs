@@ -1,5 +1,7 @@
 use std::thread;
 
+use enigo;
+use enigo::{Enigo, KeyboardControllable, MouseButton, MouseControllable};
 use rdev::{listen, simulate, Button, Event, EventType, Key, SimulateError};
 
 use crate::constants;
@@ -7,22 +9,20 @@ use crate::coords::GameAwarePosition;
 
 /// Moves the mouse to `pos`.
 pub fn mouse_move(pos: GameAwarePosition) {
-    send(&EventType::MouseMove {
-        x: pos.x.into(),
-        y: pos.y.into(),
-    });
+    let mut e = Enigo::new();
+    e.mouse_move_to(pos.x.into(), pos.y.into());
 }
 
 /// Left-clicks on current position.
 pub fn click() {
-    send(&EventType::ButtonPress(Button::Left));
-    send(&EventType::ButtonRelease(Button::Left));
+    let mut e = Enigo::new();
+    e.mouse_click(MouseButton::Left);
 }
 
 /// Right-clicks on current position.
 pub fn right_click() {
-    send(&EventType::ButtonPress(Button::Right));
-    send(&EventType::ButtonRelease(Button::Right));
+    let mut e = Enigo::new();
+    e.mouse_click(MouseButton::Right);
 }
 
 /// Moves the mouse to `pos` and right-clicks.
@@ -38,29 +38,16 @@ pub fn click_at(pos: GameAwarePosition) {
 }
 
 /// Sends `key` as if it were pressed by the keyboard.
-pub fn send_key(key: Key) {
-    send(&EventType::KeyPress(key));
-    send(&EventType::KeyRelease(key));
+pub fn send_key(key: enigo::Key) {
+    let mut e = Enigo::new();
+    e.key_click(key);
 }
 
 pub fn input_number(number: u64) {
     let number = number.to_string();
 
-    let input_char = |c: char| match c {
-        '0' => send_key(Key::Num0),
-        '1' => send_key(Key::Num1),
-        '2' => send_key(Key::Num2),
-        '3' => send_key(Key::Num3),
-        '4' => send_key(Key::Num4),
-        '5' => send_key(Key::Num5),
-        '6' => send_key(Key::Num6),
-        '7' => send_key(Key::Num7),
-        '8' => send_key(Key::Num8),
-        '9' => send_key(Key::Num9),
-        _ => (),
-    };
-
-    number.chars().for_each(input_char);
+    let mut e = Enigo::new();
+    e.key_sequence(&number);
 }
 
 /// Represents a object that can perform a "press" event.

@@ -1,5 +1,7 @@
 use std::thread;
 
+use enigo::Key;
+
 use crate::adventure;
 use crate::constants::itopod::coords;
 use crate::constants::user::*;
@@ -17,9 +19,7 @@ pub fn fast_itopod(quantity: u16) {
     input::click_at(*coords::ENTER_CONFIRMATION_PIXEL);
     thread::sleep(LONG_SLEEP);
 
-    if adventure::is_idle_mode() {
-        input::send_key(rdev::Key::KeyQ); // Disable Idle Mode
-    }
+    adventure::disable_idle_mode_if_needed();
 
     for kills in 1..=quantity {
         while !adventure::is_enemy_alive() {
@@ -35,7 +35,7 @@ pub fn fast_itopod(quantity: u16) {
     }
 
     if !adventure::is_idle_mode() {
-        input::send_key(rdev::Key::KeyQ); // Disable Idle Mode
+        input::send_key(Key::Layout('q')); // Disable Idle Mode
     }
 }
 
@@ -53,17 +53,13 @@ pub fn push_itopod() {
     // Set end floor to some big enough number
     input::click_at(*coords::END_FLOOR_INPUT_PIXEL);
     thread::sleep(LONG_SLEEP);
-    input::send_key(rdev::Key::Num9);
-    input::send_key(rdev::Key::Num9);
-    input::send_key(rdev::Key::Num9);
+    input::input_number(999);
 
     // Confirm Enter
     input::click_at(*coords::ENTER_CONFIRMATION_PIXEL);
     thread::sleep(LONG_SLEEP);
 
-    if adventure::is_idle_mode() {
-        input::send_key(rdev::Key::KeyQ); // Disable Idle Mode
-    }
+    adventure::disable_idle_mode_if_needed();
 
     let mut kill_counter = 0;
     loop {

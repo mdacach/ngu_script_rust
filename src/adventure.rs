@@ -1,8 +1,8 @@
 use std::thread;
 use std::time::Duration;
 
+use enigo::Key;
 use lazy_static::lazy_static;
-use rdev::Key;
 
 use crate::constants::adventure::*;
 use crate::constants::user;
@@ -40,7 +40,7 @@ pub enum AdventureZone {
 
 pub fn disable_idle_mode_if_needed() {
     if is_idle_mode() {
-        send_key(Key::KeyQ); // Disable Idle Mode key.
+        send_key(Key::Layout('q')); // Disable Idle Mode key.
     }
 }
 
@@ -61,9 +61,7 @@ pub fn fast_kill_enemy() {
 pub fn kill_monsters_at_zone(quantity: u16, zone: AdventureZone) {
     go_to_zone(zone);
 
-    if is_idle_mode() {
-        send_key(Key::KeyQ); // Disable Idle Mode
-    }
+    disable_idle_mode_if_needed();
 
     for kills in 1..=quantity {
         while !is_enemy_alive() {
@@ -126,9 +124,7 @@ fn kill_hard_enemy() {
 pub fn fast_kill_monsters_at_zone(quantity: u16, zone: AdventureZone) {
     go_to_zone(zone);
 
-    if is_idle_mode() {
-        send_key(Key::KeyQ); // Disable Idle Mode
-    }
+    disable_idle_mode_if_needed();
 
     for kills in 1..=quantity {
         while !is_enemy_alive() {
@@ -149,9 +145,7 @@ pub fn fast_kill_monsters_at_zone(quantity: u16, zone: AdventureZone) {
 pub fn kill_bosses_at_zone(quantity: u16, zone: AdventureZone) {
     go_to_zone(zone);
 
-    if is_idle_mode() {
-        send_key(Key::KeyQ); // Disable Idle Mode
-    }
+    disable_idle_mode_if_needed();
 
     let mut kill_counter = 0;
     while kill_counter < quantity {
@@ -291,7 +285,7 @@ pub fn attack_highest_available() {
 }
 
 pub fn attack() {
-    send_key(Key::KeyW); // Regular attack
+    send_key(Key::Layout('w')); // Regular attack
 }
 
 pub fn is_enemy_alive() -> bool {

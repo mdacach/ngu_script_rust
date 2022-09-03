@@ -1,6 +1,6 @@
 use std::iter::from_fn;
 
-use rdev::Key;
+use enigo::Key;
 
 use crate::constants::inventory::*;
 use crate::coords::GameAwarePosition;
@@ -43,13 +43,13 @@ fn boost_at(pos: GameAwarePosition) {
 /// Inventory shortcut to merge is "d".
 /// Note that you must have enabled "Simple Inventory Shortcut" in Settings.
 fn merge() {
-    input::send_key(Key::KeyD);
+    input::send_key(Key::Layout('d'));
 }
 
 /// Inventory shortcut to boost is "a".
 /// Note that you must have enabled "Simple Inventory Shortcut" in Settings.
 fn boost() {
-    input::send_key(Key::KeyA);
+    input::send_key(Key::Layout('a'));
 }
 
 /// Boosts infinity cube.
