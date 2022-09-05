@@ -1,4 +1,5 @@
 pub mod adventure;
+pub mod augments;
 pub mod constants;
 pub mod coords;
 pub mod exp;
@@ -8,8 +9,8 @@ pub mod itopod;
 pub mod menu;
 pub mod ocr;
 pub mod pixel;
-pub mod yggdrasil;
 pub mod time_machine;
+pub mod yggdrasil;
 
 pub fn run<F>(script_routine: F)
 where
