@@ -19,6 +19,8 @@ pub enum Menu {
     Wandoos,
     NGU,
     Yggdrasil,
+    Rebirth,
+    SpendEXP,
 }
 
 /// Navigates between menus.
@@ -36,6 +38,8 @@ pub fn navigate(menu: Menu) {
         Menu::Wandoos => navigate_to(*coords::WANDOOS),
         Menu::NGU => navigate_to(*coords::NGU),
         Menu::Yggdrasil => navigate_to(*coords::YGGDRASIL),
+        Menu::Rebirth => navigate_to(*coords::REBIRTH),
+        Menu::SpendEXP => navigate_to(*coords::SPEND_EXP),
     }
     // Give it time for the game to load
     thread::sleep(constants::user::LONG_SLEEP);

@@ -16,5 +16,7 @@ pub mod coords {
         pub static ref WANDOOS: GameAwarePosition = GameAwarePosition::from_coords(315, 360);
         pub static ref NGU: GameAwarePosition = GameAwarePosition::from_coords(315, 390);
         pub static ref YGGDRASIL: GameAwarePosition = GameAwarePosition::from_coords(315, 430);
+        pub static ref REBIRTH: GameAwarePosition = GameAwarePosition::from_coords(120, 564);
+        pub static ref SPEND_EXP: GameAwarePosition = GameAwarePosition::from_coords(120, 605);
     }
 }

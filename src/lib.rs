@@ -1,6 +1,7 @@
 pub mod adventure;
 pub mod constants;
 pub mod coords;
+pub mod exp;
 pub mod input;
 pub mod inventory;
 pub mod itopod;

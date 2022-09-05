@@ -36,18 +36,6 @@ fn test_ocr_adventure_zone() {
 }
 
 #[test]
-fn test_ocr_unspent_exp() {
-    let x = 581;
-    let y = 90;
-    let width = 486;
-    let height = 36;
-    let unspent_exp = GameAwareRectangle::from_coords(x, y, width, height);
-    let path = Path::new("images/temporary_screenshot.png");
-    pixel::save_screenshot_area_to(unspent_exp, path);
-    dbg!(get_ocr_text_from_file(path));
-}
-
-#[test]
 fn test_ocr_next_itopod_rewards() {
     crate::input::click_at(*crate::constants::itopod::coords::GET_TOOLTIP_PIXEL);
     std::thread::sleep(std::time::Duration::from_secs(2));
