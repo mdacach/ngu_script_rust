@@ -5,6 +5,9 @@ use enigo::{Enigo, KeyboardControllable, MouseButton, MouseControllable};
 use rdev::{listen, simulate, Button, Event, EventType, Key, SimulateError};
 
 use crate::constants;
+use crate::constants::menu;
+use crate::constants::menu::coords::INPUT;
+use crate::constants::user::{FAST_SLEEP, LONG_SLEEP};
 use crate::coords::GameAwarePosition;
 
 /// Moves the mouse to `pos`.
@@ -44,10 +47,20 @@ pub fn send_key(key: enigo::Key) {
 }
 
 pub fn input_number(number: u64) {
+    click_at(*menu::coords::INPUT);
+    thread::sleep(LONG_SLEEP);
+    write_number(number);
+}
+
+pub fn write_number(number: u64) {
     let number = number.to_string();
 
+    write_sequence(&number);
+}
+
+pub fn write_sequence(number: &str) {
     let mut e = Enigo::new();
-    e.key_sequence(&number);
+    e.key_sequence(number);
 }
 
 /// Represents a object that can perform a "press" event.

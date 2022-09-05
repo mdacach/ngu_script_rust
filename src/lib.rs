@@ -9,6 +9,7 @@ pub mod menu;
 pub mod ocr;
 pub mod pixel;
 pub mod yggdrasil;
+pub mod time_machine;
 
 pub fn run<F>(script_routine: F)
 where

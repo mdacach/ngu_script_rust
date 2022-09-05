@@ -53,7 +53,7 @@ pub fn push_itopod() {
     // Set end floor to some big enough number
     input::click_at(*coords::END_FLOOR_INPUT_PIXEL);
     thread::sleep(LONG_SLEEP);
-    input::input_number(999);
+    input::write_number(999);
 
     // Confirm Enter
     input::click_at(*coords::ENTER_CONFIRMATION_PIXEL);
@@ -89,7 +89,7 @@ pub fn enter_itopod_at_floor(floor: u16) {
     // Set starting floor to desired
     input::click_at(*coords::START_FLOOR_INPUT_PIXEL);
     thread::sleep(LONG_SLEEP);
-    input::input_number(floor as u64);
+    input::write_number(floor as u64);
 
     // Confirm Enter
     input::click_at(*coords::ENTER_CONFIRMATION_PIXEL);
