@@ -1,5 +1,6 @@
 pub mod adventure;
 pub mod augments;
+pub mod blood_magic;
 pub mod constants;
 pub mod coords;
 pub mod exp;
