@@ -5,6 +5,7 @@ pub mod coords {
 
     lazy_static! {
         pub static ref NUKE: GameAwarePosition = GameAwarePosition::from_coords(833, 206);
+        pub static ref STOP: GameAwarePosition = GameAwarePosition::from_coords(833, 283);
         pub static ref FIGHT: GameAwarePosition = GameAwarePosition::from_coords(833, 354);
     }
 }

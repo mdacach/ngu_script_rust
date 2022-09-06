@@ -7,3 +7,7 @@ pub fn nuke() {
 pub fn fight() {
     click_at(*crate::constants::fight_boss::coords::FIGHT)
 }
+
+pub fn stop() {
+    click_at(*crate::constants::fight_boss::coords::STOP)
+}

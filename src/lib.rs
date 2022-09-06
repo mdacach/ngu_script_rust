@@ -13,6 +13,7 @@ pub mod pixel;
 pub mod time_machine;
 pub mod yggdrasil;
 pub mod fight_boss;
+pub mod wandoos;
 
 pub fn run<F>(script_routine: F)
 where

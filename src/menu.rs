@@ -19,6 +19,7 @@ pub enum Menu {
     Wandoos,
     NGU,
     Yggdrasil,
+    GoldDiggers,
     Rebirth,
     SpendEXP,
 }
@@ -38,6 +39,7 @@ pub fn navigate(menu: Menu) {
         Menu::Wandoos => navigate_to(*coords::WANDOOS),
         Menu::NGU => navigate_to(*coords::NGU),
         Menu::Yggdrasil => navigate_to(*coords::YGGDRASIL),
+        Menu::GoldDiggers => navigate_to(*coords::GOLD_DIGGERS),
         Menu::Rebirth => navigate_to(*coords::REBIRTH),
         Menu::SpendEXP => navigate_to(*coords::SPEND_EXP),
     }
