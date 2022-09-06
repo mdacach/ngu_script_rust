@@ -1,4 +1,8 @@
+use std::thread;
+use std::time::Duration;
+
 use crate::constants::time_machine;
+use crate::constants::user::LONG_SLEEP;
 use crate::input::input_number;
 use crate::menu;
 use crate::menu::Menu;
@@ -6,11 +10,13 @@ use crate::*;
 
 pub fn add_energy(amount: u64) {
     input_number(amount);
+    thread::sleep(LONG_SLEEP);
     input::click_at(*time_machine::coords::ADD_ENERGY);
 }
 
 pub fn add_magic(amount: u64) {
     input_number(amount);
+    thread::sleep(LONG_SLEEP);
     input::click_at(*time_machine::coords::ADD_MAGIC);
 }
 

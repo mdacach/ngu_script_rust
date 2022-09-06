@@ -314,6 +314,12 @@ pub fn is_idle_mode() -> bool {
     pixel::approximately_equal(color, colors::IDLE_MODE_ON_RGB)
 }
 
+pub fn turn_on_idle_mode() {
+    if !is_idle_mode() {
+        send_key(Key::Layout('q'));
+    }
+}
+
 #[derive(Debug, Clone, Copy)]
 /// Represents a castable adventure skill.
 struct AdventureSkill {
