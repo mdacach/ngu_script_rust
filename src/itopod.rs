@@ -81,6 +81,16 @@ pub fn push_itopod() {
     }
 }
 
+pub fn enter_itoped_at_optimal_floor() {
+    input::click_at(*coords::ENTER_PIXEL);
+
+    thread::sleep(LONG_SLEEP);
+    input::click_at(*coords::OPTIMAL_FLOOR_PIXEL);
+    thread::sleep(LONG_SLEEP);
+    input::click_at(*coords::ENTER_CONFIRMATION_PIXEL);
+    thread::sleep(LONG_SLEEP);
+}
+
 pub fn enter_itopod_at_floor(floor: u16) {
     // Enter itopod
     input::click_at(*coords::ENTER_PIXEL);

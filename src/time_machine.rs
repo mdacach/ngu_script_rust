@@ -8,25 +8,19 @@ use crate::menu;
 use crate::menu::Menu;
 use crate::*;
 
-pub fn add_energy(amount: u64) {
-    input_number(amount);
-    thread::sleep(LONG_SLEEP);
+pub fn add_energy() {
     input::click_at(*time_machine::coords::ADD_ENERGY);
 }
 
-pub fn add_magic(amount: u64) {
-    input_number(amount);
-    thread::sleep(LONG_SLEEP);
+pub fn add_magic() {
     input::click_at(*time_machine::coords::ADD_MAGIC);
 }
 
-pub fn remove_energy(amount: u64) {
-    input_number(amount);
+pub fn remove_energy() {
     input::click_at(*time_machine::coords::REMOVE_ENERGY);
 }
 
-pub fn remove_magic(amount: u64) {
-    input_number(amount);
+pub fn remove_magic() {
     input::click_at(*time_machine::coords::REMOVE_MAGIC);
 }
 
