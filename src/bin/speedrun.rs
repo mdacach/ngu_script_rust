@@ -1,20 +1,15 @@
-use std::arch::x86_64::_mm_extract_si64;
 use std::thread;
-use std::thread::sleep;
 use std::time::{Duration, Instant};
-
-use enigo::Key;
 
 use ngu_script::constants::gold_diggers::coords::{CAP_STAT, CAP_WANDOOS};
 use ngu_script::coords::GameAwarePosition;
-use ngu_script::input::{click_at, send_key};
+use ngu_script::input::click_at;
 use ngu_script::menu::Menu;
 use ngu_script::*;
 use ngu_script::{itopod, menu};
 
 fn main() {
     let script_routine = || {
-        let big_number = 1_000_000_000;
         let basic_training = GameAwarePosition::from_coords(1122, 186);
         let energy_idle_half = GameAwarePosition::from_coords(1156, 26);
         let energy_idle_quarter = GameAwarePosition::from_coords(1200, 26);
@@ -22,13 +17,24 @@ fn main() {
         let magic_idle_quarter = GameAwarePosition::from_coords(1200, 60);
         let rebirth_button = GameAwarePosition::from_coords(734, 700);
         let confirm = GameAwarePosition::from_coords(578, 430);
-        let mid_menu_sleep = Duration::from_secs(1);
+        let mid_menu_sleep = Duration::from_millis(450);
+
+        let pit_feed = GameAwarePosition::from_coords(784, 324);
+        let pit_confirm = GameAwarePosition::from_coords(580, 422);
+        let feed_money_pit = || {
+            menu::navigate(Menu::MoneyPit);
+            thread::sleep(mid_menu_sleep);
+            click_at(pit_feed);
+            thread::sleep(mid_menu_sleep);
+            click_at(pit_confirm);
+            thread::sleep(mid_menu_sleep);
+        };
 
         let blood_magic = 4;
         let augment = 3;
 
         let script_start = Instant::now();
-        let mut run_counter = 0;
+        let mut run_id = 1;
 
         let get_exp = || {
             menu::navigate(Menu::SpendEXP);
@@ -37,19 +43,9 @@ fn main() {
         };
 
         let script_start_exp = get_exp();
-        println!("Starting exp: {:#?}", script_start_exp);
+        println!("Starting script exp: {:#?}", script_start_exp);
 
         loop {
-            println!("Run counter: {}", run_counter);
-            menu::navigate(Menu::SpendEXP);
-            thread::sleep(mid_menu_sleep);
-            let starting_exp = get_exp();
-            if let Some(v) = starting_exp {
-                println!("Starting exp: {}", v);
-            } else {
-                println!("Error reading starting exp");
-            }
-
             let start = Instant::now();
             thread::sleep(mid_menu_sleep);
             menu::navigate(Menu::BasicTraining);
@@ -147,20 +143,15 @@ fn main() {
                 loop_counter += 1;
             }
 
+            feed_money_pit();
+
             menu::navigate(Menu::FightBoss);
             while start.elapsed().as_secs() < 179 {
                 fight_boss::fight();
                 thread::sleep(mid_menu_sleep);
             }
-
-            menu::navigate(Menu::SpendEXP);
+            fight_boss::stop();
             thread::sleep(mid_menu_sleep);
-            let current_exp = exp::get_unspent_exp().ok();
-            if let Some(v) = current_exp {
-                println!("Current exp: {}", v);
-            } else {
-                println!("Error reading current exp");
-            }
 
             menu::navigate(Menu::Rebirth);
             thread::sleep(mid_menu_sleep);
@@ -169,17 +160,23 @@ fn main() {
             click_at(confirm);
             thread::sleep(mid_menu_sleep);
 
-            run_counter += 1;
-            if run_counter % 5 == 0 {
+            if run_id % 5 == 0 {
                 menu::navigate(Menu::SpendEXP);
                 thread::sleep(mid_menu_sleep);
                 let current_exp = exp::get_unspent_exp().ok();
                 let total_elapsed = script_start.elapsed().as_secs();
                 println!("Total elapsed time: {}", total_elapsed);
+                let time_per_run = total_elapsed as f64 / run_id as f64;
+                println!("Time per run: {}", time_per_run);
                 if let Some(v) = current_exp {
-                    println!("Total exp earned: {}", v - script_start_exp.unwrap());
+                    let total_exp = v - script_start_exp.unwrap();
+                    println!("Total exp earned: {}", total_exp);
+                    let exp_per_run = total_exp as f64 / run_id as f64;
+                    println!("Exp per run: {}", exp_per_run);
                 }
             }
+
+            run_id += 1;
         }
     };
 
