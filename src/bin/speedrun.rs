@@ -10,6 +10,7 @@ use ngu_script::{itopod, menu};
 
 fn main() {
     let script_routine = || {
+        // TODO: move these coordinates to lib
         let basic_training = GameAwarePosition::from_coords(1122, 186);
         let energy_idle_half = GameAwarePosition::from_coords(1156, 26);
         let energy_idle_quarter = GameAwarePosition::from_coords(1200, 26);
@@ -18,6 +19,9 @@ fn main() {
         let rebirth_button = GameAwarePosition::from_coords(734, 700);
         let confirm = GameAwarePosition::from_coords(578, 430);
         let mid_menu_sleep = Duration::from_millis(450);
+        let loadout1 = GameAwarePosition::from_coords(445, 345);
+        let loadout2 = GameAwarePosition::from_coords(485, 345);
+        let loadout3 = GameAwarePosition::from_coords(525, 345);
 
         let pit_feed = GameAwarePosition::from_coords(784, 324);
         let pit_confirm = GameAwarePosition::from_coords(580, 422);
@@ -31,7 +35,7 @@ fn main() {
         };
 
         let blood_magic = 4;
-        let augment = 3;
+        let augment = 2;
 
         let script_start = Instant::now();
         let mut run_id = 1;
@@ -62,13 +66,17 @@ fn main() {
             }
 
             thread::sleep(mid_menu_sleep);
+            menu::navigate(Menu::Inventory);
+            thread::sleep(mid_menu_sleep);
+            click_at(loadout2);
+            thread::sleep(mid_menu_sleep);
             menu::navigate(Menu::Adventure);
             thread::sleep(mid_menu_sleep);
             adventure::go_to_latest();
             thread::sleep(mid_menu_sleep);
             adventure::turn_on_idle_mode();
             // wait for a kill
-            thread::sleep(Duration::from_secs(5));
+            thread::sleep(Duration::from_secs(8));
             itopod::enter_itoped_at_optimal_floor();
             thread::sleep(mid_menu_sleep);
 
@@ -114,9 +122,9 @@ fn main() {
 
                 menu::navigate(Menu::GoldDiggers);
                 thread::sleep(mid_menu_sleep);
-                click_at(*CAP_WANDOOS);
-                thread::sleep(mid_menu_sleep);
                 click_at(*CAP_STAT);
+                thread::sleep(mid_menu_sleep);
+                click_at(*CAP_WANDOOS);
                 thread::sleep(mid_menu_sleep);
 
                 menu::navigate(Menu::FightBoss);
@@ -138,6 +146,11 @@ fn main() {
                     // wait for a kill
                     thread::sleep(Duration::from_secs(5));
                     itopod::enter_itoped_at_optimal_floor();
+                    thread::sleep(mid_menu_sleep);
+
+                    menu::navigate(Menu::Inventory);
+                    thread::sleep(mid_menu_sleep);
+                    click_at(loadout1);
                     thread::sleep(mid_menu_sleep);
                 }
                 loop_counter += 1;
