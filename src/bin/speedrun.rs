@@ -4,7 +4,9 @@ use std::time::{Duration, Instant};
 use image::Rgb;
 
 use ngu_script::constants::adventure::colors::NO_ENEMY_RGB;
-use ngu_script::constants::gold_diggers::coords::{CAP_STAT, CAP_WANDOOS};
+use ngu_script::constants::gold_diggers::coords::{
+    CAP_DROP_CHANCE, CAP_STAT, CAP_WANDOOS, PAGE1, PAGE2, PAGE3,
+};
 use ngu_script::constants::user::LONG_SLEEP;
 use ngu_script::coords::GameAwarePosition;
 use ngu_script::input::{click_at, right_click_at};
@@ -26,6 +28,12 @@ fn main() {
         let loadout1 = GameAwarePosition::from_coords(445, 345);
         let loadout2 = GameAwarePosition::from_coords(485, 345);
         let loadout3 = GameAwarePosition::from_coords(525, 345);
+        let ngu_gold_cap = GameAwarePosition::from_coords(790, 460);
+
+        let leftover_to_ngu = || {
+            menu::navigate(Menu::NGU);
+            click_at(ngu_gold_cap);
+        };
 
         let white: Rgb<u8> = Rgb([255, 255, 255]);
         let time_machine_energy_cap_pixel = GameAwarePosition::from_coords(678, 315);
@@ -54,6 +62,7 @@ fn main() {
             }
             time_machine::add_energy();
             time_machine::add_energy();
+            time_machine::add_energy();
         };
 
         let cap_magic_tm = || {
@@ -68,7 +77,6 @@ fn main() {
                     break;
                 }
             }
-            time_machine::add_magic();
         };
 
         let cap_augment = |number| {
@@ -88,6 +96,19 @@ fn main() {
             augments::add_augment(number);
         };
 
+        let activate_diggers = || {
+            menu::navigate(Menu::GoldDiggers);
+            click_at(*PAGE3);
+            click_at(*CAP_DROP_CHANCE);
+
+            click_at(*PAGE1);
+            click_at(*CAP_STAT);
+            click_at(*CAP_WANDOOS);
+
+            click_at(*PAGE2);
+            click_at(*CAP_DROP_CHANCE);
+        };
+
         let pit_feed = GameAwarePosition::from_coords(784, 324);
         let pit_confirm = GameAwarePosition::from_coords(580, 422);
         let feed_money_pit = || {
@@ -99,7 +120,7 @@ fn main() {
             //thread::sleep(mid_menu_sleep);
         };
 
-        let blood_magic = 6;
+        let blood_magic = 5;
         let augment = 2;
 
         let script_start = Instant::now();
@@ -163,9 +184,9 @@ fn main() {
                 menu::navigate(Menu::BloodMagic);
                 blood_magic::cap_ritual(blood_magic);
 
-                menu::navigate(Menu::GoldDiggers);
-                click_at(*CAP_STAT);
-                click_at(*CAP_WANDOOS);
+                activate_diggers();
+
+                leftover_to_ngu();
             };
 
             setup();
