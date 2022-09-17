@@ -6,7 +6,6 @@ use rdev::{listen, simulate, Button, Event, EventType, Key, SimulateError};
 
 use crate::constants;
 use crate::constants::menu;
-use crate::constants::menu::coords::INPUT;
 use crate::constants::user::{FAST_SLEEP, LONG_SLEEP};
 use crate::coords::GameAwarePosition;
 
@@ -14,18 +13,21 @@ use crate::coords::GameAwarePosition;
 pub fn mouse_move(pos: GameAwarePosition) {
     let mut e = Enigo::new();
     e.mouse_move_to(pos.x.into(), pos.y.into());
+    thread::sleep(FAST_SLEEP);
 }
 
 /// Left-clicks on current position.
 pub fn click() {
     let mut e = Enigo::new();
     e.mouse_click(MouseButton::Left);
+    thread::sleep(FAST_SLEEP);
 }
 
 /// Right-clicks on current position.
 pub fn right_click() {
     let mut e = Enigo::new();
     e.mouse_click(MouseButton::Right);
+    thread::sleep(FAST_SLEEP);
 }
 
 /// Moves the mouse to `pos` and right-clicks.
@@ -44,6 +46,7 @@ pub fn click_at(pos: GameAwarePosition) {
 pub fn send_key(key: enigo::Key) {
     let mut e = Enigo::new();
     e.key_click(key);
+    thread::sleep(FAST_SLEEP);
 }
 
 pub fn input_number(number: u64) {
@@ -61,6 +64,7 @@ pub fn write_number(number: u64) {
 pub fn write_sequence(number: &str) {
     let mut e = Enigo::new();
     e.key_sequence(number);
+    thread::sleep(LONG_SLEEP);
 }
 
 /// Represents a object that can perform a "press" event.

@@ -14,5 +14,15 @@ pub mod coords {
         pub static ref ENH_3_ADD: GameAwarePosition = GameAwarePosition::from_coords(717, 650);
         pub static ref AUG_4_ADD: GameAwarePosition = GameAwarePosition::from_coords(717, 700);
         pub static ref ENH_4_ADD: GameAwarePosition = GameAwarePosition::from_coords(717, 735);
+        pub static ref AUG_0_CAP: GameAwarePosition = GameAwarePosition::from_coords(687, 352);
+        pub static ref ENH_0_CAP: GameAwarePosition = GameAwarePosition::from_coords(687, 390);
+        pub static ref AUG_1_CAP: GameAwarePosition = GameAwarePosition::from_coords(687, 440);
+        pub static ref ENH_1_CAP: GameAwarePosition = GameAwarePosition::from_coords(687, 475);
+        pub static ref AUG_2_CAP: GameAwarePosition = GameAwarePosition::from_coords(687, 525);
+        pub static ref ENH_2_CAP: GameAwarePosition = GameAwarePosition::from_coords(687, 560);
+        pub static ref AUG_3_CAP: GameAwarePosition = GameAwarePosition::from_coords(687, 610);
+        pub static ref ENH_3_CAP: GameAwarePosition = GameAwarePosition::from_coords(687, 650);
+        pub static ref AUG_4_CAP: GameAwarePosition = GameAwarePosition::from_coords(687, 700);
+        pub static ref ENH_4_CAP: GameAwarePosition = GameAwarePosition::from_coords(687, 735);
     }
 }

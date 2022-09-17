@@ -1,9 +1,13 @@
 use std::thread;
 use std::time::{Duration, Instant};
 
+use image::Rgb;
+
+use ngu_script::constants::adventure::colors::NO_ENEMY_RGB;
 use ngu_script::constants::gold_diggers::coords::{CAP_STAT, CAP_WANDOOS};
+use ngu_script::constants::user::LONG_SLEEP;
 use ngu_script::coords::GameAwarePosition;
-use ngu_script::input::click_at;
+use ngu_script::input::{click_at, right_click_at};
 use ngu_script::menu::Menu;
 use ngu_script::*;
 use ngu_script::{itopod, menu};
@@ -23,18 +27,79 @@ fn main() {
         let loadout2 = GameAwarePosition::from_coords(485, 345);
         let loadout3 = GameAwarePosition::from_coords(525, 345);
 
+        let white: Rgb<u8> = Rgb([255, 255, 255]);
+        let time_machine_energy_cap_pixel = GameAwarePosition::from_coords(678, 315);
+        let time_machine_magic_cap_pixel = GameAwarePosition::from_coords(678, 445);
+
+        let tm_energy_capped = || {
+            let color = pixel::get_pixel_rgb(time_machine_energy_cap_pixel);
+            !pixel::approximately_equal(color, white)
+        };
+        let tm_magic_capped = || {
+            let color = pixel::get_pixel_rgb(time_machine_magic_cap_pixel);
+            !pixel::approximately_equal(color, white)
+        };
+
+        let cap_energy_tm = || {
+            if tm_energy_capped() {
+                return;
+            }
+
+            for _ in 0..10 {
+                time_machine::add_energy();
+                thread::sleep(ngu_script::constants::user::MEDIUM_SLEEP);
+                if tm_energy_capped() {
+                    break;
+                }
+            }
+            time_machine::add_energy();
+            time_machine::add_energy();
+        };
+
+        let cap_magic_tm = || {
+            if tm_magic_capped() {
+                return;
+            }
+
+            for _ in 0..1 {
+                time_machine::add_magic();
+                thread::sleep(ngu_script::constants::user::MEDIUM_SLEEP);
+                if tm_magic_capped() {
+                    break;
+                }
+            }
+            time_machine::add_magic();
+        };
+
+        let cap_augment = |number| {
+            if augments::is_capped_augment(number) {
+                return;
+            }
+
+            for _ in 0..10 {
+                augments::add_augment(number);
+                augments::add_enhancement(number);
+                thread::sleep(ngu_script::constants::user::MEDIUM_SLEEP);
+                if augments::is_capped_augment(number) {
+                    break;
+                }
+            }
+            augments::add_augment(number);
+            augments::add_augment(number);
+        };
+
         let pit_feed = GameAwarePosition::from_coords(784, 324);
         let pit_confirm = GameAwarePosition::from_coords(580, 422);
         let feed_money_pit = || {
             menu::navigate(Menu::MoneyPit);
-            thread::sleep(mid_menu_sleep);
+            //thread::sleep(mid_menu_sleep);
             click_at(pit_feed);
-            thread::sleep(mid_menu_sleep);
+            //thread::sleep(mid_menu_sleep);
             click_at(pit_confirm);
-            thread::sleep(mid_menu_sleep);
+            //thread::sleep(mid_menu_sleep);
         };
 
-        let blood_magic = 4;
+        let blood_magic = 6;
         let augment = 2;
 
         let script_start = Instant::now();
@@ -42,7 +107,7 @@ fn main() {
 
         let get_exp = || {
             menu::navigate(Menu::SpendEXP);
-            thread::sleep(mid_menu_sleep);
+            //thread::sleep(mid_menu_sleep);
             exp::get_unspent_exp().ok()
         };
 
@@ -51,109 +116,80 @@ fn main() {
 
         loop {
             let start = Instant::now();
-            thread::sleep(mid_menu_sleep);
             menu::navigate(Menu::BasicTraining);
-            thread::sleep(mid_menu_sleep);
-            click_at(basic_training);
+            right_click_at(basic_training);
 
-            thread::sleep(mid_menu_sleep);
             menu::navigate(Menu::FightBoss);
             fight_boss::nuke();
+            // Wait for nuke to kill bosses
             thread::sleep(Duration::from_secs(4));
             for _ in 0..5 {
                 fight_boss::fight();
-                thread::sleep(Duration::from_secs(1));
+                //thread::sleep(Duration::from_secs(1));
             }
 
-            thread::sleep(mid_menu_sleep);
+            //thread::sleep(mid_menu_sleep);
             menu::navigate(Menu::Inventory);
-            thread::sleep(mid_menu_sleep);
+            //thread::sleep(mid_menu_sleep);
             click_at(loadout2);
-            thread::sleep(mid_menu_sleep);
+            //thread::sleep(mid_menu_sleep);
             menu::navigate(Menu::Adventure);
-            thread::sleep(mid_menu_sleep);
+            //thread::sleep(mid_menu_sleep);
             adventure::go_to_latest();
-            thread::sleep(mid_menu_sleep);
+            //thread::sleep(mid_menu_sleep);
             adventure::turn_on_idle_mode();
             // wait for a kill
             thread::sleep(Duration::from_secs(8));
             itopod::enter_itoped_at_optimal_floor();
-            thread::sleep(mid_menu_sleep);
+            //thread::sleep(mid_menu_sleep);
 
-            let mut loop_counter = 0;
-            while start.elapsed().as_secs() < 155 {
+            menu::navigate(Menu::TimeMachine);
+            let increment = 50_000_000;
+            input::input_number(increment);
+            // Set up time machine
+            // Wait until capping it (how to check if capped?)
+            let setup = || {
                 menu::navigate(Menu::TimeMachine);
-                thread::sleep(mid_menu_sleep);
-                click_at(energy_idle_quarter);
-                thread::sleep(mid_menu_sleep);
-                time_machine::add_energy();
-                thread::sleep(mid_menu_sleep);
+                cap_energy_tm();
+                cap_magic_tm();
 
                 menu::navigate(Menu::Wandoos);
-                thread::sleep(mid_menu_sleep);
-                wandoos::add_energy();
-                thread::sleep(mid_menu_sleep);
+                wandoos::cap_energy();
+                wandoos::cap_magic();
 
                 menu::navigate(Menu::Augmentation);
-                thread::sleep(mid_menu_sleep);
-                augments::add_augment(augment);
-                thread::sleep(mid_menu_sleep);
-                augments::add_enhancement(augment);
-                thread::sleep(mid_menu_sleep);
-
-                menu::navigate(Menu::TimeMachine);
-                thread::sleep(mid_menu_sleep);
-                click_at(magic_idle_half);
-                thread::sleep(mid_menu_sleep);
-                time_machine::add_magic();
-                thread::sleep(mid_menu_sleep);
-
-                click_at(magic_idle_half);
-                thread::sleep(mid_menu_sleep);
-                menu::navigate(Menu::Wandoos);
-                thread::sleep(mid_menu_sleep);
-                wandoos::add_magic();
-                thread::sleep(mid_menu_sleep);
+                cap_augment(augment);
 
                 menu::navigate(Menu::BloodMagic);
-                thread::sleep(mid_menu_sleep);
-                blood_magic::add_ritual(blood_magic);
-                thread::sleep(mid_menu_sleep);
+                blood_magic::cap_ritual(blood_magic);
 
                 menu::navigate(Menu::GoldDiggers);
-                thread::sleep(mid_menu_sleep);
                 click_at(*CAP_STAT);
-                thread::sleep(mid_menu_sleep);
                 click_at(*CAP_WANDOOS);
-                thread::sleep(mid_menu_sleep);
+            };
 
-                menu::navigate(Menu::FightBoss);
-                thread::sleep(mid_menu_sleep);
-                fight_boss::nuke();
-                thread::sleep(mid_menu_sleep);
-                fight_boss::fight();
-                thread::sleep(mid_menu_sleep);
-                fight_boss::fight();
-                thread::sleep(mid_menu_sleep);
+            setup();
 
-                if loop_counter == 0 {
-                    thread::sleep(mid_menu_sleep);
-                    menu::navigate(Menu::Adventure);
-                    thread::sleep(mid_menu_sleep);
-                    adventure::go_to_latest();
-                    thread::sleep(mid_menu_sleep);
-                    adventure::turn_on_idle_mode();
-                    // wait for a kill
-                    thread::sleep(Duration::from_secs(5));
-                    itopod::enter_itoped_at_optimal_floor();
-                    thread::sleep(mid_menu_sleep);
+            // Get to new zones
+            menu::navigate(Menu::FightBoss);
+            fight_boss::nuke();
+            thread::sleep(Duration::from_secs(3));
+            fight_boss::fight();
+            fight_boss::fight();
 
-                    menu::navigate(Menu::Inventory);
-                    thread::sleep(mid_menu_sleep);
-                    click_at(loadout1);
-                    thread::sleep(mid_menu_sleep);
-                }
-                loop_counter += 1;
+            menu::navigate(Menu::Adventure);
+            adventure::go_to_latest();
+            adventure::turn_on_idle_mode();
+            // wait for a kill
+            thread::sleep(Duration::from_secs(8));
+            itopod::enter_itoped_at_optimal_floor();
+
+            menu::navigate(Menu::Inventory);
+            click_at(loadout1);
+
+            // Here we want to do something else
+            while start.elapsed().as_secs() < 155 {
+                setup();
             }
 
             feed_money_pit();
@@ -161,21 +197,16 @@ fn main() {
             menu::navigate(Menu::FightBoss);
             while start.elapsed().as_secs() < 179 {
                 fight_boss::fight();
-                thread::sleep(mid_menu_sleep);
             }
             fight_boss::stop();
-            thread::sleep(mid_menu_sleep);
 
             menu::navigate(Menu::Rebirth);
-            thread::sleep(mid_menu_sleep);
             click_at(rebirth_button);
-            thread::sleep(mid_menu_sleep);
             click_at(confirm);
-            thread::sleep(mid_menu_sleep);
 
             if run_id % 5 == 0 {
                 menu::navigate(Menu::SpendEXP);
-                thread::sleep(mid_menu_sleep);
+                thread::sleep(LONG_SLEEP);
                 let current_exp = exp::get_unspent_exp().ok();
                 let total_elapsed = script_start.elapsed().as_secs();
                 println!("Total elapsed time: {}", total_elapsed);
