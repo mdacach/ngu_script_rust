@@ -51,7 +51,7 @@ pub fn send_key(key: enigo::Key) {
 
 pub fn input_number(number: u64) {
     click_at(*menu::coords::INPUT);
-    thread::sleep(5 * LONG_SLEEP);
+    thread::sleep(2 * LONG_SLEEP);
     write_number(number);
 }
 

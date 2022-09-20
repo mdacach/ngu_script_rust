@@ -28,11 +28,35 @@ fn main() {
         let loadout1 = GameAwarePosition::from_coords(445, 345);
         let loadout2 = GameAwarePosition::from_coords(485, 345);
         let loadout3 = GameAwarePosition::from_coords(525, 345);
+
+        // NGU coordinates
+        let ngu_augments_cap = GameAwarePosition::from_coords(790, 320);
+        let ngu_wandoos_cap = GameAwarePosition::from_coords(790, 370);
+        let ngu_respawn_cap = GameAwarePosition::from_coords(790, 415);
         let ngu_gold_cap = GameAwarePosition::from_coords(790, 460);
+        let ngu_adventure_alpha_cap = GameAwarePosition::from_coords(790, 510);
+        let ngu_power_alpha_cap = GameAwarePosition::from_coords(790, 555);
+        let ngu_drop_chance_cap = GameAwarePosition::from_coords(790, 600);
+        let ngu_magic_ngu_cap = GameAwarePosition::from_coords(790, 650);
+        let ngu_pp_cap = GameAwarePosition::from_coords(790, 695);
+
+        let ngu_augments_add = GameAwarePosition::from_coords(690, 320);
+        let ngu_wandoos_add = GameAwarePosition::from_coords(690, 370);
+        let ngu_respawn_add = GameAwarePosition::from_coords(690, 415);
+        let ngu_gold_add = GameAwarePosition::from_coords(690, 460);
+        let ngu_adventure_alpha_add = GameAwarePosition::from_coords(690, 510);
+        let ngu_power_alpha_add = GameAwarePosition::from_coords(690, 555);
+        let ngu_drop_chance_add = GameAwarePosition::from_coords(690, 600);
+        let ngu_magic_ngu_add = GameAwarePosition::from_coords(690, 650);
+        let ngu_pp_add = GameAwarePosition::from_coords(690, 695);
 
         let leftover_to_ngu = || {
             menu::navigate(Menu::NGU);
-            click_at(ngu_gold_cap);
+            click_at(energy_idle_quarter);
+            click_at(ngu_augments_add);
+            click_at(ngu_gold_add);
+            click_at(ngu_wandoos_add);
+            click_at(ngu_power_alpha_add);
         };
 
         let white: Rgb<u8> = Rgb([255, 255, 255]);
@@ -60,6 +84,7 @@ fn main() {
                     break;
                 }
             }
+            time_machine::add_energy();
             time_machine::add_energy();
             time_machine::add_energy();
             time_machine::add_energy();
@@ -94,6 +119,7 @@ fn main() {
             }
             augments::add_augment(number);
             augments::add_augment(number);
+            augments::add_augment(number);
         };
 
         let activate_diggers = || {
@@ -121,7 +147,7 @@ fn main() {
         };
 
         let blood_magic = 5;
-        let augment = 2;
+        let augment = 3;
 
         let script_start = Instant::now();
         let mut run_id = 1;
@@ -132,6 +158,7 @@ fn main() {
             exp::get_unspent_exp().ok()
         };
 
+        menu::navigate(Menu::SpendEXP); // Focus the game
         let script_start_exp = get_exp();
         println!("Starting script exp: {:#?}", script_start_exp);
 
@@ -164,13 +191,12 @@ fn main() {
             itopod::enter_itoped_at_optimal_floor();
             //thread::sleep(mid_menu_sleep);
 
-            menu::navigate(Menu::TimeMachine);
-            let increment = 50_000_000;
-            input::input_number(increment);
             // Set up time machine
             // Wait until capping it (how to check if capped?)
             let setup = || {
                 menu::navigate(Menu::TimeMachine);
+                let increment = 100_000_000;
+                input::input_number(increment);
                 cap_energy_tm();
                 cap_magic_tm();
 
