@@ -54,8 +54,8 @@ fn main() {
             menu::navigate(Menu::NGU);
             click_at(energy_idle_quarter);
             click_at(ngu_augments_add);
-            click_at(ngu_gold_add);
             click_at(ngu_wandoos_add);
+            click_at(ngu_gold_add);
             click_at(ngu_power_alpha_add);
         };
 
