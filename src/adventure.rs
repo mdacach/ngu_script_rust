@@ -36,6 +36,7 @@ pub enum AdventureZone {
     Beard,
     Walderp,
     BDW,
+    BAE,
 }
 
 pub fn disable_idle_mode_if_needed() {
@@ -79,7 +80,6 @@ fn kill_enemy() {
     'outer: while is_enemy_alive() {
         println!("Checking available skills");
         let mut available_skills = get_available_attack_skills();
-        dbg!(&available_skills);
 
         for skill in available_skills {
             println!("Casting skill {:?}", skill);
@@ -235,7 +235,6 @@ fn get_available_attack_skills() -> Vec<AdventureSkill> {
 
 #[test]
 fn test_available_skills() {
-    dbg!(get_available_attack_skills());
     loop {
         kill_hard_enemy();
     }

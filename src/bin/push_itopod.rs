@@ -7,7 +7,7 @@ fn main() {
         let mut kill_counter = 0;
         loop {
             menu::navigate(Menu::Adventure);
-            itopod::fast_itopod(120);
+            itopod::push_itopod();
 
             kill_counter += 1;
             println!("[LOG] Total kill counter: {}", kill_counter);

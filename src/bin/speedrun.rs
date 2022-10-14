@@ -5,9 +5,10 @@ use image::Rgb;
 
 use ngu_script::constants::adventure::colors::NO_ENEMY_RGB;
 use ngu_script::constants::gold_diggers::coords::{
-    CAP_DROP_CHANCE, CAP_STAT, CAP_WANDOOS, PAGE1, PAGE2, PAGE3,
+    CAP_ADVENTURE, CAP_DROP_CHANCE, CAP_STAT, CAP_WANDOOS, PAGE1, PAGE2, PAGE3,
 };
 use ngu_script::constants::user::LONG_SLEEP;
+use ngu_script::adventure::AdventureZone;
 use ngu_script::coords::GameAwarePosition;
 use ngu_script::input::{click_at, right_click_at};
 use ngu_script::menu::Menu;
@@ -52,11 +53,28 @@ fn main() {
 
         let leftover_to_ngu = || {
             menu::navigate(Menu::NGU);
+            /*
+            click_at(ngu_magic_ngu_cap);
+            click_at(*PAGE1);
+            click_at(ngu_power_alpha_cap);
+            */
+
+            /*
+            click_at(energy_idle_half);
+            click_at(ngu_adventure_alpha_add);
+            click_at(ngu_drop_chance_add);
+            click_at(*PAGE1);
+            click_at(ngu_drop_chance_cap);
+            */
+
+
             click_at(energy_idle_quarter);
             click_at(ngu_augments_add);
             click_at(ngu_wandoos_add);
             click_at(ngu_gold_add);
             click_at(ngu_power_alpha_add);
+            click_at(*PAGE1);
+            click_at(ngu_drop_chance_cap);
         };
 
         let white: Rgb<u8> = Rgb([255, 255, 255]);
@@ -95,13 +113,15 @@ fn main() {
                 return;
             }
 
-            for _ in 0..1 {
+            for _ in 0..3 {
                 time_machine::add_magic();
                 thread::sleep(ngu_script::constants::user::MEDIUM_SLEEP);
                 if tm_magic_capped() {
                     break;
                 }
             }
+                time_machine::add_magic();
+                time_machine::add_magic();
         };
 
         let cap_augment = |number| {
@@ -120,19 +140,22 @@ fn main() {
             augments::add_augment(number);
             augments::add_augment(number);
             augments::add_augment(number);
+                augments::add_enhancement(number);
         };
 
         let activate_diggers = || {
             menu::navigate(Menu::GoldDiggers);
             click_at(*PAGE3);
+            click_at(*CAP_ADVENTURE);
             click_at(*CAP_DROP_CHANCE);
 
-            click_at(*PAGE1);
-            click_at(*CAP_STAT);
-            click_at(*CAP_WANDOOS);
 
             click_at(*PAGE2);
             click_at(*CAP_DROP_CHANCE);
+            click_at(*CAP_WANDOOS);
+
+            click_at(*PAGE1);
+            click_at(*CAP_STAT);
         };
 
         let pit_feed = GameAwarePosition::from_coords(784, 324);
@@ -146,8 +169,8 @@ fn main() {
             //thread::sleep(mid_menu_sleep);
         };
 
-        let blood_magic = 5;
-        let augment = 3;
+        let blood_magic = 6;
+        let augment = 4;
 
         let script_start = Instant::now();
         let mut run_id = 1;
@@ -164,6 +187,10 @@ fn main() {
 
         loop {
             let start = Instant::now();
+
+            menu::navigate(Menu::Inventory);
+            click_at(loadout2);
+
             menu::navigate(Menu::BasicTraining);
             right_click_at(basic_training);
 
@@ -173,29 +200,19 @@ fn main() {
             thread::sleep(Duration::from_secs(4));
             for _ in 0..5 {
                 fight_boss::fight();
-                //thread::sleep(Duration::from_secs(1));
+                thread::sleep(Duration::from_secs(1));
             }
 
-            //thread::sleep(mid_menu_sleep);
-            menu::navigate(Menu::Inventory);
-            //thread::sleep(mid_menu_sleep);
-            click_at(loadout2);
-            //thread::sleep(mid_menu_sleep);
             menu::navigate(Menu::Adventure);
-            //thread::sleep(mid_menu_sleep);
-            adventure::go_to_latest();
-            //thread::sleep(mid_menu_sleep);
+            adventure::go_to_zone(AdventureZone::BAE);
             adventure::turn_on_idle_mode();
             // wait for a kill
             thread::sleep(Duration::from_secs(8));
             itopod::enter_itoped_at_optimal_floor();
-            //thread::sleep(mid_menu_sleep);
 
-            // Set up time machine
-            // Wait until capping it (how to check if capped?)
             let setup = || {
                 menu::navigate(Menu::TimeMachine);
-                let increment = 100_000_000;
+                let increment = 500_000_000;
                 input::input_number(increment);
                 cap_energy_tm();
                 cap_magic_tm();
@@ -215,24 +232,11 @@ fn main() {
                 leftover_to_ngu();
             };
 
-            setup();
-
-            // Get to new zones
-            menu::navigate(Menu::FightBoss);
-            fight_boss::nuke();
-            thread::sleep(Duration::from_secs(3));
-            fight_boss::fight();
-            fight_boss::fight();
-
-            menu::navigate(Menu::Adventure);
-            adventure::go_to_latest();
-            adventure::turn_on_idle_mode();
-            // wait for a kill
-            thread::sleep(Duration::from_secs(8));
-            itopod::enter_itoped_at_optimal_floor();
-
             menu::navigate(Menu::Inventory);
             click_at(loadout1);
+
+            menu::navigate(Menu::BasicTraining);
+            right_click_at(basic_training);
 
             // Here we want to do something else
             while start.elapsed().as_secs() < 155 {
@@ -242,6 +246,7 @@ fn main() {
             feed_money_pit();
 
             menu::navigate(Menu::FightBoss);
+            fight_boss::nuke();
             while start.elapsed().as_secs() < 179 {
                 fight_boss::fight();
             }

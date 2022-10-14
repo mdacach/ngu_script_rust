@@ -204,12 +204,12 @@ pub fn equip_slots() -> impl Iterator<Item = EquipmentSlot> {
     // more efficiently.
     let mut order = Vec::new();
     use EquipmentSlot::*;
-    order.push(Weapon);
     order.push(Acc1);
     order.push(Acc2);
-    order.push(Boots);
-    order.push(Helmet);
     order.push(Chest);
+    order.push(Helmet);
+    order.push(Boots);
+    order.push(Weapon);
     order.push(Legs);
 
     order.into_iter()

@@ -14,8 +14,8 @@ fn main() {
         loop {
             menu::navigate(Menu::Adventure);
 
-            let quantity = 30;
-            adventure::fast_kill_monsters_at_zone(quantity, AdventureZone::Mega);
+            let quantity = 40;
+            adventure::fast_kill_monsters_at_zone(quantity, AdventureZone::BDW);
             kill_counter += quantity;
             adventure::go_to_zone(AdventureZone::Safe);
 
@@ -23,25 +23,14 @@ fn main() {
             let inventory_routine = || {
                 inventory::merge_equips();
                 inventory::boost_equips();
-                inventory::inventory_slots().take(36).for_each(|slot| {
+                inventory::inventory_slots().take(30).for_each(|slot| {
                     slot.merge();
                     slot.boost();
                 });
-                inventory::merge_equip(EquipmentSlot::Cube);
+                inventory::boost_equip(EquipmentSlot::Cube);
             };
-            println!("[LOG] Finished adventure routine");
             println!("[LOG] Total kill counter: {}", kill_counter);
-
-            let empty_slots = inventory::count_empty_slots();
-            let items_dropped = empty_slots - previous_empty_slots;
-            println!("[LOG] Empty slots: {}", empty_slots);
-            println!("[LOG] Items dropped: {}", items_dropped);
-            if items_dropped > empty_slots {
-                // There's no room for more items, so we must tidy up the inventory.
-                println!("Performing Inventory routine");
                 inventory_routine();
-            }
-            previous_empty_slots = inventory::count_empty_slots();
         }
     };
 
